@@ -33,3 +33,18 @@ This project aims to design and develop the most loved secondhand marketplace pl
 - As a *seller* I want to be able to *sell an item* so i can *make money*
 - As a *seller* I want to be able to *sell an item* so i can *get rid of something i dont want*
 - As a *customer service* I want help the customers to solve their problems while using our app in a easy way
+
+
+## Project Management
+- [Kanban Board](https://github.com/orgs/spe-uob/projects/310/views/1)
+- [Gantt Chart](https://github.com/orgs/spe-uob/projects/310/views/2)
+
+
+## Team Members
+| Members          | Email                                                 |
+| ---------------- | ----------------------------------------------------- |
+| Filip Hrehovcik  | [tq23547@bristol.ac.uk](mailto:tq23547@bristol.ac.uk) |
+| Yunbo Zhang      | [th24060@bristol.ac.uk](mailto:th24060@bristol.ac.uk) |
+| Emir Gizer       | [nh24391@bristol.ac.uk](mailto:nh24391@bristol.ac.uk) |
+| Ewan Friend      | [pu24994@bristol.ac.uk](mailto:pu24994@bristol.ac.uk) |
+| Lingze Yuan      | [wp22171@bristol.ac.uk](mailto:wp22171@bristol.ac.uk) |
