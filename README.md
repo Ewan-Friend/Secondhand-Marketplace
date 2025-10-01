@@ -1,7 +1,8 @@
 # SecondhandMarketplace(2025)
 
 # Contents
-    [Project description](#project-description).
+    [Go to Real Cool Heading section](#real-cool-heading)
+    
 
 ## Project description
 This project aims to design and develop the most loved secondhand marketplace platform, with a strong emphasis on user engagement, trust, and efficiency. Your team will decide whether to build on the foundations laid by last year’s brilliant team or start from scratch with a future-proof, enterprise-grade tech stack. The primary aim is to create a super user-friendly marketplace UX that ensures fast, intuitive, and enjoyable interactions.
@@ -22,6 +23,9 @@ This project aims to design and develop the most loved secondhand marketplace pl
 ### Business & Strategy
 - Marketing team
 - Legal team
+
+#Real Cool Heading
+#real-cool-heading
 
 ## User Stories
 - As a *buyer* I want to be able to *buy an item* so i can *use it for personal use*
