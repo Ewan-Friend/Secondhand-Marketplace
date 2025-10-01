@@ -1,7 +1,7 @@
 # SecondhandMarketplace(2025)
 
-# Contents
-    [Go to Real Cool Heading section](#real-cool-heading)
+## Contents
+    [Project description](#project-description)
     
 
 ## Project description
@@ -24,8 +24,6 @@ This project aims to design and develop the most loved secondhand marketplace pl
 - Marketing team
 - Legal team
 
-#Real Cool Heading
-#real-cool-heading
 
 ## User Stories
 - As a *buyer* I want to be able to *buy an item* so i can *use it for personal use*
