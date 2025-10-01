@@ -4,6 +4,8 @@
 - [Project description](#project-description)
 - [Stakeholders](#stakeholders)
 - [User Stories](#user-stories)
+- [Project Management](#project-management)
+- [Team Members](#team-members)
 
 ## Project description
 This project aims to design and develop the most loved secondhand marketplace platform, with a strong emphasis on user engagement, trust, and efficiency. Your team will decide whether to build on the foundations laid by last year’s brilliant team or start from scratch with a future-proof, enterprise-grade tech stack. The primary aim is to create a super user-friendly marketplace UX that ensures fast, intuitive, and enjoyable interactions.
@@ -43,7 +45,7 @@ This project aims to design and develop the most loved secondhand marketplace pl
 ## Team Members
 | Members          | Email                                                 |
 | ---------------- | ----------------------------------------------------- |
-| Filip Hrehovcik  | [tq23547@bristol.ac.uk](mailto:tq23547@bristol.ac.uk) |
+| Filip Hrehovcik  | [zu24411@bristol.ac.uk](mailto:zu24411@bristol.ac.uk) |
 | Yunbo Zhang      | [th24060@bristol.ac.uk](mailto:th24060@bristol.ac.uk) |
 | Emir Gizer       | [nh24391@bristol.ac.uk](mailto:nh24391@bristol.ac.uk) |
 | Ewan Friend      | [pu24994@bristol.ac.uk](mailto:pu24994@bristol.ac.uk) |
