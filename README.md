@@ -8,15 +8,19 @@
 - [Team Members](#team-members)
 
 ## Project description
-This project aims to design and develop the most loved secondhand marketplace platform, with a strong emphasis on user engagement, trust, and efficiency. Your team will decide whether to build on the foundations laid by last year’s brilliant team or start from scratch with a future-proof, enterprise-grade tech stack. The primary aim is to create a super user-friendly marketplace UX that ensures fast, intuitive, and enjoyable interactions.
+This project aims to transform second-hand marketplaces by harnessing the power of AI to deliver an unparalleled user experience. As part of this initiative, you will develop a dedicated robust app for Android and iOS, enabling users to effortlessly add items they no longer use to the platform.
+
+## Project goals
+- Protect the environment since items can be reused and renewed.
+- Provide the seller a quick and convenient way to get rid of items they no longer want, for money.
+- Provide the buyer a straightforward way to find the articles they desire.
 
 ## Stakeholders
 ### End Users:
 - Buyers
 - Sellers
 - Browser
-- Customer support team
--
+
 ### Core project & Development:
 - Organisation managers
 - Organisation owners
@@ -31,10 +35,9 @@ This project aims to design and develop the most loved secondhand marketplace pl
 ## User Stories
 - As a *buyer* I want to be able to *buy an item* so i can *use it for personal use*
 - As a *buyer* I want to be able to *buy a second-hand item* so i can *save money over a new item*
-- As a *browser* I want to be able to *browse items* so i can *find out what i want*
 - As a *seller* I want to be able to *sell an item* so i can *make money*
 - As a *seller* I want to be able to *sell an item* so i can *get rid of something i dont want*
-- As a *customer service* I want help the customers to solve their problems while using our app in a easy way
+- As a *browser* I want to be able to *browse items* so i can *find out what i want*
 
 
 ## Project Management
