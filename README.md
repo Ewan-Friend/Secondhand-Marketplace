@@ -2,6 +2,7 @@
 
 ## Contents
 - [Project description](#project-description)
+- [Project goals](#project-goals)
 - [Stakeholders](#stakeholders)
 - [User Stories](#user-stories)
 - [Project Management](#project-management)
