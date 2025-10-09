@@ -1,43 +1,117 @@
----
-name: Task / Issue
-about: Create a new task, feature, or bug report
+name: "Task / Issue"
+description: "Create a new task, feature, or bug report"
 title: "[ISSUE]: "
-labels: ''
-assignees: ''
----
+labels: []
+assignees: []
 
-## 📋 Description
-- **Summary:**  
-  <!-- Short description of the issue -->
+body:
+  - type: markdown
+    attributes:
+      value: "## 📋 Description"
 
-- **Details:**  
-  <!-- Provide additional information if needed -->
+  - type: input
+    id: summary
+    attributes:
+      label: "Summary"
+      description: "Short description of the issue"
+      placeholder: "Briefly summarize the issue"
+    validations:
+      required: true
 
-## 🔗 Related Issue
-Closes #___  
-Relates to #___  
+  - type: textarea
+    id: details
+    attributes:
+      label: "Details"
+      description: "Provide additional information if needed"
+      placeholder: "Add more context, logs, or details here"
 
-## 🔄 Type of Change
-- [ ] Bug fix  
-- [ ] New feature  
-- [ ] Enhancement  
-- [ ] Documentation update  
-- [ ] Other (please specify): ________  
+  - type: markdown
+    attributes:
+      value: "## 🔗 Related Issue"
 
-## 🧪 How Has This Been Tested?
-- **Test Method:** (Manual / Automated / Unit / Integration)  
-- **Test Environment:** (Local / Staging / Production)  
+  - type: input
+    id: closes
+    attributes:
+      label: "Closes"
+      description: "Add issue numbers this issue will close (e.g., #123)"
+      placeholder: "#___"
 
-## ✅ Checklist
-- [ ] Linked relevant issues  
-- [ ] Added labels, milestones, assignees  
-- [ ] Performed self-review of code  
-- [ ] Code follows project style guidelines  
-- [ ] Added comments where necessary  
-- [ ] Added tests covering changes  
-- [ ] All new & existing tests passed  
-- [ ] Documentation updated if needed  
-- [ ] No new warnings or errors  
+  - type: input
+    id: relates_to
+    attributes:
+      label: "Relates to"
+      description: "Add related issue numbers (e.g., #456)"
+      placeholder: "#___"
 
-## 📎 Additional Notes
-- Screenshots, references, or extra context if applicable
+  - type: markdown
+    attributes:
+      value: "## 🔄 Type of Change"
+
+  - type: checkboxes
+    id: change_type
+    attributes:
+      label: "Select the type of change"
+      options:
+        - label: "Bug fix"
+        - label: "New feature"
+        - label: "Enhancement"
+        - label: "Documentation update"
+        - label: "Other (please specify below)"
+
+  - type: input
+    id: other_change
+    attributes:
+      label: "Other Type (if applicable)"
+      placeholder: "Specify other change type"
+
+  - type: markdown
+    attributes:
+      value: "## 🧪 How Has This Been Tested?"
+
+  - type: dropdown
+    id: test_method
+    attributes:
+      label: "Test Method"
+      options:
+        - Manual
+        - Automated
+        - Unit
+        - Integration
+        - Other
+      default: 0
+
+  - type: input
+    id: test_environment
+    attributes:
+      label: "Test Environment"
+      placeholder: "Local / Staging / Production"
+
+  - type: markdown
+    attributes:
+      value: "## ✅ Checklist"
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: "Before submitting, please make sure you have:"
+      options:
+        - label: "Linked relevant issues"
+        - label: "Added labels, milestones, assignees"
+        - label: "Performed self-review of code"
+        - label: "Code follows project style guidelines"
+        - label: "Added comments where necessary"
+        - label: "Added tests covering changes"
+        - label: "All new & existing tests passed"
+        - label: "Documentation updated if needed"
+        - label: "No new warnings or errors"
+
+  - type: markdown
+    attributes:
+      value: "## 📎 Additional Notes"
+
+  - type: textarea
+    id: additional_notes
+    attributes:
+      label: "Additional Notes"
+      description: "Screenshots, references, or extra context if applicable"
+      placeholder: "Add any supporting information here"
