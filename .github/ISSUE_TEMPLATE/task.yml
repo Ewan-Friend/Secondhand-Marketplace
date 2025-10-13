@@ -79,3 +79,39 @@ body:
         - Integration
         - Other
       default: 0
+
+  - type: input
+    id: test_environment
+    attributes:
+      label: "Test Environment"
+      placeholder: "Local / Staging / Production"
+
+  - type: markdown
+    attributes:
+      value: "## ✅ Checklist"
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: "Before submitting, please make sure you have:"
+      options:
+        - label: "Linked relevant issues"
+        - label: "Added labels, milestones, assignees"
+        - label: "Performed self-review of code"
+        - label: "Code follows project style guidelines"
+        - label: "Added comments where necessary"
+        - label: "Added tests covering changes"
+        - label: "All new & existing tests passed"
+        - label: "Documentation updated if needed"
+        - label: "No new warnings or errors"
+
+  - type: markdown
+    attributes:
+      value: "## 📎 Additional Notes"
+
+  - type: textarea
+    id: additional_notes
+    attributes:
+      label: "Additional Notes"
+      description: "Screenshots, references, or extra context if applicable"
+      placeholder: "Add any supporting information here"
