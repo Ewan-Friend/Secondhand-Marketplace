@@ -7,6 +7,7 @@
 - [User Stories](#user-stories)
 - [Project Management](#project-management)
 - [Team Members](#team-members)
+- [Naming Conventions](#naming-conventions)
 
 ## Project description
 This project aims to transform second-hand marketplaces by harnessing the power of AI to deliver an unparalleled user experience. As part of this initiative, you will develop a dedicated robust app for Android and iOS, enabling users to effortlessly add items they no longer use to the platform.
@@ -20,31 +21,35 @@ This project aims to transform second-hand marketplaces by harnessing the power 
 ### End Users:
 - Buyers
 - Sellers
-- Browser
+- Browsers
 
 ### Core project & Development:
 - Organisation managers
 - Organisation owners
 - Development team
 - UX development team
-- 
+
 ### Business & Strategy
 - Marketing team
 - Legal team
 
 
 ## User Stories
-- As a *buyer* I want to be able to *buy an item* so i can *use it for personal use*
+- As a *buyer* I want to be able to *buy an item* so i can *have it for personal use*
+  - **situation 1** -> **situation 2** -> **situation 3**
 - As a *buyer* I want to be able to *buy a second-hand item* so i can *save money over a new item*
+- As a *buyer* I want to be able to *see where a seller is* so i can *collect an item*
+- As a *buyer* I want to be able to *review a seller* so i can *inform other buyers about quality*
 - As a *seller* I want to be able to *sell an item* so i can *make money*
 - As a *seller* I want to be able to *sell an item* so i can *get rid of something i dont want*
+- As a *seller* I want to be able to *review a buyer* so i can *inform other sellers about credibility*
 - As a *browser* I want to be able to *browse items* so i can *find out what i want*
+- As a *customer support worker* I want to be able to *help customers* so i can *do my job*
 
 
 ## Project Management
 - [Kanban Board](https://github.com/orgs/spe-uob/projects/310/views/1)
 - [Gantt Chart](https://github.com/orgs/spe-uob/projects/310/views/2)
-
 
 ## Team Members
 | Members          | Email                                                 |
@@ -54,3 +59,39 @@ This project aims to transform second-hand marketplaces by harnessing the power 
 | Emir Gizer       | [nh24391@bristol.ac.uk](mailto:nh24391@bristol.ac.uk) |
 | Ewan Friend      | [pu24994@bristol.ac.uk](mailto:pu24994@bristol.ac.uk) |
 | Lingze Yuan      | [wp22171@bristol.ac.uk](mailto:wp22171@bristol.ac.uk) |
+
+
+## Naming conventions
+
+### Branch Naming
+When naming branches, use only **lower case**, **hyphens (-)**, and **slashes (/)**  
+`<type>/<issue-number#>-<short-description>`  
+
+**Examples**  
+`feature/10-initial-pages`  
+it is a new feature and closes [ISSUE]: create pages for website in Flutter #10
+  
+`fix/45-mapping-between-pages`  
+it is a fix to a bug and closes [ISSUE]: fix linking between pages
+
+---
+### Pull Request Naming
+when naming pull requests (PR), start with the **type of change** followed by short description  
+`[Type] decription`
+
+**Examples**  
+`[Feature] created 5 pages in flutter` 
+
+`[Fix] Crash when user is not authenticated`
+
+---
+### Commit Messages
+when commiting, make sure to address the **type** and **scope** (UI, API, README, authorisation, database)  
+`<type>(scope) description`
+
+**Examples**  
+`feature(profile): implement user avatar upload`
+
+`fix(authorisation): prevent crash on expired tokens` 
+
+
