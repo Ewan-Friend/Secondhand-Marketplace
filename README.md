@@ -35,16 +35,94 @@ This project aims to transform second-hand marketplaces by harnessing the power 
 
 
 ## User Stories
-- As a *buyer* I want to be able to *buy an item* so i can *have it for personal use*
-  - **situation 1** -> **situation 2** -> **situation 3**
-- As a *buyer* I want to be able to *buy a second-hand item* so i can *save money over a new item*
-- As a *buyer* I want to be able to *see where a seller is* so i can *collect an item*
-- As a *buyer* I want to be able to *review a seller* so i can *inform other buyers about quality*
-- As a *seller* I want to be able to *sell an item* so i can *make money*
-- As a *seller* I want to be able to *sell an item* so i can *get rid of something i dont want*
-- As a *seller* I want to be able to *review a buyer* so i can *inform other sellers about credibility*
-- As a *browser* I want to be able to *browse items* so i can *find out what i want*
-- As a *customer support worker* I want to be able to *help customers* so i can *do my job*
+
+### As a **Casual Buyer**
+**I want to** browse and search listings easily  
+**So that** I can quickly find second-hand items I like without wasting time.
+
+**Pain Points / Problems:**
+- Too many irrelevant results when searching  
+- Slow or cluttered interfaces in other apps  
+
+**Criteria:**
+- Can browse by category (e.g., electronics, fashion, books)  
+- Can filter by price range and condition (new/used)  
+- Can favorite or save items for later  
+
+---
+
+### As a **First-Time User**
+**I want to** explore the app and understand how it works easily  
+**So that** I can sell/buy without any confusion.
+
+**Pain Points / Problems:**
+- Doesn’t know where to start  
+- Too many options on the first screen make it hard to focus  
+
+**Criteria:**
+- Clear navigation and tooltips  
+- Friendly and immersive design  
+- Simple “Buy” vs “Sell” mode selection  
+
+---
+
+### As a **Buyer**
+**I want to** see seller reviews and ratings  
+**So that** I can make sure I’m buying from a trustworthy person.
+
+**Pain Points / Problems:**
+- Fear of scams or poor-quality products  
+- Hard to know if a seller is reliable  
+
+**Criteria:**
+- Seller rating and review system  
+- “Verified Seller” badge for trusted users  
+
+---
+
+### As a **Seller**
+**I want to** upload and manage my listings easily from my phone  
+**So that** I can sell my used items faster and track interest.
+
+**Pain Points / Problems:**
+- Uploading listings takes too long on other platforms  
+- Hard to manage listings on mobile  
+
+**Criteria:**
+- Can upload photos and details directly from mobile  
+- Can edit listings easily  
+- Can see the status of my listings at a glance  
+
+---
+
+### As a **Top-Rated Seller**
+**I want to** make my shop feel like a small premium boutique  
+**So that** customers trust my listings more.
+
+**Pain Points / Problems:**
+- Other apps make every seller look the same  
+- Hard to build a brand identity  
+
+**Criteria:**
+- Customizable profile banner and logo  
+- Verified badge + “Top Seller” tag  
+- Option to feature listings for extra visibility  
+
+---
+
+### As a **Conscious Consumer**
+**I want to** give my unused items a new life  
+**So that** I reduce waste and earn something in return.
+
+**Pain Points / Problems:**
+- Other marketplaces feel too commercial  
+- Lack of community or shared values  
+
+**Criteria:**
+- Profile badges for sustainable sellers  
+- Monthly “eco impact” summary  
+- “Bundle sell” option for related items  
+
 
 
 ## Project Management
