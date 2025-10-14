@@ -1,8 +1,11 @@
 # SecondhandMarketplace(2025)
+[![Flutter](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)](https://flutter.dev/)
+[![Flask](https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white)](https://palletsprojects.com/p/flask/)
 
 ## Contents
 - [Project description](#project-description)
 - [Project goals](#project-goals)
+- [Software architecture](#software-architecture)
 - [Stakeholders](#stakeholders)
 - [User Stories](#user-stories)
 - [Project Management](#project-management)
@@ -17,21 +20,32 @@ This project aims to transform second-hand marketplaces by harnessing the power 
 - Provide the seller a quick and convenient way to get rid of items they no longer want, for money.
 - Provide the buyer a straightforward way to find the articles they desire.
 
+## Software architecture
+
 ## Stakeholders
 ### End Users:
-- Buyers
-- Sellers
-- Browsers
+* #### Buyers
+   Buyers are end-users visiting the platform to search for and purchase items. They want products that match their interets with an emphasis on quality, speed of delivery and accurate listings, they will look for these metrics on a user rating system. It is imperitive for these users to have secure payment options and a functioning, easy to use interface.
+* #### Sellers
+   Sellers are users who list pre-owned goods for sale. They want to be able to easily create and manage listings, while also finding ideal buyers i.e through AI tools to help them along the way. They require payments to be managed efficiently and preferably be able to share location to interested buyers.
+* #### Browsers
+   Browsers are casual visitors exploring the marketplace without immediate intent to buy or sell, usually to explore items they might want. They contribute to traffic, may become buyers later, and help gauge user interest and trends.
 
 ### Core project & Development:
-- Organisation managers
-- Organisation owners
-- Development team
-- UX development team
+* #### Organisation managers
+   Managers oversee day-to-day operations, ensuring the platform runs smoothly and meets strategic goals. It is their role to ensure that operations are running smoothly, and to coordinate between developers and other departments to align with company objectives.
+* #### Organisation owners
+   Owners are stakeholders or investors who fund and guide the business. They define the company objectives with a focus on profibility and brand growth
+* #### Development team
+   The development team is responsible for building and maintaining the platform’s technical infrastructure. They handle coding, testing, and ensuring the system is secure, scalable, and user-friendly.
+* #### UX development team
+   The UX development moreso focuses on developing and accessible and efficient interface thats users can directly interact with. Usually implement designs with user experience in mind through testing and feedback
 
 ### Business & Strategy
-- Marketing team
-- Legal team
+* #### Marketing team
+   The marketing team promotes the platform to garner interest in the brand, the goal to increase the number of buyers and sellers. They manage campaigns, analyze market trends, and build brand awareness to drive user engagement and growth.
+* #### Legal team
+   The legal team ensures that all marketplace operations comply with laws and regulations. They handle issues like user agreements, intellectual property rights, data protection, and dispute resolution.
 
 
 ## User Stories
