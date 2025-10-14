@@ -12,8 +12,12 @@
 - [Team Members](#team-members)
 - [Naming Conventions](#naming-conventions)
 
-## Project description
-This project aims to transform second-hand marketplaces by harnessing the power of AI to deliver an unparalleled user experience. As part of this initiative, you will develop a dedicated robust app for Android and iOS, enabling users to effortlessly add items they no longer use to the platform.
+## Project description 
+* **Project name:** Secondhand Marketplace
+* **Description:** A Cross-platform secondhand marketplace application built with Flutter, harnessing Python Flask as the backend and using AWS for more backend services such as authentication, databases and cloud hosting.
+* **Tech stack:**
+  - Frontend: Flutter
+  - Backend: Flask, AWS
 
 ## Project goals
 - Protect the environment since items can be reused and renewed.
@@ -21,6 +25,10 @@ This project aims to transform second-hand marketplaces by harnessing the power 
 - Provide the buyer a straightforward way to find the articles they desire.
 
 ## Software architecture
+The following diagram illustrates the Secondhand Marketplace software architecture. It highlights the interaction between the flutter frontend, and the python-flask backend
+<p align="left">
+  <img width="918" alt="architecture image" src="./docs/architecture.jpeg" style="box-shadow: 5px 5px 10px rgba(0,0,0,0.5)";>
+</p>
 
 ## Stakeholders
 ### End Users:
