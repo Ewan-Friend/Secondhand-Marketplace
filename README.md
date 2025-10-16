@@ -29,7 +29,7 @@
 ## Software architecture
 The following diagram illustrates the Secondhand Marketplace software architecture. It highlights the interaction between the flutter frontend, and the python-flask backend
 <p align="left">
-  <img width="918" alt="architecture image" src="./docs/architecture.jpeg" style="box-shadow: 5px 5px 10px rgba(0,0,0,0.5)";>
+  <img width="918" alt="architecture image" src="./docs/architecture/architecture.jpeg" style="box-shadow: 5px 5px 10px rgba(0,0,0,0.5)";>
 </p>
 
 ## Stakeholders
