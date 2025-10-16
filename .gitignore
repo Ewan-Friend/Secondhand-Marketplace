@@ -1,0 +1,13 @@
+# -----------------------------------------------------------------------------
+# 💻 Local/Development Artifacts and Environments
+# -----------------------------------------------------------------------------
+
+# VS Code Configuration (user-specific launch/settings)
+# Generally, ignore the entire .vscode folder unless it contains shared config.
+.vscode/
+
+# Python Virtual Environments
+# Ignore the entire virtual environment directory.
+# This covers venv, venv/bin/*, venv/lib64, venv/pyvenv.cfg
+/venv
+*/venv/
