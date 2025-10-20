@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../services/api_service.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -10,6 +11,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   final TextEditingController _searchController = TextEditingController();
+  String _apiMessage = 'Checking API Connection...';
 
   // Placeholder categories
   final List<Map<String, dynamic>> _categories = [
@@ -83,6 +85,21 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  @override 
+  void initState(){
+    super.initState();
+    // Calls check on API
+    _checkApi();
+  }
+
+  void _checkApi() async {
+    final apiService = APIService();
+    final result = await apiService.checkConnection();
+    setState(() {
+      _apiMessage = result['message'] ?? 'Unknown';
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -127,6 +144,19 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             const SizedBox(height: 16),
+
+              // API connection check, displays message
+             Padding(
+               padding: const EdgeInsets.all(16.0),
+               child: Text(
+                  _apiMessage, // the message from APIService
+                  style: const TextStyle(
+                  color: Colors.red,
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
 
             // Categories Section
             Padding(
