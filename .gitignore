@@ -1,13 +1,51 @@
 # -----------------------------------------------------------------------------
-# 💻 Local/Development Artifacts and Environments
+# 🦋 Flutter & Dart
 # -----------------------------------------------------------------------------
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+coverage/
+pubspec.lock
 
-# VS Code Configuration (user-specific launch/settings)
-# Generally, ignore the entire .vscode folder unless it contains shared config.
-.vscode/
+# -----------------------------------------------------------------------------
+# 🧱 Platform-specific Build Artifacts
+# -----------------------------------------------------------------------------
+# Android
+android/app/debug/
+android/app/profile/
+android/app/release/
 
-# Python Virtual Environments
-# Ignore the entire virtual environment directory.
-# This covers venv, venv/bin/*, venv/lib64, venv/pyvenv.cfg
-/venv
-*/venv/
+# iOS
+ios/Pods/
+ios/Flutter/Flutter.framework/
+ios/Flutter/Flutter.podspec
+ios/.symlinks/
+ios/Flutter/ephemeral/
+ios/ServiceDefinitions.json
+ios/Runner/GeneratedPluginRegistrant.*
+
+# macOS
+macos/Flutter/ephemeral/
+.DS_Store
+
+# Web
+web/.dart_tool/
+web/build/
+
+# -----------------------------------------------------------------------------
+# 🧰 IDE and Editor Settings
+# -----------------------------------------------------------------------------
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# -----------------------------------------------------------------------------
+# ⚙️ Operating System Files
+# -----------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
