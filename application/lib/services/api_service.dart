@@ -3,12 +3,15 @@ import 'dart:convert';
 // import 'dart:nativewrappers/_internal/vm/lib/ffi_patch.dart';
 import 'package:http/http.dart' as http;
 
-const String _baseUrl = 'http://localhost:5000/api';
-
 class APIService {
+
+  static const String baseUrl = 'http://localhost:5000/api';
+  // Client for use in other methods/classes
+  static final http.Client httpClient = http.Client();
+
   Future<Map<String, dynamic>> checkConnection() async {
       // Construct URL
-      final url = Uri.parse('$_baseUrl/status');
+      final url = Uri.parse('$baseUrl/status');
 
       try {
         // request http using GET

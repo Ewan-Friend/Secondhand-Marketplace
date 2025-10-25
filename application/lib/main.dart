@@ -26,6 +26,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Secondhand Marketplace',
+      // ~~~~~~~~ Change initial route to desired starting page ~~~~~~~~~
       initialRoute: '/signup',
       routes: {
         '/': (context) => const HomePage(),
