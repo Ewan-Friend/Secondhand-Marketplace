@@ -13,25 +13,24 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Set up Flutter
-      uses: subosito/flutter-action@v2
-      with:
-        flutter-version: '3.24.0'
-        channel: 'stable'
-        cache: true
-    
-    - name: Get dependencies
-      working-directory: ./application
-      run: flutter pub get
-    
-    - name: Analyze project
-      working-directory: ./application
-      run: flutter analyze
-    
-    - name: Run tests
-      working-directory: ./application
-      run: flutter test
+      - uses: actions/checkout@v3
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.7'
+          channel: 'stable'
+          cache: true
+
+      - name: Get dependencies
+        working-directory: ./application
+        run: flutter pub get
+
+      - name: Analyze project
+        working-directory: ./application
+        run: flutter analyze
+
+      - name: Run tests
+        working-directory: ./application
+        run: flutter test
