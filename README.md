@@ -16,10 +16,10 @@
 
 ## Project description 
 * **Project name:** Secondhand Marketplace
-* **Description:** A Cross-platform secondhand marketplace application built with Flutter, harnessing Python Flask as the backend and using AWS for more backend services such as authentication, databases and cloud hosting.
+* **Description:** A Cross-platform secondhand marketplace application built with Flutter, harnessing Python Flask as the backend and using AWS for more backend services such as authentication, databases and cloud hosting.Use Supabase to manage accounts and authentication
 * **Tech stack:**
   - Frontend: Flutter
-  - Backend: Flask, AWS
+  - Backend: Flask, AWS，Supabase
 
 ## Project goals
 - Protect the environment since items can be reused and renewed.
