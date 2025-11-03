@@ -11,12 +11,18 @@ class AuthService {
         }
   
   //sign up with email and password
-Future<AuthResponse> signUpwithEmailpassword(
-        String email, String password) async {
-          return await supabase.auth.signUp(
-            email:email,
-            password:password);
-        }
+Future<AuthResponse> signUpWithEmailPassword({
+  required String email,
+  required String password,
+  String? emailRedirectTo,
+}) async {
+  return await supabase.auth.signUp(
+    email: email,
+    password: password,
+    emailRedirectTo: emailRedirectTo, // Web verification bounce-back
+  );
+}
+
 
   //sign out
   Future<void> signOut() async {
