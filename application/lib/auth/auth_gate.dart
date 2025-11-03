@@ -28,8 +28,10 @@ class AuthGate extends StatelessWidget {
       builder: (context, snapshot) {
         // loading..
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold();
-          body: Center(child: CircularProgressIndicator());
+          return Scaffold(
+  body: const Center(child: CircularProgressIndicator()),
+);
+
         }
 
       //check if there is a valid session currently
