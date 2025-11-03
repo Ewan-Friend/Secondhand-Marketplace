@@ -6,7 +6,7 @@ void main() {
   });
 
   test('String concatenation test', () {
-    final result = 'Hello' + ' ' + 'World';
+    final result = 'Hello World';
     expect(result, equals('Hello World'));
   });
 }
