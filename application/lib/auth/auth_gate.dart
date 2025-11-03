@@ -34,16 +34,11 @@ class AuthGate extends StatelessWidget {
 
         }
 
-      //check if there is a valid session currently
-      final session = snapshot.hasData ? snapshot.data!.session : null;
+    // check if there is a valid session currently
+return snapshot.data?.session != null
+    ? const ProfilePage()
+    : const LoginPage();
 
-if (session != null) {
- 
-  return const ProfilePage();
-} else {
-
-  return const LoginPage();
-}
 
     },
     ); // StreamBuilder
