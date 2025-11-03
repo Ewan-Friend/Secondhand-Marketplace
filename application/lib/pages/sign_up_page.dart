@@ -1,6 +1,5 @@
 import 'package:application/services/api_service.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -19,6 +18,7 @@ class _SignUpPageState extends State<SignUpPage> {
   String _apiMessage = "Checking API connection..."; // Shows API status
   String _registrationMessage = ""; //Shows registration status (fail/success)
 
+  @override
   void initState(){
     super.initState();
     // Calls check on API
