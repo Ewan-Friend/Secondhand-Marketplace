@@ -29,6 +29,9 @@ class MainApp extends StatelessWidget {
      //Use AuthGate as the sole entry point
       home: AuthGate(),
 
+      theme:  ThemeData(fontFamily: 'Poppins'),
+      // ~~~~~~~~ Change initial route to desired starting page ~~~~~~~~~
+      initialRoute: '/signup',
       routes: {
         '/home':   (_) => const HomePage(),
         '/item':   (_) => const ItemDetailPage(),
