@@ -14,6 +14,15 @@ void main() async {
     url: 'https://rakyxzkfdntbmhhjkltp.supabase.co',
     anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJha3l4emtmZG50Ym1oaGprbHRwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE5MTgwMTQsImV4cCI6MjA3NzQ5NDAxNH0.0YGZOLNn-nSba2B1fXJ4Hevq1zNPw7VIKyiGI2-CeWs',
   );
+
+
+
+void main() async{
+
+  // Create API service instance then check connection on startup
+  // Morseso to test connection and can likely be discarded at a later point
+  // WidgetsFlutterBinding.ensureInitialized();
+
   runApp(const MainApp());
 }
 

@@ -1,7 +1,7 @@
 import 'package:application/services/api_service.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -18,6 +18,7 @@ class _SignUpPageState extends State<SignUpPage> {
   String _apiMessage = "Checking API connection..."; // Shows API status
   String _registrationMessage = ""; //Shows registration status (fail/success)
 
+  @override
   void initState(){
     super.initState();
     // Calls check on API
@@ -62,7 +63,35 @@ class _SignUpPageState extends State<SignUpPage> {
       _registrationMessage = 'Registering User...';
     });
 
-    // TODO: try catch: success / error with sending HTTP post package
+    try {
+      // Send HTTP POST request to backend
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(body),
+      );
+
+      // Parse response
+      final responseData = jsonDecode(response.body);
+
+      if (response.statusCode == 201) {
+        // Registration successful
+        setState(() {
+          _registrationMessage = responseData['message'] ?? 'Registration successful!';
+        });
+        // TODO: Navigate to login page or home page after successful registration
+      } else {
+        // Registration failed with error message from backend
+        setState(() {
+          _registrationMessage = responseData['message'] ?? 'Registration failed';
+        });
+      }
+    } catch (e) {
+      // Handle network errors or other exceptions
+      setState(() {
+        _registrationMessage = 'Network Error: $e';
+      });
+    }
   }
 
   @override
@@ -141,7 +170,22 @@ class _SignUpPageState extends State<SignUpPage> {
             ),
             const SizedBox(height: 20),
 
-            // TODO: registration status message
+            // Registration status message
+            if (_registrationMessage.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Text(
+                  _registrationMessage,
+                  style: TextStyle(
+                    color: _registrationMessage.contains('success') || _registrationMessage.contains('successfully')
+                        ? Colors.green
+                        : Colors.red,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
           ],
         )
       )
