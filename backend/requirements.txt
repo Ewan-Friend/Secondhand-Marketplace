@@ -46,3 +46,5 @@ typing_extensions==4.15.0
 websockets==15.0.1
 Werkzeug==3.1.3
 yarl==1.22.0
+pytest>=7.4.0
+pytest-cov>=4.1.0
