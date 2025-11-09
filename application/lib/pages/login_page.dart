@@ -1,7 +1,7 @@
-
 import '../auth/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:supabase_flutter/supabase_flutter.dart'; 
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -11,24 +11,19 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
- 
   final authService = AuthService();
-
 
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
   bool _obscurePwd = true;
-  bool _rememberMe = true; 
+  bool _rememberMe = true;
 
-  
   final _emailNode = FocusNode();
   final _pwdNode = FocusNode();
 
- 
   static const _bgGradient = LinearGradient(
     colors: [Color(0xFF6D8BFE), Color(0xFF7ED6DF)],
     begin: Alignment.topLeft,
@@ -47,39 +42,47 @@ class _LoginPageState extends State<LoginPage> {
     end: Alignment.centerRight,
   );
 
-  
   Future<void> login() async {
     FocusScope.of(context).unfocus();
     if (!_formKey.currentState!.validate()) return;
 
-    final email = _emailController.text.trim();
+    final email = _emailController.text.trim().toLowerCase(); // Standardized mailbox
     final password = _passwordController.text;
 
     setState(() => _isLoading = true);
     try {
+      //  supabase.auth.signInWithPassword
       await authService.signInwithEmailpassword(email, password);
+
       if (!mounted) return;
       HapticFeedback.lightImpact();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Logged in successfully')),
       );
+
       
-      
+      // Navigator.of(context).pushReplacementNamed('/home');
+
+    } on AuthException catch (e) {
+      // Clearly show Supabase errors, such as Invalid login credentials
+      if (!mounted) return;
+      HapticFeedback.heavyImpact();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.message)),
+      );
     } catch (e) {
-      if (mounted) {
-        HapticFeedback.heavyImpact();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
-        );
-      }
+      if (!mounted) return;
+      HapticFeedback.heavyImpact();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Unexpected error, please try again.')),
+      );
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
   }
 
-  // forgot password handler
   Future<void> _onForgotPassword() async {
-    final email = _emailController.text.trim();
+    final email = _emailController.text.trim().toLowerCase();
     if (email.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Enter your email first')),
@@ -87,24 +90,26 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
     try {
-      //  AuthService 
       await authService.sendPasswordReset(email);
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Password reset email sent to: $email')),
       );
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to send reset email: $e')),
-        );
-      }
+    } on AuthException catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to send reset email: ${e.message}')),
+      );
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to send reset email.')),
+      );
     }
   }
 
   @override
   void dispose() {
-    
     _emailController.dispose();
     _passwordController.dispose();
     _emailNode.dispose();
@@ -141,18 +146,17 @@ class _LoginPageState extends State<LoginPage> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                         
                           ShaderMask(
                             blendMode: BlendMode.srcIn,
-                            shaderCallback: (bounds) => _btnGradient
-                                .createShader(Rect.fromLTWH(0, 0, bounds.width, bounds.height)),
+                            shaderCallback: (b) =>
+                                _btnGradient.createShader(Rect.fromLTWH(0, 0, b.width, b.height)),
                             child: const Icon(Icons.lock_outline, size: 54),
                           ),
                           const SizedBox(height: 12),
                           ShaderMask(
                             blendMode: BlendMode.srcIn,
-                            shaderCallback: (rect) => _btnGradient
-                                .createShader(Rect.fromLTWH(0, 0, rect.width, rect.height)),
+                            shaderCallback: (r) =>
+                                _btnGradient.createShader(Rect.fromLTWH(0, 0, r.width, r.height)),
                             child: Text(
                               'Welcome Back',
                               style: theme.textTheme.headlineSmall?.copyWith(
@@ -184,8 +188,11 @@ class _LoginPageState extends State<LoginPage> {
                             validator: (v) {
                               final value = v?.trim() ?? '';
                               if (value.isEmpty) return 'Please enter email';
-                              final emailReg = RegExp(r'^[\w\.\-]+@([\w\-]+\.)+[a-zA-Z]{2,}$');
-                              if (!emailReg.hasMatch(value)) return 'Invalid email format';
+                              final emailReg =
+                                  RegExp(r'^[\w\.\-]+@([\w\-]+\.)+[a-zA-Z]{2,}$');
+                              if (!emailReg.hasMatch(value)) {
+                                return 'Invalid email format';
+                              }
                               return null;
                             },
                             onFieldSubmitted: (_) => _pwdNode.requestFocus(),
@@ -205,15 +212,19 @@ class _LoginPageState extends State<LoginPage> {
                               icon: Icons.lock,
                               isDark: isDark,
                               suffix: IconButton(
-                                onPressed: () => setState(() => _obscurePwd = !_obscurePwd),
-                                icon: Icon(_obscurePwd ? Icons.visibility : Icons.visibility_off),
+                                onPressed: () =>
+                                    setState(() => _obscurePwd = !_obscurePwd),
+                                icon: Icon(
+                                    _obscurePwd ? Icons.visibility : Icons.visibility_off),
                                 tooltip: _obscurePwd ? 'Show password' : 'Hide password',
                               ),
                             ),
                             validator: (v) {
                               final value = v ?? '';
                               if (value.isEmpty) return 'Please enter password';
-                              if (value.length < 6) return 'Password must be at least 6 characters';
+                              if (value.length < 6) {
+                                return 'Password must be at least 6 characters';
+                              }
                               return null;
                             },
                           ),
@@ -225,8 +236,11 @@ class _LoginPageState extends State<LoginPage> {
                             children: [
                               Checkbox(
                                 value: _rememberMe,
-                                onChanged: (v) => setState(() => _rememberMe = v ?? true),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                                onChanged: (v) =>
+                                    setState(() => _rememberMe = v ?? true),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
                               ),
                               const Text('Remember me'),
                               const Spacer(),
@@ -249,7 +263,11 @@ class _LoginPageState extends State<LoginPage> {
                               gradient: _isLoading ? _btnGradientDisabled : _btnGradient,
                               child: const Text(
                                 'Login',
-                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white),
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                           ),
@@ -264,7 +282,8 @@ class _LoginPageState extends State<LoginPage> {
                                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                                 child: Text(
                                   'or',
-                                  style: theme.textTheme.bodySmall?.copyWith(color: Colors.black54),
+                                  style: theme.textTheme.bodySmall
+                                      ?.copyWith(color: Colors.black54),
                                 ),
                               ),
                               const Expanded(child: Divider()),
@@ -273,35 +292,29 @@ class _LoginPageState extends State<LoginPage> {
 
                           const SizedBox(height: 12),
 
-                          // 社交登录（渐变边框按钮）
+                          // 社交登录（占位）
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               _SocialIconButton(
                                 icon: Icons.g_mobiledata_rounded,
                                 tooltip: 'Continue with Google',
-                                onTap: () {
-                                  // Connect to Google Login
-                                },
+                                onTap: () {},
                               ),
                               const SizedBox(width: 12),
                               _SocialIconButton(
                                 icon: Icons.apple,
                                 tooltip: 'Continue with Apple',
-                                onTap: () {
-                                  // Connect to Apple Login
-                                },
+                                onTap: () {},
                               ),
                             ],
                           ),
 
                           const SizedBox(height: 18),
 
-                          //Go to Sign Up
+                          // Go register
                           GestureDetector(
-                            onTap: () {
-                             
-                            },
+                            onTap: () => Navigator.of(context).pushNamed('/signup'),
                             child: Text.rich(
                               TextSpan(
                                 text: "Don't have an account? ",
@@ -332,7 +345,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  //Uniform input box decoration
+  // Go to unify the input box decorations
   InputDecoration _inputDecoration({
     required String label,
     required IconData icon,
@@ -341,14 +354,17 @@ class _LoginPageState extends State<LoginPage> {
   }) {
     final baseBorder = OutlineInputBorder(
       borderRadius: BorderRadius.circular(14),
-      borderSide: BorderSide(color: isDark ? const Color(0xFF2B2F36) : const Color(0xFFE6E8EF)),
+      borderSide: BorderSide(
+        color: isDark ? const Color(0xFF2B2F36) : const Color(0xFFE6E8EF),
+      ),
     );
 
     return InputDecoration(
       labelText: label,
       prefixIcon: ShaderMask(
         blendMode: BlendMode.srcIn,
-        shaderCallback: (bounds) => _btnGradient.createShader(Rect.fromLTWH(0, 0, bounds.width, bounds.height)),
+        shaderCallback: (b) =>
+            _btnGradient.createShader(Rect.fromLTWH(0, 0, b.width, b.height)),
         child: Icon(icon),
       ),
       suffixIcon: suffix,
@@ -364,7 +380,6 @@ class _LoginPageState extends State<LoginPage> {
   }
 }
 
-/// General Gradient Button
 class _GradientButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final Widget child;
@@ -407,7 +422,10 @@ class _GradientButton extends StatelessWidget {
                       key: ValueKey('loading'),
                       width: 22,
                       height: 22,
-                      child: CircularProgressIndicator(strokeWidth: 2.6, valueColor: AlwaysStoppedAnimation(Colors.white)),
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2.6,
+                        valueColor: AlwaysStoppedAnimation(Colors.white),
+                      ),
                     )
                   : Padding(
                       key: const ValueKey('text'),
@@ -422,7 +440,6 @@ class _GradientButton extends StatelessWidget {
   }
 }
 
-/// Social media buttons
 class _SocialIconButton extends StatelessWidget {
   final IconData icon;
   final String tooltip;
@@ -447,7 +464,7 @@ class _SocialIconButton extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(14),
             gradient: const LinearGradient(
-              colors: [Color(0x33736EFE), Color(0x3362E0E6)], 
+              colors: [Color(0x33736EFE), Color(0x3362E0E6)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -455,11 +472,11 @@ class _SocialIconButton extends StatelessWidget {
           child: Center(
             child: ShaderMask(
               blendMode: BlendMode.srcIn,
-              shaderCallback: (bounds) => const LinearGradient(
+              shaderCallback: (b) => const LinearGradient(
                 colors: [Color(0xFF736EFE), Color(0xFF62E0E6)],
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
-              ).createShader(Rect.fromLTWH(0, 0, bounds.width, bounds.height)),
+              ).createShader(Rect.fromLTWH(0, 0, b.width, b.height)),
               child: Icon(icon, size: 28),
             ),
           ),
