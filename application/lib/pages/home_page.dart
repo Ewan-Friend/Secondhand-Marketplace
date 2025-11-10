@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
+// NEW IMPORTS FOR DYNAMIC DATA
+import '../models/item_model.dart';
+import '../widgets/item_widget.dart';
+import 'package:flutter/foundation.dart'; // For kDebugMode
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -11,9 +15,12 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   final TextEditingController _searchController = TextEditingController();
-  String _apiMessage = 'Checking API Connection...';
+  
+  // --- DYNAMIC STATE ---
+  late Future<List<Item>> _futureItems; 
+  final APIService _apiService = APIService(); 
 
-  // Placeholder categories
+  // Placeholder categories (Can be made dynamic later)
   final List<Map<String, dynamic>> _categories = [
     {'name': 'Electronics', 'icon': Icons.phone_android},
     {'name': 'Furniture', 'icon': Icons.chair},
@@ -23,45 +30,12 @@ class _HomePageState extends State<HomePage> {
     {'name': 'Toys', 'icon': Icons.toys},
   ];
 
-  // Placeholder product data
-  final List<Map<String, dynamic>> _products = [
-    {
-      'name': 'iPhone 13 Pro',
-      'price': '\$799',
-      'image': Icons.phone_iphone,
-      'condition': 'Like New'
-    },
-    {
-      'name': 'Leather Sofa',
-      'price': '\$450',
-      'image': Icons.weekend,
-      'condition': 'Good'
-    },
-    {
-      'name': 'Winter Jacket',
-      'price': '\$85',
-      'image': Icons.checkroom,
-      'condition': 'Excellent'
-    },
-    {
-      'name': 'MacBook Air',
-      'price': '\$650',
-      'image': Icons.laptop_mac,
-      'condition': 'Very Good'
-    },
-    {
-      'name': 'Gaming Chair',
-      'price': '\$200',
-      'image': Icons.chair,
-      'condition': 'Good'
-    },
-    {
-      'name': 'Bicycle',
-      'price': '\$320',
-      'image': Icons.pedal_bike,
-      'condition': 'Excellent'
-    },
-  ];
+  @override 
+  void initState(){
+    super.initState();
+    // Start fetching item data immediately
+    _futureItems = _apiService.getItems(); 
+  }
 
   void _onBottomNavTapped(int index) {
     setState(() {
@@ -83,21 +57,6 @@ class _HomePageState extends State<HomePage> {
         Navigator.pushNamed(context, '/profile');
         break;
     }
-  }
-
-  @override 
-  void initState(){
-    super.initState();
-    // Calls check on API
-    _checkApi();
-  }
-
-  void _checkApi() async {
-    final apiService = APIService();
-    final result = await apiService.checkConnection();
-    setState(() {
-      _apiMessage = result['message'] ?? 'Unknown';
-    });
   }
 
   @override
@@ -144,19 +103,6 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             const SizedBox(height: 16),
-
-              // API connection check, displays message
-             Padding(
-               padding: const EdgeInsets.all(16.0),
-               child: Text(
-                  _apiMessage, // the message from APIService
-                  style: const TextStyle(
-                  color: Colors.red,
-                  fontSize: 10,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
 
             // Categories Section
             Padding(
@@ -225,115 +171,65 @@ class _HomePageState extends State<HomePage> {
             ),
             const SizedBox(height: 24),
 
-            // Featured Items Section
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Featured Items',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {},
-                    child: const Text('View all'),
-                  ),
-                ],
+            // Featured Items Section Title
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Text(
+                'Featured Items',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             const SizedBox(height: 8),
-
-            // Product Grid
+            
+            // --- DYNAMIC PRODUCT GRID INTEGRATION ---
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
-                  childAspectRatio: 0.75,
-                ),
-                itemCount: _products.length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(context, '/item');
-                    },
-                    child: Card(
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+              child: FutureBuilder<List<Item>>(
+                future: _futureItems,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    // Show a spinner while the API call is running
+                    return const Center(child: CircularProgressIndicator()); 
+                  } else if (snapshot.hasError) {
+                    // Show a clear error if the API or parsing failed
+                    // This is where you will see the full exception details
+                    if (kDebugMode) {
+                      print('Error details: ${snapshot.error}');
+                    }
+                    return Center(
+                        child: Text(
+                            'Error loading listings. Server down or data issue.',
+                            style: TextStyle(color: Colors.red.shade700)));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    // Handle case where the API returned an empty list
+                    return const Center(child: Text('No items listed yet.'));
+                  } else {
+                    // Data successfully loaded
+                    final items = snapshot.data!;
+                    return GridView.builder(
+                      // Uses the custom ItemCard widget
+                      itemCount: items.length, 
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 12,
+                        mainAxisSpacing: 12,
+                        childAspectRatio: 0.75,
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Product Image Placeholder
-                          Expanded(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade200,
-                                borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(12),
-                                  topRight: Radius.circular(12),
-                                ),
-                              ),
-                              child: Center(
-                                child: Icon(
-                                  _products[index]['image'],
-                                  size: 60,
-                                  color: Colors.grey.shade400,
-                                ),
-                              ),
-                            ),
-                          ),
-                          // Product Details
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  _products[index]['name'],
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  _products[index]['condition'],
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    color: Colors.grey.shade600,
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  _products[index]['price'],
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                    color: Colors.blue,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
+                      itemBuilder: (context, index) {
+                        // Renders the dynamic ItemCard with the fetched data
+                        return ItemCard(item: items[index]); 
+                      },
+                    );
+                  }
                 },
               ),
             ),
+
             const SizedBox(height: 20),
           ],
         ),

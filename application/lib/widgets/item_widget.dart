@@ -7,21 +7,58 @@ class ItemCard extends StatelessWidget{
   final Item item;
 
   // Placeholder no image URL
-  static const String noImageUrl = 'https://i.imgur.com/placeholder-no-image.png';
+  static const String noImageUrl = 'hhttps://rakyxzkfdntbmhhjkltp.supabase.co/storage/v1/object/public/item_images/noimage.jpeg';
 
-  const ItemCard({super.key, required this.item}); 
+  const ItemCard({
+    super.key, 
+    required this.item
+    }); 
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Card(
-        child: Column(children: [
-          ListTile(
-            title: Text(
-              item.title,
+      elevation: 2,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // 1. Image Area
+          Expanded(
+            child: Ink.image(
+              // TODO: implement image into item_model, currently at placeholder
+              image: NetworkImage(noImageUrl),
+              fit: BoxFit.cover,
+              child: InkWell(
+                onTap: () {
+                  // Navigate to item detail page, passing item.id
+                },
+              ),
+            ),
+          ),
+          
+          // 2. Details Area (Title, Price)
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  item.title,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                  overflow: TextOverflow.ellipsis, // Prevents text overflow
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  '\$${item.price.toStringAsFixed(2)}',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
       ),
     );
-  }}
+  }
+  }
