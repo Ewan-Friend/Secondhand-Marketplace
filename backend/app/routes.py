@@ -1,14 +1,16 @@
 # Imports
 from flask import Blueprint, jsonify, request
+from supabase import create_client, Client
+import os
 
 # Create a blueprint called 'main'
 bp = Blueprint('api', __name__)
 
-# When you visit http://127.0.0.1:5000/hello, flask runs hello message
-# @bp.route("/hello")
-# def hello():
-#     return jsonify({"message": "flask says hello"})
+# Initialise supabase project reference variables
+SUPABASE_URL = os.environ.get("SUPABASE_URL", "https://rakyxzkfdntbmhhjkltp.supabase.co")
+SUPABASE_KEY = os.environ.get("SUPABASE_KEY", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJha3l4emtmZG50Ym1oaGprbHRwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE5MTgwMTQsImV4cCI6MjA3NzQ5NDAxNH0.0YGZOLNn-nSba2B1fXJ4Hevq1zNPw7VIKyiGI2-CeWs")
 
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 @bp.route("/status", methods=['GET'])
 def get_status():
@@ -18,6 +20,35 @@ def get_status():
         'status_code': 200
         })
 
+# Gets data attributed to 'items' from supabase
+@bp.route("/items", methods=['GET'])
+def get_items():
+    # Fetch all the items from the table
+    # TODO: retrieve and cleanup item images
+    response = supabase.table("items").select(
+        "id, seller_id, title, created_at, description, rating, price"
+    ).order("created_at", desc=True).limit(16).execute()
+
+    data = response.data or []
+
+    items_list = []
+    # Cleans up items into named formats
+    for item in data:
+        items_list.append({
+            'id': item.get('id'),
+            'seller_id': item.get('seller_id'),
+            'title': item.get('title'),
+            'created_at': item.get('created_at'),
+            'rating': item.get('rating'),
+            'price': float(item.get('price')) if item.get('price') else 0.0
+        })
+
+
+    # Return all items and corresponding data
+    return jsonify({
+        'table_data': items_list,
+        'status_code': 202
+    })
 
 @bp.route("/register", methods=['POST'])
 def register_user():
