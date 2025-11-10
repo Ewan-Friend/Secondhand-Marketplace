@@ -28,10 +28,10 @@ class MainApp extends StatelessWidget {
       title: 'Secondhand Marketplace',
       theme:  ThemeData(fontFamily: 'Poppins'),
       // ~~~~~~~~ Change initial route to desired starting page ~~~~~~~~~
-      initialRoute: '/signup',
+      initialRoute: '/',
       routes: {
         '/': (context) => const HomePage(),
-        '/item': (context) => const ItemDetailPage(),
+        '/item': (context) => const MarketplaceApp(),
         '/login': (context) => const LoginPage(),
         '/signup': (context) => const SignUpPage(),
         '/create': (context) => const CreateListingPage(),

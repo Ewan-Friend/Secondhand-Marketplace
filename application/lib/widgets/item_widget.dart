@@ -1,3 +1,4 @@
+import 'package:application/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/item_model.dart';
@@ -30,6 +31,11 @@ class ItemCard extends StatelessWidget{
               child: InkWell(
                 onTap: () {
                   // Navigate to item detail page, passing item.id
+                  Navigator.pushNamed(
+                    context,
+                    '/item',
+                    arguments: item.id
+                  );
                 },
               ),
             ),
