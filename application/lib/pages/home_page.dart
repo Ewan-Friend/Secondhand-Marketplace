@@ -11,17 +11,13 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
+  int _selectedCategoryIndex = 0;
   final TextEditingController _searchController = TextEditingController();
   String _apiMessage = 'Checking API Connection...';
 
   // Placeholder categories
-  final List<Map<String, dynamic>> _categories = [
-    {'name': 'Electronics', 'icon': Icons.phone_android},
-    {'name': 'Furniture', 'icon': Icons.chair},
-    {'name': 'Clothing', 'icon': Icons.checkroom},
-    {'name': 'Books', 'icon': Icons.book},
-    {'name': 'Sports', 'icon': Icons.sports_basketball},
-    {'name': 'Toys', 'icon': Icons.toys},
+  final List<String> _categories = [
+    'Explore', 'Clothing', 'Electronics', 'Home', 'Kids', 'Sports', 'Books & Media', 'Vehicles', 'Hobbies', 'Beauty'
   ];
 
   // Placeholder product data
@@ -105,6 +101,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
+        // top navigation bar
         preferredSize: Size.fromHeight(80),
         child: Header(), 
       ),
@@ -125,66 +122,35 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
 
-            // Categories Section
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Categories',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {},
-                    child: const Text('See all'),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 8),
-
             // Horizontal Category List
             SizedBox(
-              height: 100,
-              child: ListView.builder(
+              height: 40,
+              child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 itemCount: _categories.length,
+                separatorBuilder: (_, __) => const SizedBox(width: 12),
                 itemBuilder: (context, index) {
-                  return Container(
-                    width: 80,
-                    margin: const EdgeInsets.symmetric(horizontal: 4),
-                    child: Column(
-                      children: [
-                        Container(
-                          width: 60,
-                          height: 60,
-                          decoration: BoxDecoration(
-                            color: Colors.blue.shade50,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Icon(
-                            _categories[index]['icon'],
-                            color: Colors.blue,
-                            size: 30,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          _categories[index]['name'],
-                          style: const TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          textAlign: TextAlign.center,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
+                  final isSelected = index == _selectedCategoryIndex;
+
+                  return TextButton(
+                    onPressed: () {
+                      setState(() {
+                        _selectedCategoryIndex = index;
+                      });
+                    },
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.only(right: 16, left: 8),
+                      minimumSize: const Size(0, 0), // avoid oversized buttons
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                    child: Text(
+                      _categories[index],
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                        color: Colors.black,
+                      ),
                     ),
                   );
                 },
