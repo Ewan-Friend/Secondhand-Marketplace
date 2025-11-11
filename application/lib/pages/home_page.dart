@@ -140,7 +140,7 @@ class _HomePageState extends State<HomePage> {
                       });
                     },
                     style: TextButton.styleFrom(
-                      padding: EdgeInsets.only(right: 16, left: 8),
+                      padding: EdgeInsets.only(right: 16, left: 16),
                       minimumSize: const Size(0, 0), // avoid oversized buttons
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),

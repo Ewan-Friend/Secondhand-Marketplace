@@ -28,6 +28,13 @@ class MainApp extends StatelessWidget {
       title: 'Secondhand Marketplace',
       theme: ThemeData(
         useMaterial3: true,
+        textButtonTheme: TextButtonThemeData(
+          style: ButtonStyle(
+            overlayColor: WidgetStateProperty.all(
+              Colors.grey.shade100,
+            ),
+          ),
+        ),
         fontFamily: 'Poppins',
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xFFE36D6D),
