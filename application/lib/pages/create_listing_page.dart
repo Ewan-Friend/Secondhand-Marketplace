@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/header.dart';
 
 class CreateListingPage extends StatelessWidget {
   const CreateListingPage({super.key});
@@ -6,8 +7,17 @@ class CreateListingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Post a Listing')),
-      body: const Center(child: Text('Create Listing Page')),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(80),
+        child: Header(), 
+      ),
+      body: Column(
+        children: [
+          Center(
+            child: Text('Listing Page Content Here'),
+          ),
+        ],
+      ),
     );
   }
 }
