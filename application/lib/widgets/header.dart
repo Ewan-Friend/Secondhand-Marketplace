@@ -30,7 +30,7 @@ class Header extends StatelessWidget {
                 color: Colors.grey.shade200,
                 borderRadius: BorderRadius.circular(28),
               ),
-              padding: const EdgeInsets.only(left: 30, right: 8),
+              padding: const EdgeInsets.only(left: 30, right: 6),
               child: Row(
                 children: [
                   const Expanded(
@@ -46,9 +46,9 @@ class Header extends StatelessWidget {
                       color: cs.primary,
                       shape: BoxShape.circle,
                     ),
-                    width: 32,
-                    height: 32,
-                    child: const Icon(Icons.search, color: Colors.white, size: 18),
+                    width: 40,
+                    height: 40,
+                    child: const Icon(Icons.search, color: Colors.white, size: 24),
                   ),
                 ],
               ),
