@@ -32,12 +32,12 @@ class MainApp extends StatelessWidget {
 
       // Routing table
       routes: {
-        '/home':   (_) => const HomePage(),
-        '/item':   (_) => const ItemDetailPage(),
-        '/login':  (_) => const LoginPage(),
-        '/signup': (_) => const SignUpPage(),
-        '/create': (_) => const CreateListingPage(),
-        '/profile':(_) => const ProfilePage(),
+        '/home':   (_) => HomePage(),
+        '/item':   (_) => ItemDetailPage(),
+        '/login':  (_) => LoginPage(),
+        '/signup': (_) => SignUpPage(),
+        '/create': (_) => CreateListingPage(),
+        '/profile':(_) => ProfilePage(),
       },
 
       // Unknown route protection: redirect to login page
