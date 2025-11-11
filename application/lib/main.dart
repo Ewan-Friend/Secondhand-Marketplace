@@ -26,7 +26,15 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Secondhand Marketplace',
-      theme:  ThemeData(fontFamily: 'Poppins'),
+      theme: ThemeData(
+        useMaterial3: true,
+        fontFamily: 'Poppins',
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFFE36D6D),
+        ).copyWith(
+          primary: const Color(0xFFE36D6D), // force your exact color
+        ),
+      ),
       // ~~~~~~~~ Change initial route to desired starting page ~~~~~~~~~
       initialRoute: '/signup',
       routes: {
