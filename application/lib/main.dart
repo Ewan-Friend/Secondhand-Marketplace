@@ -43,7 +43,7 @@ class MainApp extends StatelessWidget {
         ),
       ),
       // ~~~~~~~~ Change initial route to desired starting page ~~~~~~~~~
-      initialRoute: '/signup',
+      initialRoute: '/',
       routes: {
         '/': (context) => const HomePage(),
         '/item': (context) => const ItemDetailPage(),

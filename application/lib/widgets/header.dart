@@ -3,7 +3,7 @@ import '../pages/profile_page.dart';
 import '../pages/create_listing_page.dart';
 
 class Header extends StatelessWidget {
-  const Header({super.key});
+  Header({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,20 +16,21 @@ class Header extends StatelessWidget {
           _LocationChip(
             icon: Icons.location_on,
             label: 'Bristol, UK',
-            bg: Colors.grey.shade100,
-            fg: cs.primary,
+            bg: cs.surface.withValues(alpha:0),
+            iconColor: cs.primary,
+            textColor: cs.onSurface,
           ),
           const SizedBox(width: 60),
 
           // Search bar
           Expanded(
             child: Container(
-              height: 44,
+              height: 80,
               decoration: BoxDecoration(
                 color: Colors.grey.shade200,
                 borderRadius: BorderRadius.circular(28),
               ),
-              padding: const EdgeInsets.only(left: 20, right: 8),
+              padding: const EdgeInsets.only(left: 30, right: 8),
               child: Row(
                 children: [
                   const Expanded(
@@ -61,14 +62,14 @@ class Header extends StatelessWidget {
               // Navigate to wishlist page
             },
             tooltip: 'Wishlist',
-            icon: const Icon(Icons.favorite_border),
+            icon: const Icon(Icons.favorite_border, size: 30),
           ),
           IconButton(
             onPressed: () {
               // Navigate to messages page
             },
             tooltip: 'Messages',
-            icon: const Icon(Icons.chat_bubble_outline),
+            icon: const Icon(Icons.chat_bubble_outline, size: 30),
           ),
           IconButton(
             onPressed: () {
@@ -78,11 +79,11 @@ class Header extends StatelessWidget {
               );
             },
             tooltip: 'Post Item',
-            icon: const Icon(Icons.add_circle_outline),
+            icon: const Icon(Icons.add_circle_outline, size: 30),
           ),
           IconButton(
             tooltip: 'Account',
-            icon: const Icon(Icons.person_outline),
+            icon: const Icon(Icons.person_outline, size: 30),
             onPressed: () {
               Navigator.push(
                 context,
@@ -101,13 +102,15 @@ class _LocationChip extends StatelessWidget {
   final IconData icon;
   final String label;
   final Color bg;
-  final Color fg;
+  final Color iconColor;
+  final Color textColor;
 
   const _LocationChip({
     required this.icon,
     required this.label,
     required this.bg,
-    required this.fg,
+    required this.iconColor,
+    required this.textColor,
   });
 
   @override
@@ -120,11 +123,11 @@ class _LocationChip extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(icon, color: fg, size: 18),
-          const SizedBox(width: 4),
+          Icon(icon, color: iconColor, size: 24),
+          const SizedBox(width: 5),
           Text(
             label,
-            style: TextStyle(color: fg, fontWeight: FontWeight.w500),
+            style: TextStyle(color: textColor, fontWeight: FontWeight.w500, fontSize: 16),
           ),
         ],
       ),
