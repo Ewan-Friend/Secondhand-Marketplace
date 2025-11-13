@@ -1,7 +1,7 @@
-name: "Task / Issue"
-description: "Create a new task, feature, or bug report"
-title: "[ISSUE]: "
-labels: []
+name: "Feature / Task Request"
+description: "Propose a new feature, enhancement, or general task for the project."
+title: "[TASK]: "
+labels: ["enhancement"]
 assignees: []
 
 body:
@@ -13,105 +13,83 @@ body:
     id: summary
     attributes:
       label: "Summary"
-      description: "Short description of the issue"
-      placeholder: "Briefly summarize the issue"
+      description: "Short, concise description of the feature or task"
+      placeholder: "Briefly summarize the feature/task"
     validations:
       required: true
 
   - type: textarea
     id: details
     attributes:
-      label: "Details"
-      description: "Provide additional information if needed"
-      placeholder: "Add more context, logs, or details here"
+      label: "Feature Details / User Story"
+      description: "Explain the need for this feature, including a user story (e.g., As a [user type], I want [goal], so that [reason])."
+      placeholder: "Add context, design notes, or user stories here"
+    validations:
+      required: true
 
   - type: markdown
     attributes:
-      value: "## 🔗 Related Issue"
+      value: "## 🔗 Related Issues / Tasks"
 
-  - type: input
+  - type: issues
     id: closes
     attributes:
       label: "Closes"
-      description: "Add issue numbers this issue will close (e.g., #123)"
-      placeholder: "#___"
-
-  - type: input
+      description: "Select issue numbers this feature/task will close upon completion (e.g., to resolve a previously logged request)."
+      placeholder: "Search for issues to close"
+      # The 'issues' type automatically enables autofill/search
+    
+  - type: issues
     id: relates_to
     attributes:
       label: "Relates to"
-      description: "Add related issue numbers (e.g., #456)"
-      placeholder: "#___"
+      description: "Select related issue numbers for context (e.g., related design or discussion tickets)."
+      placeholder: "Search for related issues"
 
   - type: markdown
     attributes:
-      value: "## 🔄 Type of Change"
+      value: "## 🔄 Type of Request"
 
   - type: checkboxes
     id: change_type
     attributes:
-      label: "Select the type of change"
+      label: "Select the type of request"
       options:
-        - label: "Bug fix"
         - label: "New feature"
+          required: true
         - label: "Enhancement"
         - label: "Documentation update"
         - label: "Other (please specify below)"
+      default: [0]
 
   - type: input
     id: other_change
     attributes:
       label: "Other Type (if applicable)"
-      placeholder: "Specify other change type"
+      placeholder: "Specify other type of task"
 
   - type: markdown
     attributes:
-      value: "## 🧪 How Has This Been Tested?"
-
-  - type: dropdown
-    id: test_method
-    attributes:
-      label: "Test Method"
-      options:
-        - Manual
-        - Automated
-        - Unit
-        - Integration
-        - Other
-      default: 0
-
-  - type: input
-    id: test_environment
-    attributes:
-      label: "Test Environment"
-      placeholder: "Local / Staging / Production"
-
-  - type: markdown
-    attributes:
-      value: "## ✅ Checklist"
+      value: "## ✅ Feature Development Checklist"
 
   - type: checkboxes
     id: checklist
     attributes:
-      label: "Before submitting, please make sure you have:"
+      label: "Before submitting, please make sure you have considered:"
       options:
-        - label: "Linked relevant issues"
-        - label: "Added labels, milestones, assignees"
-        - label: "Performed self-review of code"
-        - label: "Code follows project style guidelines"
-        - label: "Added comments where necessary"
-        - label: "Added tests covering changes"
-        - label: "All new & existing tests passed"
-        - label: "Documentation updated if needed"
-        - label: "No new warnings or errors"
+        - label: "Linked relevant issues and discussions"
+        - label: "Added labels and a potential assignee/milestone (if known)"
+        - label: "If a pull request is submitted, it will have tests covering the change"
+        - label: "If a pull request is submitted, documentation will be updated if needed"
+        - label: "Design implications have been considered or discussed"
 
   - type: markdown
     attributes:
-      value: "## 📎 Additional Notes"
+      value: "## 📎 Additional Notes / Mockups"
 
   - type: textarea
     id: additional_notes
     attributes:
       label: "Additional Notes"
-      description: "Screenshots, references, or extra context if applicable"
+      description: "Screenshots, design mockups, references, or extra context if applicable"
       placeholder: "Add any supporting information here"
