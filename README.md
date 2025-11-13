@@ -7,12 +7,12 @@
 ## Contents
 - [Project description](#project-description)
 - [Project goals](#project-goals)
+- [Project structure](#project-structure)
 - [Software architecture](#software-architecture)
 - [Stakeholders](#stakeholders)
 - [User Stories](#user-stories)
 - [Project Management](#project-management)
 - [Team Members](#team-members)
-- [Naming Conventions](#naming-conventions)
 
 ## Project description 
 * **Project name:** Secondhand Marketplace
@@ -25,6 +25,27 @@
 - Protect the environment since items can be reused and renewed.
 - Provide the seller a quick and convenient way to get rid of items they no longer want, for money.
 - Provide the buyer a straightforward way to find the articles they desire.
+
+## Project structure
+```
+2025-SecondhandMarketPlace                    
+├── application                     # Holds scripts relating to the Flutter Frontend                    
+│   ├── lib
+│   │   ├── models                  # Constains data structures that can be reused throughout the frontend
+│   │   ├── pages                   # Contains information held on application pages
+│   │   ├── services                # Contains files that provide services to other aspects of the frontend
+│   │   └── widgets                 # Contains reusable UI elements for the application
+|   ├── test                        # Contains tests for the frontend
+│   ├── ...
+├── backend                         # Holds scripts relating to the Python Flask Backend
+│   ├── app
+│   │   └── __init__.py             # Creates a blueprint and establishes connection with frontend
+│   │   └──  routes.py              # Establishes API endpoints that can connect with the frontend
+│   ├── run.py                      # Runs the backend of the application
+│   ├── test                        # Contains test files for the backend
+│   ├── requirements.txt            # Contains necessary dependencies for the backend
+├── docs                            # Contains project information
+```
 
 ## Software architecture
 The following diagram illustrates the Secondhand Marketplace software architecture. It highlights the interaction between the flutter frontend, and the python-flask backend
@@ -60,7 +81,7 @@ The following diagram illustrates the Secondhand Marketplace software architectu
 
 ## User Stories
 
-### As a **Casual Buyer**
+## As a **Casual Buyer**
 **I want to** browse and search listings easily  
 **So that** I can quickly find second-hand items I like without wasting time.
 
@@ -75,7 +96,7 @@ The following diagram illustrates the Secondhand Marketplace software architectu
 
 ---
 
-### As a **First-Time User**
+## As a **First-Time User**
 **I want to** explore the app and understand how it works easily  
 **So that** I can sell/buy without any confusion.
 
@@ -90,7 +111,7 @@ The following diagram illustrates the Secondhand Marketplace software architectu
 
 ---
 
-### As a **Buyer**
+## As a **Buyer**
 **I want to** see seller reviews and ratings  
 **So that** I can make sure I’m buying from a trustworthy person.
 
@@ -104,7 +125,7 @@ The following diagram illustrates the Secondhand Marketplace software architectu
 
 ---
 
-### As a **Seller**
+## As a **Seller**
 **I want to** upload and manage my listings easily from my phone  
 **So that** I can sell my used items faster and track interest.
 
@@ -119,7 +140,7 @@ The following diagram illustrates the Secondhand Marketplace software architectu
 
 ---
 
-### As a **Top-Rated Seller**
+## As a **Top-Rated Seller**
 **I want to** make my shop feel like a small premium boutique  
 **So that** customers trust my listings more.
 
@@ -134,7 +155,7 @@ The following diagram illustrates the Secondhand Marketplace software architectu
 
 ---
 
-### As a **Conscious Consumer**
+## As a **Conscious Consumer**
 **I want to** give my unused items a new life  
 **So that** I reduce waste and earn something in return.
 
