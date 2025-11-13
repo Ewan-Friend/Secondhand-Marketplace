@@ -2,6 +2,8 @@
 import 'dart:convert';
 // import 'dart:nativewrappers/_internal/vm/lib/ffi_patch.dart';
 import 'package:http/http.dart' as http;
+import '../models/item_model.dart';
+import 'package:flutter/foundation.dart';
 
 class APIService {
 
@@ -20,7 +22,7 @@ class APIService {
         // Checks statusCode of message response sent from routes.py
         if (response.statusCode == 200) {
           // Return decoded data (connection message in this case)
-          return jsonDecode(response.body);
+          return json.decode(response.body);
         } else {
           // If status code is not 200, return the actual status code
           return {'message': 'Connection Failed: ${response.statusCode}'};
@@ -28,7 +30,7 @@ class APIService {
       }
       catch (e) {
         // Handle in case of errors
-        return {'message': 'Network Error: $e'};
+        throw Exception('Network/Server error: Ensure Flask server is running. $e');
       }
   }
 }

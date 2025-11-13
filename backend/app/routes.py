@@ -66,7 +66,7 @@ def get_items():
     # Return all items and corresponding data
     return jsonify({
         'table_data': items_list,
-        'status_code': 202
+        'status_code': 200
     })
 
 @bp.route("/register", methods=['POST'])
