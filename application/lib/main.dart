@@ -4,6 +4,7 @@ import 'pages/home_page.dart';
 import 'pages/item_detail_page.dart';
 import 'pages/profile_page.dart';
 import 'pages/login_page.dart';
+import 'pages/post_items_page.dart';
 import 'pages/sign_up_page.dart';
 import 'pages/create_listing_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -38,6 +39,7 @@ class MainApp extends StatelessWidget {
         '/signup': (_) => const SignUpPage(),
         '/create': (_) => const CreateListingPage(),
         '/profile':(_) => const ProfilePage(),
+        '/post':   (_) => const PostItemsPage(),
       },
 
       // Unknown route protection: redirect to login page
