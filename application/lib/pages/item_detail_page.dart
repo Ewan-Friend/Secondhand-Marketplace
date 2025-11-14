@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MarketplaceApp());
+  runApp(const ItemDetailPage());
 }
 
-class MarketplaceApp extends StatelessWidget {
-  const MarketplaceApp({super.key});
+class ItemDetailPage extends StatelessWidget {
+  const ItemDetailPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // Extract the item ID passed as an argument
+
+    //TODO: in the return, implement an API service that can grab the itemId and get the corresponding item details
+    final itemId = ModalRoute.of(context)?.settings.arguments as String?;
+
     return MaterialApp( // sets up global theming and navigation
       title: 'Product Detail',
       debugShowCheckedModeBanner: false,

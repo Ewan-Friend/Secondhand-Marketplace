@@ -27,8 +27,8 @@ class MainApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Secondhand Marketplace',
 
-      // Single Entry Point (Login Authentication)
-      home: const AuthGate(),
+      // Single Entry Point
+      home: const HomePage(),
 
       // Routing table
       routes: {
