@@ -25,13 +25,13 @@ class ItemDetailPage extends StatelessWidget {
           titleLarge: TextStyle(fontWeight: FontWeight.w700),
         ),
       ),
-      home: const ProductDetailPage(),
+      home: const ItemDetailPage(),
     );
   }
 }
 
-class ProductDetailPage extends StatelessWidget { // overall layout
-  const ProductDetailPage({super.key});
+class ItemDetailPage extends StatelessWidget { // overall layout (renamed from ProductDetailPage)
+  const ItemDetailPage({super.key});
 
   @override
   Widget build(BuildContext context) {
