@@ -24,39 +24,45 @@ class _HomePageState extends State<HomePage> {
   final List<Map<String, dynamic>> _products = [
     {
       'name': 'iPhone 13 Pro',
-      'price': '\$799',
+      'price': 'CHF 799',
       'image': Icons.phone_iphone,
-      'condition': 'Like New'
+      'condition': 'Like New',
+      'location' : 'Bristol, UK'
     },
     {
       'name': 'Leather Sofa',
-      'price': '\$450',
+      'price': 'CHF 250',
       'image': Icons.weekend,
-      'condition': 'Good'
+      'condition': 'Good',
+      'location' : 'Bristol, UK'
     },
     {
       'name': 'Winter Jacket',
-      'price': '\$85',
+      'price': 'CHF 85',
       'image': Icons.checkroom,
-      'condition': 'Excellent'
+      'condition': 'Excellent',
+      'location' : 'Cheltenham, UK'
     },
     {
       'name': 'MacBook Air',
-      'price': '\$650',
+      'price': 'CHF 650',
       'image': Icons.laptop_mac,
-      'condition': 'Very Good'
+      'condition': 'Very Good',
+      'location' : 'Bath, UK'
     },
     {
       'name': 'Gaming Chair',
-      'price': '\$200',
+      'price': 'CHF 200',
       'image': Icons.chair,
-      'condition': 'Good'
+      'condition': 'Good',
+      'location' : 'Bristol, UK'
     },
     {
       'name': 'Bicycle',
-      'price': '\$320',
+      'price': 'CHF 320',
       'image': Icons.pedal_bike,
-      'condition': 'Excellent'
+      'condition': 'Excellent',
+      'location' : 'Bristol, UK'
     },
   ];
 
@@ -99,6 +105,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+
     return Scaffold(
       appBar: PreferredSize(
         // top navigation bar
@@ -168,7 +176,7 @@ class _HomePageState extends State<HomePage> {
                   crossAxisCount: 4,
                   crossAxisSpacing: 16,
                   mainAxisSpacing: 16,
-                  childAspectRatio: 1,
+                  childAspectRatio: 0.85,
                 ),
                 itemCount: _products.length,
                 itemBuilder: (context, index) {
@@ -178,26 +186,49 @@ class _HomePageState extends State<HomePage> {
                     },
                     child: Card(
                       elevation: 0,
+                      clipBehavior: Clip.antiAlias,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           // Product Image Placeholder
-                          Expanded(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade200,
-                              ),
-                              child: Center(
-                                child: Icon(
-                                  _products[index]['image'],
-                                  size: 60,
-                                  color: Colors.grey.shade400,
+                          SizedBox(
+                            height: 240,
+                            width: double.infinity,
+                            child: Stack(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey.shade300,
+                                  ),
+                                  child: Center(
+                                    child: Icon(
+                                      _products[index]['image'],
+                                      size: 60,
+                                      color: Colors.grey.shade400,
+                                    ),
+                                  ),
                                 ),
-                              ),
+                                Positioned(
+                                  top: 2,
+                                  right: 4,
+                                  child: IconButton(
+                                    icon: Icon(
+                                      Icons.favorite_border,
+                                      color: Colors.grey.shade700,
+                                      size: 30,
+                                    ),
+                                    onPressed: () {
+                                      // add item to favourites
+                                    },
+                                    ),
+                                )
+                              ]
                             ),
                           ),
                           // Product Details
                           Container(
+                            width: double.infinity,
+                            height: 160,
                             padding: const EdgeInsets.all(10.0),
                             decoration: BoxDecoration(
                               color: Colors.white,
@@ -205,32 +236,67 @@ class _HomePageState extends State<HomePage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  _products[index]['name'],
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 16,
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                const SizedBox(height: 5),
-                                Text(
-                                  _products[index]['condition'],
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    color: Colors.grey.shade600,
-                                  ),
-                                ),
                                 const SizedBox(height: 4),
-                                Text(
-                                  _products[index]['price'],
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                    color: Colors.blue,
-                                  ),
+                                // Product Name and Price
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        _products[index]['name'],
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 22,
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    Text(
+                                      _products[index]['price'],
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 20,
+                                        color: Color.fromARGB(255, 10, 10, 10),
+                                      ),
+                                    ),
+                                  ],
                                 ),
+                                const SizedBox(height: 8),
+                                
+                                // Location and condition
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        const Icon(Icons.location_on, size: 16, color: Color(0xFFE36D6D)),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          _products[index]['location'] ?? 'Unknown',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.grey.shade700,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Icon(Icons.sell, size: 16, color: Color(0xFFE36D6D)),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          _products[index]['condition'] ?? 'Unknown',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.grey.shade700,
+                                          ),
+                                        ),
+                                    ],)
+                                  ],
+                                ),
+                                // User widget
+                                
                               ],
                             ),
                           ),
