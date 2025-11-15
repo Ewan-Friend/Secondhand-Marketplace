@@ -1,0 +1,99 @@
+name: "Bug Report"
+description: "Report a reproducible bug or unexpected behavior"
+title: "[Fix]: "
+labels: []
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: "## 🐞 Bug Description"
+
+  - type: input
+    id: summary
+    attributes:
+      label: "Summary"
+      description: "A short, descriptive title for the bug"
+      placeholder: "Briefly summarize the unexpected behavior"
+    validations:
+      required: true
+
+  - type: textarea
+    id: details
+    attributes:
+      label: "Expected vs. Actual Behavior"
+      description: "What did you expect to happen, and what actually happened?"
+      placeholder: |
+        Expected: The button should change color when clicked.
+        Actual: The button remains the same color, and an error is logged to the console.
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: "## ⚙️ Steps to Reproduce"
+
+  - type: textarea
+    id: steps_to_reproduce
+    attributes:
+      label: "How to reproduce the issue"
+      description: "Provide clear, numbered steps to reproduce the bug."
+      placeholder: |
+        1. Go to '...'
+        2. Click on '....'
+        3. Scroll down to '....'
+        4. See error.
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: "## 💻 Environment"
+
+  - type: input
+    id: version
+    attributes:
+      label: "App/Library Version"
+      description: "What version of the software are you using? (e.g., v1.2.3, main branch commit hash)"
+      placeholder: "vX.Y.Z or commit hash"
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: "Operating System"
+      description: "e.g., Windows 10, macOS Monterey, Ubuntu 20.04"
+      placeholder: "Your OS"
+
+  - type: input
+    id: browser
+    attributes:
+      label: "Browser (if applicable)"
+      description: "e.g., Chrome 100, Firefox 99, Safari 15"
+      placeholder: "Your Browser and Version"
+
+  - type: markdown
+    attributes:
+      value: "## 📚 Additional Context"
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: "Error Logs or Stack Trace (if available)"
+      description: "Please include any relevant error messages, logs, or stack traces. Format code/logs using backticks (```)"
+      placeholder: "Paste logs here..."
+
+  - type: textarea
+    id: image_annotation
+    attributes:
+      label: "Screenshots or screen recordings"
+      description: "Screenshots or a screen recording can greatly help in understanding the issue. Drag and drop to upload."
+      placeholder: "Add any supporting visual references here"
+
+  - type: input
+    id: relates_to
+    attributes:
+      label: "Related Issues"
+      description: "Add issue numbers that seem related to this bug (e.g., #456)"
+      placeholder: "#___"

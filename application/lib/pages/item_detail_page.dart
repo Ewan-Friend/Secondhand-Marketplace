@@ -9,7 +9,12 @@ class ItemDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    // Extract the item ID passed as an argument
+
+    //TODO: in the return, implement an API service that can grab the itemId and get the corresponding item details
+    final itemId = ModalRoute.of(context)?.settings.arguments as String?;
+
+    return MaterialApp( // sets up global theming and navigation
       title: 'Product Detail',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -20,13 +25,13 @@ class ItemDetailPage extends StatelessWidget {
           titleLarge: TextStyle(fontWeight: FontWeight.w700),
         ),
       ),
-      home: const ProductDetailPage(),
+      home: const ItemDetailPage(),
     );
   }
 }
 
-class ProductDetailPage extends StatelessWidget {
-  const ProductDetailPage({super.key});
+class ItemDetailPage extends StatelessWidget { // overall layout (renamed from ProductDetailPage)
+  const ItemDetailPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -144,7 +149,7 @@ class ProductDetailPage extends StatelessWidget {
   }
 }
 
-class _Header extends StatelessWidget {
+class _Header extends StatelessWidget { // build the top bar: back button, location chip, search bar, and action icons.
   const _Header();
 
   @override
@@ -152,6 +157,17 @@ class _Header extends StatelessWidget {
     final cs = Theme.of(context).colorScheme;
     return Row(
       children: [
+        // Back button
+         IconButton(
+          icon: const Icon(Icons.arrow_back),
+          tooltip: 'Back',
+          onPressed: () {
+             Navigator.pop(context);
+          },
+         ),
+
+        const SizedBox(width: 8),
+        
         _LocationChip(
           icon: Icons.location_on,
           label: 'Bristol, UK',
@@ -235,7 +251,7 @@ class _ImageCollage extends StatelessWidget {
   }
 }
 
-class _ImagePlaceholder extends StatelessWidget {
+class _ImagePlaceholder extends StatelessWidget { // placeholder for real images
   const _ImagePlaceholder();
 
   @override

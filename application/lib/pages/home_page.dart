@@ -14,7 +14,10 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   int _selectedCategoryIndex = 0;
   final TextEditingController _searchController = TextEditingController();
-  String _apiMessage = 'Checking API Connection...';
+  
+  // --- DYNAMIC STATE ---
+  late Future<List<Item>> _futureItems; 
+  final APIService _apiService = APIService(); 
 
   // Placeholder categories
   final List<String> _categories = [
@@ -263,6 +266,7 @@ class _HomePageState extends State<HomePage> {
                   },
                 )
             ),
+
             const SizedBox(height: 20),
           ],
         ),

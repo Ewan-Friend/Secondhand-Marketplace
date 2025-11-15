@@ -8,6 +8,7 @@ app = create_app()
 
 if __name__ == "__main__":
     # Enable live reload for developmental purposes
+    # Using port 5001 because 5000 is often occupied by AirPlay on macOS
     app.run(debug=True, host='0.0.0.0', port=5000)
 
 '''
