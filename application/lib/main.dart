@@ -40,6 +40,7 @@ class MainApp extends StatelessWidget {
           seedColor: const Color(0xFFE36D6D),
         ).copyWith(
           primary: const Color(0xFFE36D6D), // force your exact color
+          surface: const Color.fromARGB(255, 255, 255, 255), // force your exact color
         ),
       ),
       // ~~~~~~~~ Change initial route to desired starting page ~~~~~~~~~

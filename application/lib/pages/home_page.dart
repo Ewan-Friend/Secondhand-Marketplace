@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
 import '../widgets/header.dart';
+import '../widgets/user_widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -66,28 +67,6 @@ class _HomePageState extends State<HomePage> {
     },
   ];
 
-  void _onBottomNavTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-
-    // Navigate to different pages based on index
-    switch (index) {
-      case 0:
-        // Already on home
-        break;
-      case 1:
-        Navigator.pushNamed(context, '/create');
-        break;
-      case 2:
-        // TODO: Navigate to favorites page
-        break;
-      case 3:
-        Navigator.pushNamed(context, '/profile');
-        break;
-    }
-  }
-
   @override 
   void initState(){
     super.initState();
@@ -108,12 +87,14 @@ class _HomePageState extends State<HomePage> {
     final cs = Theme.of(context).colorScheme;
 
     return Scaffold(
+      backgroundColor: cs.surface,
       appBar: PreferredSize(
         // top navigation bar
         preferredSize: Size.fromHeight(80),
         child: Header(), 
       ),
       body: SingleChildScrollView(
+        
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -186,6 +167,10 @@ class _HomePageState extends State<HomePage> {
                     },
                     child: Card(
                       elevation: 0,
+                      color: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.zero, // <-- makes corners sharp
+                      ),
                       clipBehavior: Clip.antiAlias,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -295,8 +280,16 @@ class _HomePageState extends State<HomePage> {
                                     ],)
                                   ],
                                 ),
-                                // User widget
                                 
+                                const SizedBox(height: 16),
+
+                                // User widget
+                                UserWidget(
+                                  userName: "Markus Aurelius",
+                                  rating: 4.84,
+                                  reviews: 23,
+                                  avatarUrl: null,
+                                )
                               ],
                             ),
                           ),
@@ -310,33 +303,6 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(height: 20),
           ],
         ),
-      ),
-
-      // Bottom Navigation Bar
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _onBottomNavTapped,
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.grey,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add_circle_outline),
-            label: 'Sell',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite_border),
-            label: 'Favorites',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            label: 'Profile',
-          ),
-        ],
       ),
     );
   }
