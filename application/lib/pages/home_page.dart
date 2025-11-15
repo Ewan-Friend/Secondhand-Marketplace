@@ -150,41 +150,37 @@ class _HomePageState extends State<HomePage> {
             // Product Grid
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                  childAspectRatio: 0.85,
-                ),
-                itemCount: _products.length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(context, '/item');
-                    },
-                    child: Card(
-                      elevation: 0,
-                      color: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.zero, // <-- makes corners sharp
-                      ),
-                      clipBehavior: Clip.antiAlias,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Product Image Placeholder
-                          SizedBox(
-                            height: 240,
-                            width: double.infinity,
-                            child: Stack(
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey.shade300,
-                                  ),
+              child: 
+                GridView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 500, // max width per card
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                    childAspectRatio: 0.76, // width / height ratio of each card
+                  ),
+                  itemCount: _products.length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {Navigator.pushNamed(context, '/item');},
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(
+                          minWidth: 400,
+                        ),
+                        child: Card(
+                          elevation: 0,
+                          color: Colors.white,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+                          clipBehavior: Clip.antiAlias,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Image
+                              AspectRatio(
+                                aspectRatio: 1.2, // slightly wider than tall
+                                child: Container(
+                                  color: Colors.grey.shade300,
                                   child: Center(
                                     child: Icon(
                                       _products[index]['image'],
@@ -193,112 +189,79 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                   ),
                                 ),
-                                Positioned(
-                                  top: 2,
-                                  right: 4,
-                                  child: IconButton(
-                                    icon: Icon(
-                                      Icons.favorite_border,
-                                      color: Colors.grey.shade700,
-                                      size: 30,
-                                    ),
-                                    onPressed: () {
-                                      // add item to favourites
-                                    },
-                                    ),
-                                )
-                              ]
-                            ),
-                          ),
-                          // Product Details
-                          Container(
-                            width: double.infinity,
-                            height: 160,
-                            padding: const EdgeInsets.all(10.0),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(height: 4),
-                                // Product Name and Price
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        _products[index]['name'],
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 22,
-                                        ),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                    Text(
-                                      _products[index]['price'],
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 20,
-                                        color: Color.fromARGB(255, 10, 10, 10),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 8),
-                                
-                                // Location and condition
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              ),
+                              // Description — fits inside fixed card height
+                              Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        const Icon(Icons.location_on, size: 16, color: Color(0xFFE36D6D)),
-                                        const SizedBox(width: 4),
-                                        Text(
-                                          _products[index]['location'] ?? 'Unknown',
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.grey.shade700,
+                                        Expanded(
+                                          child: Text(
+                                            _products[index]['name'],
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.w500, fontSize: 22),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
                                           ),
+                                        ),
+                                        Text(
+                                          _products[index]['price'],
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.w400, fontSize: 20),
                                         ),
                                       ],
                                     ),
+                                    const SizedBox(height: 8),
                                     Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        const Icon(Icons.sell, size: 16, color: Color(0xFFE36D6D)),
-                                        const SizedBox(width: 4),
-                                        Text(
-                                          _products[index]['condition'] ?? 'Unknown',
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.grey.shade700,
-                                          ),
+                                        Row(
+                                          children: [
+                                            const Icon(Icons.location_on,
+                                                size: 16, color: Color(0xFFE36D6D)),
+                                            const SizedBox(width: 4),
+                                            Text(
+                                              _products[index]['location'] ?? 'Unknown',
+                                              style: TextStyle(
+                                                  fontSize: 14, color: Colors.grey.shade700),
+                                            ),
+                                          ],
                                         ),
-                                    ],)
+                                        Row(
+                                          children: [
+                                            const Icon(Icons.sell,
+                                                size: 16, color: Color(0xFFE36D6D)),
+                                            const SizedBox(width: 4),
+                                            Text(
+                                              _products[index]['condition'] ?? 'Unknown',
+                                              style: TextStyle(
+                                                  fontSize: 14, color: Colors.grey.shade700),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 16),
+                                    UserWidget(
+                                      userName: "Markus Aurelius",
+                                      rating: 4.84,
+                                      reviews: 23,
+                                      avatarUrl: null,
+                                    ),
                                   ],
                                 ),
-                                
-                                const SizedBox(height: 16),
-
-                                // User widget
-                                UserWidget(
-                                  userName: "Markus Aurelius",
-                                  rating: 4.84,
-                                  reviews: 23,
-                                  avatarUrl: null,
-                                )
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
-                    ),
-                  );
-                },
-              ),
+                    );
+                  },
+                )
             ),
             const SizedBox(height: 20),
           ],
