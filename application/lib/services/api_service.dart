@@ -33,4 +33,40 @@ class APIService {
         throw Exception('Network/Server error: Ensure Flask server is running. $e');
       }
   }
+
+  Future<List<Item>> getItems() async {
+    //Construct URL
+    final url = Uri.parse('$baseUrl/items');
+
+    try {
+      final response = await http.get(url);
+        // Checks statusCode of items response sent from routes.py
+        if (response.statusCode == 200) {
+
+          if (kDebugMode) {
+          debugPrint('--- RAW JSON RESPONSE FROM FLASK ---');
+          // Use debugPrint to avoid truncation in the console
+          debugPrint(response.body); 
+          debugPrint('-----------------------------------');
+        }
+
+          // Return decoded data (A list of the class 'Item')
+          final Map<String, dynamic> responseData = json.decode(response.body);
+          final List<dynamic> data = responseData['table_data'];
+
+          if (kDebugMode) {
+            debugPrint(response.body); 
+          }
+
+          return data.map((json) => Item.fromJson(json)).toList();
+        } else {
+          // If status code is not 200, return the actual status code
+          throw Exception('Failed to load items: Server returned status ${response.statusCode}');
+        }
+    }
+    catch (e){
+        // Handle in case of errors
+        throw Exception('Network/Server error: Ensure Flask server is running. $e');
+    }
+  }
 }
