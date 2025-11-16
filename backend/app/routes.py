@@ -24,23 +24,23 @@ def get_status():
 @bp.route("/items", methods=['GET'])
 def get_items():
     # Get query parameters for filtering
-    status = request.args.get('status')  # 'active' or None
-    sold = request.args.get('sold')  # 'true' or None
+    # status = request.args.get('status')  # 'active' or None
+    # sold = request.args.get('sold')  # 'true' or None
     user_id = request.args.get('user_id')  # filter by user
     
     # Start building query
     query = supabase.table("items").select(
-        "id, seller_id, title, created_at, description, rating, price, status, sold"
+        "id, seller_id, title, created_at, description, rating, price"
     )
     
     # Apply filters based on query parameters
-    if status == 'active':
-        query = query.eq('status', 'active')
+    # if status == 'active':
+    #     query = query.eq('status', 'active')
     
-    if sold == 'true':
-        query = query.eq('sold', True)
-    elif sold == 'false':
-        query = query.eq('sold', False)
+    # if sold == 'true':
+    #     query = query.eq('sold', True)
+    # elif sold == 'false':
+    #     query = query.eq('sold', False)
     
     if user_id:
         query = query.eq('seller_id', user_id)
@@ -59,8 +59,8 @@ def get_items():
             'created_at': item.get('created_at'),
             'rating': item.get('rating'),
             'price': float(item.get('price')) if item.get('price') else 0.0,
-            'status': item.get('status', 'active'),
-            'sold': item.get('sold', False)
+            # 'status': item.get('status', 'active'),
+            # 'sold': item.get('sold', False)
         })
 
     # Return all items and corresponding data

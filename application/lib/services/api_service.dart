@@ -43,13 +43,6 @@ class APIService {
         // Checks statusCode of items response sent from routes.py
         if (response.statusCode == 200) {
 
-          if (kDebugMode) {
-          debugPrint('--- RAW JSON RESPONSE FROM FLASK ---');
-          // Use debugPrint to avoid truncation in the console
-          debugPrint(response.body); 
-          debugPrint('-----------------------------------');
-        }
-
           // Return decoded data (A list of the class 'Item')
           final Map<String, dynamic> responseData = json.decode(response.body);
           final List<dynamic> data = responseData['table_data'];
