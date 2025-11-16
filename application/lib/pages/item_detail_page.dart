@@ -30,8 +30,8 @@ class ItemDetailPage extends StatelessWidget {
   }
 }
 
-class ItemDetailPage extends StatelessWidget { // overall layout (renamed from ProductDetailPage)
-  const ItemDetailPage({super.key});
+class ProductDetailPage extends StatelessWidget { // overall layout (renamed from ProductDetailPage)
+  const ProductDetailPage({super.key});
 
   @override
   Widget build(BuildContext context) {
