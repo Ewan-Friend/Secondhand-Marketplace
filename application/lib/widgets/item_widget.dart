@@ -8,7 +8,7 @@ class ItemCard extends StatelessWidget{
   final Item item;
 
   // Placeholder no image URL
-  static const String noImageUrl = 'hhttps://rakyxzkfdntbmhhjkltp.supabase.co/storage/v1/object/public/item_images/noimage.jpeg';
+  static const String noImageUrl = 'https://rakyxzkfdntbmhhjkltp.supabase.co/storage/v1/object/public/item_images/noimage.jpeg';
 
   const ItemCard({
     super.key, 
