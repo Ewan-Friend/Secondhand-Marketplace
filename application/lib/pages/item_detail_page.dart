@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const ItemDetailPage());
-}
 
 class ItemDetailPage extends StatelessWidget {
   const ItemDetailPage({super.key});
@@ -12,21 +9,9 @@ class ItemDetailPage extends StatelessWidget {
     // Extract the item ID passed as an argument
 
     //TODO: in the return, implement an API service that can grab the itemId and get the corresponding item details
-    final itemId = ModalRoute.of(context)?.settings.arguments as String?;
+    // final itemId = ModalRoute.of(context)?.settings.arguments as String?;
 
-    return MaterialApp( // sets up global theming and navigation
-      title: 'Product Detail',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFE76F72)),
-        scaffoldBackgroundColor: Colors.white,
-        textTheme: const TextTheme(
-          titleLarge: TextStyle(fontWeight: FontWeight.w700),
-        ),
-      ),
-      home: const ItemDetailPage(),
-    );
+    return const ProductDetailPage();
   }
 }
 
