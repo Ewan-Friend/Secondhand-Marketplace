@@ -5,7 +5,7 @@ import '../widgets/user_widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
-
+  
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -18,6 +18,7 @@ class _HomePageState extends State<HomePage> {
   // --- DYNAMIC STATE ---
   late Future<List<Item>> _futureItems; 
   final APIService _apiService = APIService(); 
+  String _apiMessage = 'Checking API connection...';
 
   // Placeholder categories
   final List<String> _categories = [
@@ -77,12 +78,20 @@ class _HomePageState extends State<HomePage> {
     _checkApi();
   }
 
+  
   void _checkApi() async {
     final apiService = APIService();
-    final result = await apiService.checkConnection();
-    setState(() {
-      _apiMessage = result['message'] ?? 'Unknown';
-    });
+
+    try {
+      final result = await apiService.checkConnection();
+      setState(() {
+        _apiMessage = result['message'] ?? 'Unknown response';
+      });
+    } catch (e) {
+      setState(() {
+        _apiMessage = 'Error: $e';
+      });
+    }
   }
 
   @override
