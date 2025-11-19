@@ -11,13 +11,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 0;
   int _selectedCategoryIndex = 0;
   final TextEditingController _searchController = TextEditingController();
   
   // --- DYNAMIC STATE ---
-  late Future<List<Item>> _futureItems; 
-  final APIService _apiService = APIService(); 
+  //final APIService _apiService = APIService(); 
   String _apiMessage = 'Checking API connection...';
 
   // Placeholder categories
@@ -130,7 +128,7 @@ class _HomePageState extends State<HomePage> {
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 itemCount: _categories.length,
-                separatorBuilder: (_, __) => const SizedBox(width: 12),
+                separatorBuilder: (_,_) => const SizedBox(width: 12),
                 itemBuilder: (context, index) {
                   final isSelected = index == _selectedCategoryIndex;
 
