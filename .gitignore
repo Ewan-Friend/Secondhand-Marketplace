@@ -51,3 +51,4 @@ web/build/
 Thumbs.db
 __pycache__/
 venv/
+.env
