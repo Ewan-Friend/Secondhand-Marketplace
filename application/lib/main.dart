@@ -20,6 +20,25 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Secondhand Marketplace',
+
+      // Single Entry Point
+      home: const HomePage(),
+
+      // Routing table
+      routes: {
+        '/home':   (_) => HomePage(),
+        '/item':   (_) => ItemDetailPage(),
+        '/login':  (_) => LoginPage(),
+        '/signup': (_) => SignUpPage(),
+        '/create': (_) => CreateListingPage(),
+        '/profile':(_) => ProfilePage(),
+      },
+
+      // Unknown route protection: redirect to login page
+      onUnknownRoute: (_) =>
+          MaterialPageRoute(builder: (_) => const LoginPage()),
+
+      //Unified theme
       theme: ThemeData(
         useMaterial3: true,
         textButtonTheme: TextButtonThemeData(
@@ -37,21 +56,6 @@ class MainApp extends StatelessWidget {
           surface: const Color.fromARGB(255, 255, 255, 255), // force your exact color
         ),
       ),
-      // ~~~~~~~~ Change initial route to desired starting page ~~~~~~~~~
-      initialRoute: '/',
-      routes: {
-        '/home':   (_) => HomePage(),
-        '/item':   (_) => ItemDetailPage(),
-        '/login':  (_) => LoginPage(),
-        '/signup': (_) => SignUpPage(),
-        '/create': (_) => CreateListingPage(),
-        '/profile':(_) => ProfilePage(),
-      },
-
-      // Unknown route protection: redirect to login page
-      onUnknownRoute: (_) =>
-          MaterialPageRoute(builder: (_) => const LoginPage()),
-
     );
   }
 }

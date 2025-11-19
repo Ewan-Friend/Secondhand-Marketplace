@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../services/api_service.dart';
 import '../widgets/header.dart';
 import '../widgets/user_widget.dart';
+import '../widgets/item_widget.dart';
+import '../models/item_model.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -15,7 +17,8 @@ class _HomePageState extends State<HomePage> {
   final TextEditingController _searchController = TextEditingController();
   
   // --- DYNAMIC STATE ---
-  //final APIService _apiService = APIService(); 
+  final APIService _apiService = APIService(); 
+  late Future<List<Item>> _futureItems;
   String _apiMessage = 'Checking API connection...';
 
   // Placeholder categories
@@ -74,6 +77,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     // Calls check on API
     _checkApi();
+    _futureItems = _apiService.getItems();
   }
 
   
