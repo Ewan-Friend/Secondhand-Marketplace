@@ -211,10 +211,7 @@ class _Header extends StatelessWidget { // build the top bar: back button, locat
         IconButton(onPressed: () {}, tooltip: 'Wishlist', icon: const Icon(Icons.favorite_border)),
         IconButton(onPressed: () {}, tooltip: 'Messages', icon: const Icon(Icons.chat_bubble_outline)),
         IconButton(onPressed: () {}, tooltip: 'Notifications', icon: const Icon(Icons.add_circle_outline)),
-        IconButton(onPressed: () {
-          print('Account icon tapped');
-          Navigator.pushNamed(context, '/profile');
-        }, tooltip: 'Account', icon: const Icon(Icons.person_outline)),
+        IconButton(onPressed: () {}, tooltip: 'Account', icon: const Icon(Icons.person_outline)),
       ],
     );
   }
