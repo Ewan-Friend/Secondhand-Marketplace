@@ -22,7 +22,7 @@ class MainApp extends StatelessWidget {
       title: 'Secondhand Marketplace',
 
       // Single Entry Point
-      home: const SignUpPage(),
+      home: const HomePage(),
 
       // Routing table
       routes: {

@@ -107,16 +107,17 @@ def register_user():
     # Hashing passwords directly are not necessary
     # Establish new user in 'Users' table
     try:
-        # Call built in Supabase sign_up
+         # Call built in Supabase sign_up
         response = supabase.auth.sign_up(
-            email = email,
-            password = password,
-            # Add metadata about the user
-            options={
-                "data":{
-                    "username": username
-                }
-            }
+            {
+                "email": email,
+                "password": password
+            },
+            # options={
+            #     "data":{
+            #         "username": username
+            #     }
+            # }
         )
 
         # Handles a successful response from supabase
