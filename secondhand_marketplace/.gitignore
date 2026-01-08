@@ -24,8 +24,6 @@ migrate_working_dir/
 #.vscode/
 
 # Flutter/Dart/Pub related
-**/flutter/
-**/Flutter/GeneratedPluginRegistrant.*
 **/doc/api/
 **/ios/Flutter/.last_build_id
 .dart_tool/
@@ -45,17 +43,3 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
-
-# Python virtual environments
-venv/
-application/ven/
-.env
-
-# Flutter/Dart build files
-build/
-.dart_tool/
-.flutter-plugins
-.flutter-plugins-dependencies
-
-# Docker
-.dockerignore
