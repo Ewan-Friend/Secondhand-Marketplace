@@ -48,6 +48,7 @@
 │   ├── test                        # Contains test files for the backend
 │   ├── requirements.txt            # Contains necessary dependencies for the backend
 ├── docs                            # Contains project information
+├── .env.template                   ~ Template for .env file holding API keys
 ```
 
 ## Project setup
