@@ -30,7 +30,7 @@ def get_items():
     
     # Start building query
     query = supabase.table("items").select(
-        "id, seller_id, title, created_at, description, rating, price"
+        "id, seller_id, title, created_at, description, rating, price, item_images(image_url)"
     )
     
     # Apply filters based on query parameters
@@ -49,16 +49,22 @@ def get_items():
     response = query.order("created_at", desc=True).limit(16).execute()
     data = response.data or []
 
-    items_list = []
     # Cleans up items into named formats
     for item in data:
+        
+        # Create a list of image URLS
+        images = [img.get('image_url') for img in item.get('item_images', [])]
+        items_list = []
+        
         items_list.append({
             'id': item.get('id'),
             'seller_id': item.get('seller_id'),
             'title': item.get('title'),
             'created_at': item.get('created_at'),
-            'rating': item.get('rating'),
+            'description': item.get('description'),
+            'rating': float(item.get('rating')) if item.get('rating') else 0.0,
             'price': float(item.get('price')) if item.get('price') else 0.0,
+            'image_urls': images
             # 'status': item.get('status', 'active'),
             # 'sold': item.get('sold', False)
         })
