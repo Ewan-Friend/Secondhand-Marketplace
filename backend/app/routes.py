@@ -49,12 +49,13 @@ def get_items():
     response = query.order("created_at", desc=True).limit(16).execute()
     data = response.data or []
 
+
+    items_list = []
     # Cleans up items into named formats
     for item in data:
         
         # Create a list of image URLS
         images = [img.get('image_url') for img in item.get('item_images', [])]
-        items_list = []
         
         items_list.append({
             'id': item.get('id'),
