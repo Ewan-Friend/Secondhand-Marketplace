@@ -34,4 +34,6 @@ jobs:
       working-directory: ./backend
       env:
         FLASK_ENV: testing
+        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+        SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
       run: pytest
