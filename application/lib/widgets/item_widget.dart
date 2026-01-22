@@ -16,6 +16,24 @@ class ItemCard extends StatelessWidget{
       required this.item
     }); 
 
+  // Simply returns the no image symbol
+  Widget _placeholderImage() {
+    return Image.network(noImageUrl);
+  }
+
+  // Simply builds the image from the corresponding Supabase link
+  Widget buildImage(){
+    if (item.imageUrls.isNotEmpty){
+      return Image.network(item.imageUrls[0],
+      fit: BoxFit.cover,
+      errorBuilder: (context, error, stackTrace) => _placeholderImage(),
+      );
+    }
+    else{
+      return _placeholderImage();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -37,17 +55,7 @@ class ItemCard extends StatelessWidget{
               // ~~~~~ IMAGE~~~~~
               AspectRatio(
                 aspectRatio: 1.2, 
-                child: Container(
-                  color: Colors.grey.shade300,
-                  child: Center(
-                    child: Icon(
-                      // Placeholder image, holding default for icons so far
-                      Icons.image,
-                      size: 60,
-                      color: Colors.grey.shade400,
-                    ),
-                  ),
-                ),
+                child: buildImage(),
               ),
               // ~~~~~ ALL OF THE DETAILS ~~~~~
               Padding(
@@ -61,6 +69,7 @@ class ItemCard extends StatelessWidget{
                         Expanded(
                           // ~~~~~ TITLE ~~~~~
                           child: Text(
+                            //Use item title
                             item.title,
                             style: const TextStyle(
                                 fontWeight: FontWeight.w500, fontSize: 16),
@@ -70,6 +79,7 @@ class ItemCard extends StatelessWidget{
                         ),
                         // ~~~~~ PRICE ~~~~~
                         Text(
+                          // Use item price
                           'CHF ${item.price.toString()}',
                           style: const TextStyle(
                               fontWeight: FontWeight.w400, fontSize: 20),

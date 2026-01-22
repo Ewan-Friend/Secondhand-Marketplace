@@ -4,6 +4,7 @@ class Item {
   final String title;
   final double rating;
   final double price;
+  final List<String> imageUrls;
   // final String listingDate;
 
   Item({
@@ -12,8 +13,11 @@ class Item {
     required this.title,
     required this.rating, 
     required this.price,
+    required this.imageUrls
     // required this.listingDate
   });
+
+
 
   factory Item.fromJson(Map<String, dynamic> json){
     return Item(
@@ -22,6 +26,8 @@ class Item {
       title:        (json['title'] ?? 'Untitled')as String,
       rating:       (json['rating'] as num).toDouble(),
       price:        (json['price'] as num).toDouble(),
+      // Choose between a converted list of strings or (if null) all empty list
+      imageUrls:    (json['image_urls'] != null ? List<String>.from(json['image_urls']) : [])
       // listingDate:  json['created_at'] as String,
     );
   }
