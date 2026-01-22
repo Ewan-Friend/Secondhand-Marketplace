@@ -46,7 +46,7 @@ def get_items():
         query = query.eq('seller_id', user_id)
     
     # Execute query
-    response = query.order("created_at", desc=True).limit(16).execute()
+    response = query.order("created_at", desc=True).limit(32).execute()
     data = response.data or []
 
 

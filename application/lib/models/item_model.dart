@@ -24,8 +24,8 @@ class Item {
       id:           (json['id'] ?? '')  as String,
       sellerId:     (json['seller_id'] ?? '')as String,
       title:        (json['title'] ?? 'Untitled')as String,
-      rating:       (json['rating'] as num).toDouble(),
-      price:        (json['price'] as num).toDouble(),
+      rating:       (json['rating'] as num? ?? 0.0).toDouble(),
+      price:        (json['price'] as num? ?? 0.0).toDouble(),
       // Choose between a converted list of strings or (if null) all empty list
       imageUrls:    (json['image_urls'] != null ? List<String>.from(json['image_urls']) : [])
       // listingDate:  json['created_at'] as String,

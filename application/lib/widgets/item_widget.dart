@@ -73,7 +73,7 @@ class ItemCard extends StatelessWidget{
                             item.title,
                             style: const TextStyle(
                                 fontWeight: FontWeight.w500, fontSize: 16),
-                            maxLines: 2,
+                            maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
