@@ -32,4 +32,113 @@ class APIService {
         throw Exception('Network/Server error: Ensure Flask server is running. $e');
       }
   }
+
+  Future<List<Item>> getItems() async {
+    //Construct URL
+    final url = Uri.parse('$baseUrl/items');
+
+    try {
+      final response = await http.get(url);
+        // Checks statusCode of items response sent from routes.py
+        if (response.statusCode == 200) {
+
+          // Return decoded data (A list of the class 'Item')
+          final Map<String, dynamic> responseData = json.decode(response.body);
+          final List<dynamic> data = responseData['table_data'];
+
+          if (kDebugMode) {
+            debugPrint(response.body); 
+          }
+
+          return data.map((json) => Item.fromJson(json)).toList();
+        } else {
+          // If status code is not 200, return the actual status code
+          throw Exception('Failed to load items: Server returned status ${response.statusCode}');
+        }
+    }
+    catch (e){
+        // Handle in case of errors
+        throw Exception('Network/Server error: Ensure Flask server is running. $e');
+    }
+  }
+
+  Future<Map<String, dynamic>> getCurrentUserProfile() async {
+    // Construct URL
+    final url = Uri.parse('$baseUrl/user/profile');
+
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        throw Exception('Failed to load user profile: Server returned status ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Network/Server error: Ensure Flask server is running. $e');
+    }
+  }
+
+  Future<Map<String, dynamic>> getUserItems(int userId) async {
+    // Construct URL
+    final url = Uri.parse('$baseUrl/user/$userId/items');
+
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        throw Exception('Failed to load user items: Server returned status ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Network/Server error: Ensure Flask server is running. $e');
+    }
+  }
+
+  Future<Map<String, dynamic>> getUserReviews(int userId) async {
+    // Construct URL
+    final url = Uri.parse('$baseUrl/user/$userId/reviews');
+
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        throw Exception('Failed to load user reviews: Server returned status ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Network/Server error: Ensure Flask server is running. $e');
+    }
+  }
+
+  Future<Map<String, dynamic>> updateUserProfile({
+    String? displayName,
+    String? location,
+  }) async {
+    // Construct URL
+    final url = Uri.parse('$baseUrl/user/profile');
+
+    // Build the profile data map
+    final Map<String, dynamic> profileData = {};
+    if (displayName != null) profileData['displayName'] = displayName;
+    if (location != null) profileData['location'] = location;
+
+    try {
+      final response = await http.put(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(profileData),
+      );
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        throw Exception('Failed to update profile: Server returned status ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Network/Server error: Ensure Flask server is running. $e');
+    }
+  }
 }

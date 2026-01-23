@@ -43,10 +43,19 @@ class MainApp extends StatelessWidget {
       //Unified theme
       theme: ThemeData(
         useMaterial3: true,
+        textButtonTheme: TextButtonThemeData(
+          style: ButtonStyle(
+            overlayColor: WidgetStateProperty.all(
+              Colors.grey.shade100,
+            ),
+          ),
+        ),
         fontFamily: 'Poppins',
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF6D8BFE)),
-        inputDecorationTheme: const InputDecorationTheme(
-          border: OutlineInputBorder(),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFFE36D6D),
+        ).copyWith(
+          primary: const Color(0xFFE36D6D), // force your exact color
+          surface: const Color.fromARGB(255, 255, 255, 255), // force your exact color
         ),
       ),
     );
