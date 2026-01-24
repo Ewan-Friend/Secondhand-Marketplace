@@ -2,36 +2,47 @@ name: Flask CI
 
 on:
   push:
-    branches: [ "dev" ]
+    branches: [ "task/155-156-automate-linting-and-coverage-with-github-actions" ]
     paths:
-      - 'backend/**'
+      - 'backend/**' # Isolates the changes to the backend
   pull_request:
-    branches: [ "main", "dev" ]
+    branches: [ "main", "task/155-156-automate-linting-and-coverage-with-github-actions" ]
     paths:
-      - 'backend/**'
+      - 'backend/**' # Isolates the changes to the backend
 
 jobs:
   test:
     runs-on: ubuntu-latest
     
     steps:
+    # ~~~~~ Sets up the virual environment: ~~~~~
     - uses: actions/checkout@v3
-    
     - name: Set up Python 3.11
       uses: actions/setup-python@v4
       with:
         python-version: '3.11'
         cache: 'pip'
-    
     - name: Install dependencies
       working-directory: ./backend
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-        pip install pytest
+        pip install ruff pytest-cov
+
+    - name: Check formatting standards with Ruff
+      working-directory: ./backend
+      continue-on-error: true
+      run: ruff format --check . # Use ' ruff format . ' to fix styling errors :)
     
-    - name: Run tests
+    - name: Linting using Ruff
+      working-directory: ./backend
+      continue-on-error: true
+      run: ruff check --format=github --target-version=py311 . 
+        
+    - name: Run tests and generate a coverage report
       working-directory: ./backend
       env:
         FLASK_ENV: testing
-      run: pytest
+        PYTHONPATH: .
+      run: |
+        pytest -v -s --cov=app --cov-report=term-missing test/
