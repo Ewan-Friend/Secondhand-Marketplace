@@ -43,6 +43,8 @@ jobs:
       working-directory: ./backend
       env:
         FLASK_ENV: testing
+        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+        SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
         PYTHONPATH: .
       run: |
         pytest -v -s --cov=app --cov-report=term-missing test/
