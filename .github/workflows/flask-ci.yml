@@ -9,6 +9,7 @@ on:
     branches: [ "main", "task/155-156-automate-linting-and-coverage-with-github-actions" ]
     paths:
       - 'backend/**' # Isolates the changes to the backend
+  workflow_dispatch:    
 
 jobs:
   test:
