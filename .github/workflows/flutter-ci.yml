@@ -2,11 +2,11 @@ name: Flutter CI
 
 on:
   push:
-    branches: [ "dev" ]
+    branches: [ "task/155-156-automate-linting-and-coverage-with-github-actions" ]
     paths:
       - 'application/**'
   pull_request:
-    branches: [ "main", "dev" ]
+    branches: [ "main", "task/155-156-automate-linting-and-coverage-with-github-actions" ]
     paths:
       - 'application/**'
   workflow_dispatch: 
