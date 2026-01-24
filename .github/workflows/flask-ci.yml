@@ -2,11 +2,11 @@ name: Flask CI
 
 on:
   push:
-    branches: [ "task/155-156-automate-linting-and-coverage-with-github-actions" ]
+    branches: [ "dev" ]
     paths:
       - 'backend/**' # Isolates the changes to the backend
   pull_request:
-    branches: [ "main", "task/155-156-automate-linting-and-coverage-with-github-actions" ]
+    branches: [ "main", "dev" ]
     paths:
       - 'backend/**' # Isolates the changes to the backend
   workflow_dispatch:    
