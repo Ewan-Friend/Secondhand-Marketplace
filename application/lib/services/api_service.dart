@@ -2,6 +2,7 @@
 import 'dart:convert';
 // import 'dart:nativewrappers/_internal/vm/lib/ffi_patch.dart';
 import 'package:http/http.dart' as http;
+import '../models/item_model.dart';
 import 'package:flutter/foundation.dart';
 
 class APIService {
