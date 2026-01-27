@@ -1,3 +1,4 @@
+import 'package:application/pages/post_items_page.dart';
 import 'package:flutter/material.dart';
 import '../pages/profile_page.dart';
 import '../pages/create_listing_page.dart';
@@ -75,7 +76,7 @@ class Header extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const CreateListingPage()),
+                MaterialPageRoute(builder: (context) => const PostItemsPage()),
               );
             },
             tooltip: 'Post Item',
