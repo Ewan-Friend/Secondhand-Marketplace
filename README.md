@@ -5,7 +5,7 @@
 [![Flask](https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white)](https://palletsprojects.com/p/flask/)
 [![AWS Cloud](https://img.shields.io/badge/AWS-FF9900?style=for-the-badge&logo=amazons3&logoColor=white)](https://aws.amazon.com/)
 [![Supabase](https://img.shields.io/badge/Supabase-181818?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com/)
-
+![Docker](https://img.shields.io/badge/Docker-deepskyblue?style=for-the-badge&logo=docker&logoColor=white&labelColor=%231D63ED&color=%231D63ED)
 ## Contents
 - [Project description](#project-description)
 - [Project goals](#project-goals)
@@ -39,6 +39,7 @@
 │   │   ├── services                # Contains files that provide services to other aspects of the frontend
 │   │   └── widgets                 # Contains reusable UI elements for the application
 |   ├── test                        # Contains tests for the frontend
+│   ├── Dockerfile                  # Contains build information for docker container
 │   ├── ...
 ├── backend                         # Holds scripts relating to the Python Flask Backend
 │   ├── app
@@ -47,17 +48,25 @@
 │   ├── run.py                      # Runs the backend of the application
 │   ├── test                        # Contains test files for the backend
 │   ├── requirements.txt            # Contains necessary dependencies for the backend
+│   ├── Dockerfile                  # Contains build information for docker container
 ├── docs                            # Contains project information
+├── docker-compose.yml              # Defines and runs multi-container applications (frontend / backend)
 ```
 
 ## Project setup
+
+- [Approach 1 - Local Development](#local-development)
+- [Approach 2 - Docker (reccomended for quick start)](#docker)
+
+### Approach 1:
+### Local Development
 
 #### Prerequisites
 - Python 3.10+
 - Flutter
 - Git
 
-### Guide to setup locally
+#### Guide to setup locally
 1. **Clone repository**
 ```
 git clone https://github.com/spe-uob/2025-SecondhandMarketplace.git
@@ -114,6 +123,35 @@ you will be prompted to press a key to run on a certain emulator/environment - a
 ```
 flutter run -d [environment name - e.g: chrome]
 ```
+
+### Approach 2:
+### Docker
+
+This approach only requires docker desktop (or alternatives) and handles all required dependencies automatically within the container
+
+
+1. **Clone repository**
+
+```
+git clone https://github.com/spe-uob/2025-SecondhandMarketplace.git
+```
+alternatively through ssh and a secure key setup:
+``` 
+git clone git@github.com:spe-uob/2025-SecondhandMarketplace.git
+```
+
+2. **Build and launch the project**
+   
+```
+docker compose up --build     # Builds the projects in a docker container, then launches it
+```
+Container can then be ran within docker desktop (or alternative)
+
+3. **Access applications**
+
+Frontend: http://localhost:8080
+
+Backend: http://localhost:5000
 
 ## Software architecture
 The following diagram illustrates the Secondhand Marketplace software architecture. It highlights the interaction between the flutter frontend, and the python-flask backend
