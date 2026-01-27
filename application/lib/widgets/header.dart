@@ -1,0 +1,136 @@
+import 'package:flutter/material.dart';
+import '../pages/profile_page.dart';
+import '../pages/create_listing_page.dart';
+
+class Header extends StatelessWidget {
+  Header({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 80),
+      child: Row(
+        children: [
+          _LocationChip(
+            icon: Icons.location_on,
+            label: 'Bristol, UK',
+            bg: cs.surface.withValues(alpha:0),
+            iconColor: cs.primary,
+            textColor: cs.onSurface,
+          ),
+          const SizedBox(width: 60),
+
+          // Search bar
+          Expanded(
+            child: Container(
+              height: 80,
+              decoration: BoxDecoration(
+                color: Colors.grey.shade200,
+                borderRadius: BorderRadius.circular(28),
+              ),
+              padding: const EdgeInsets.only(left: 30, right: 6),
+              child: Row(
+                children: [
+                  const Expanded(
+                    child: TextField(
+                      decoration: InputDecoration(
+                        hintText: 'Search for an item',
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: cs.primary,
+                      shape: BoxShape.circle,
+                    ),
+                    width: 40,
+                    height: 40,
+                    child: const Icon(Icons.search, color: Colors.white, size: 24),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(width: 60),
+
+          // Action icons
+          IconButton(
+            onPressed: () {
+              // Navigate to wishlist page
+            },
+            tooltip: 'Wishlist',
+            icon: const Icon(Icons.favorite_border, size: 30),
+          ),
+          IconButton(
+            onPressed: () {
+              // Navigate to messages page
+            },
+            tooltip: 'Messages',
+            icon: const Icon(Icons.chat_bubble_outline, size: 30),
+          ),
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const CreateListingPage()),
+              );
+            },
+            tooltip: 'Post Item',
+            icon: const Icon(Icons.add_circle_outline, size: 30),
+          ),
+          IconButton(
+            tooltip: 'Account',
+            icon: const Icon(Icons.person_outline, size: 30),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ProfilePage()),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Simple location chip widget (you can move this out to its own file later)
+class _LocationChip extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final Color bg;
+  final Color iconColor;
+  final Color textColor;
+
+  const _LocationChip({
+    required this.icon,
+    required this.label,
+    required this.bg,
+    required this.iconColor,
+    required this.textColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: iconColor, size: 24),
+          const SizedBox(width: 5),
+          Text(
+            label,
+            style: TextStyle(color: textColor, fontWeight: FontWeight.w500, fontSize: 16),
+          ),
+        ],
+      ),
+    );
+  }
+}

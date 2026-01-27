@@ -7,8 +7,8 @@ import os
 bp = Blueprint('api', __name__)
 
 # Initialise supabase project reference variables
-SUPABASE_URL = os.environ.get("SUPABASE_URL", "https://rakyxzkfdntbmhhjkltp.supabase.co")
-SUPABASE_KEY = os.environ.get("SUPABASE_KEY", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJha3l4emtmZG50Ym1oaGprbHRwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE5MTgwMTQsImV4cCI6MjA3NzQ5NDAxNH0.0YGZOLNn-nSba2B1fXJ4Hevq1zNPw7VIKyiGI2-CeWs")
+SUPABASE_URL = os.environ.get("SUPABASE_URL")
+SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
@@ -24,23 +24,23 @@ def get_status():
 @bp.route("/items", methods=['GET'])
 def get_items():
     # Get query parameters for filtering
-    status = request.args.get('status')  # 'active' or None
-    sold = request.args.get('sold')  # 'true' or None
+    # status = request.args.get('status')  # 'active' or None
+    # sold = request.args.get('sold')  # 'true' or None
     user_id = request.args.get('user_id')  # filter by user
     
     # Start building query
     query = supabase.table("items").select(
-        "id, seller_id, title, created_at, description, rating, price, status, sold"
+        "id, seller_id, title, created_at, description, rating, price"
     )
     
     # Apply filters based on query parameters
-    if status == 'active':
-        query = query.eq('status', 'active')
+    # if status == 'active':
+    #     query = query.eq('status', 'active')
     
-    if sold == 'true':
-        query = query.eq('sold', True)
-    elif sold == 'false':
-        query = query.eq('sold', False)
+    # if sold == 'true':
+    #     query = query.eq('sold', True)
+    # elif sold == 'false':
+    #     query = query.eq('sold', False)
     
     if user_id:
         query = query.eq('seller_id', user_id)
@@ -59,8 +59,8 @@ def get_items():
             'created_at': item.get('created_at'),
             'rating': item.get('rating'),
             'price': float(item.get('price')) if item.get('price') else 0.0,
-            'status': item.get('status', 'active'),
-            'sold': item.get('sold', False)
+            # 'status': item.get('status', 'active'),
+            # 'sold': item.get('sold', False)
         })
 
     # Return all items and corresponding data
@@ -92,9 +92,9 @@ def register_user():
     password = data.get('password', '').strip()
     
     # Validate that all required fields are present and not empty
-    if not email:
+    if not email or not password:
         return jsonify({
-            'message': 'Email is required',
+            'message': 'Email and password are required',
             'status_code': 400
         }), 400
     
@@ -104,25 +104,47 @@ def register_user():
             'status_code': 400
         }), 400
     
-    if not password:
-        return jsonify({
-            'message': 'Password is required',
-            'status_code': 400
-        }), 400
-    
-    # Basic email validation (simple check for @ symbol)
-    if '@' not in email or '.' not in email.split('@')[1]:
-        return jsonify({
-            'message': 'Invalid email format',
-            'status_code': 400
-        }), 400
-    
-    # Basic password validation (minimum length)
-    if len(password) < 6:
-        return jsonify({
-            'message': 'Password must be at least 6 characters',
-            'status_code': 400
-        }), 400
+    # Hashing passwords directly are not necessary
+    # Establish new user in 'Users' table
+    try:
+         # Call built in Supabase sign_up
+        response = supabase.auth.sign_up(
+            {
+                "email": email,
+                "password": password
+            },
+            # options={
+            #     "data":{
+            #         "username": username
+            #     }
+            # }
+        )
+
+        # Handles a successful response from supabase
+        if response.user:
+            return jsonify({
+                'message': 'User registered successfully',
+                'status_code': 201,
+                'data': {
+                    'email': email,
+                    'username': username
+                    # Note: password should never be returned
+                }
+            })
+        
+        #Default behaviour:
+        return jsonify({'message': 'Registration initiated. Please check your email.'}), 202
+
+    except Exception as e:
+        # Handle errors from supabase, this is things such as weak passwords or duplocate emails
+        error_message = str(e)
+
+        # Handles the exact error messages that Supabase returns
+        if 'duplicate key value violates unique constraint' in error_message:
+             return jsonify({'message': 'Email already registered.'}), 409
+
+        # Default error response
+        return jsonify({'message': f'Registration failed: {error_message}'}), 400
     
     # TODO: Check for duplicate email/username in database (Issue 4)
     # TODO: Hash password before storing (Issue 4)
