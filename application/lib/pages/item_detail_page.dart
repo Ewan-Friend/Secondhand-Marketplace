@@ -1,22 +1,7 @@
 import 'package:flutter/material.dart';
 
-
-class ItemDetailPage extends StatelessWidget {
+class ItemDetailPage extends StatelessWidget { // overall layout (renamed from ProductDetailPage)
   const ItemDetailPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    // Extract the item ID passed as an argument
-
-    //TODO: in the return, implement an API service that can grab the itemId and get the corresponding item details
-    // final itemId = ModalRoute.of(context)?.settings.arguments as String?;
-
-    return const ProductDetailPage();
-  }
-}
-
-class ProductDetailPage extends StatelessWidget { // overall layout (renamed from ProductDetailPage)
-  const ProductDetailPage({super.key});
 
   @override
   Widget build(BuildContext context) {

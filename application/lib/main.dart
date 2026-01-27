@@ -4,6 +4,7 @@ import 'pages/home_page.dart';
 import 'pages/item_detail_page.dart';
 import 'pages/profile_page.dart';
 import 'pages/login_page.dart';
+import 'pages/post_items_page.dart';
 import 'pages/sign_up_page.dart';
 import 'pages/create_listing_page.dart';
 
@@ -26,12 +27,13 @@ class MainApp extends StatelessWidget {
 
       // Routing table
       routes: {
-        '/home':   (_) => HomePage(),
-        '/item':   (_) => ItemDetailPage(),
-        '/login':  (_) => LoginPage(),
-        '/signup': (_) => SignUpPage(),
-        '/create': (_) => CreateListingPage(),
-        '/profile':(_) => ProfilePage(),
+        '/home':   (_) => const HomePage(),
+        '/item':   (_) => const ItemDetailPage(),
+        '/login':  (_) => const LoginPage(),
+        '/signup': (_) => const SignUpPage(),
+        '/create': (_) => const CreateListingPage(),
+        '/profile':(_) => const ProfilePage(),
+        '/post':   (_) => const PostItemsPage(),
       },
 
       // Unknown route protection: redirect to login page
