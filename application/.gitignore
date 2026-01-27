@@ -45,3 +45,17 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Python virtual environments
+venv/
+application/ven/
+.env
+
+# Flutter/Dart build files
+build/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# Docker
+.dockerignore

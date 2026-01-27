@@ -5,7 +5,7 @@
 [![Flask](https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white)](https://palletsprojects.com/p/flask/)
 [![AWS Cloud](https://img.shields.io/badge/AWS-FF9900?style=for-the-badge&logo=amazons3&logoColor=white)](https://aws.amazon.com/)
 [![Supabase](https://img.shields.io/badge/Supabase-181818?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com/)
-
+![Docker](https://img.shields.io/badge/Docker-deepskyblue?style=for-the-badge&logo=docker&logoColor=white&labelColor=%231D63ED&color=%231D63ED)
 ## Contents
 - [Project description](#project-description)
 - [Project goals](#project-goals)
@@ -39,6 +39,7 @@
 │   │   ├── services                # Contains files that provide services to other aspects of the frontend
 │   │   └── widgets                 # Contains reusable UI elements for the application
 |   ├── test                        # Contains tests for the frontend
+│   ├── Dockerfile                  # Contains build information for docker container
 │   ├── ...
 ├── backend                         # Holds scripts relating to the Python Flask Backend
 │   ├── app
@@ -47,18 +48,26 @@
 │   ├── run.py                      # Runs the backend of the application
 │   ├── test                        # Contains test files for the backend
 │   ├── requirements.txt            # Contains necessary dependencies for the backend
+│   ├── Dockerfile                  # Contains build information for docker container
 ├── docs                            # Contains project information
-├── .env.template                   ~ Template for .env file holding API keys
+├── .env.template                   # Template for .env file holding API keys
+├── docker-compose.yml              # Defines and runs multi-container applications (frontend / backend)
 ```
 
 ## Project setup
+
+- [Approach 1 - Local Development](#local-development)
+- [Approach 2 - Docker (reccomended for quick start)](#docker)
+
+### Approach 1:
+### Local Development
 
 #### Prerequisites
 - Python 3.10+
 - Flutter
 - Git
 
-### Guide to setup locally
+#### Guide to setup locally
 1. **Clone repository**
 ```
 git clone https://github.com/spe-uob/2025-SecondhandMarketplace.git
@@ -116,6 +125,35 @@ you will be prompted to press a key to run on a certain emulator/environment - a
 flutter run -d [environment name - e.g: chrome]
 ```
 
+### Approach 2:
+### Docker
+
+This approach only requires docker desktop (or alternatives) and handles all required dependencies automatically within the container
+
+
+1. **Clone repository**
+
+```
+git clone https://github.com/spe-uob/2025-SecondhandMarketplace.git
+```
+alternatively through ssh and a secure key setup:
+``` 
+git clone git@github.com:spe-uob/2025-SecondhandMarketplace.git
+```
+
+2. **Build and launch the project**
+   
+```
+docker compose up --build     # Builds the projects in a docker container, then launches it
+```
+Container can then be ran within docker desktop (or alternative)
+
+3. **Access applications**
+
+Frontend: http://localhost:8080
+
+Backend: http://localhost:5000
+
 ## Software architecture
 The following diagram illustrates the Secondhand Marketplace software architecture. It highlights the interaction between the flutter frontend, and the python-flask backend
 <p align="left">
@@ -150,94 +188,14 @@ The following diagram illustrates the Secondhand Marketplace software architectu
 
 ## User Stories
 
-## As a **Casual Buyer**
-**I want to** browse and search listings easily  
-**So that** I can quickly find second-hand items I like without wasting time.
-
-**Pain Points / Problems:**
-- Too many irrelevant results when searching  
-- Slow or cluttered interfaces in other apps  
-
-**Criteria:**
-- Can browse by category (e.g., electronics, fashion, books)  
-- Can filter by price range and condition (new/used)  
-- Can favorite or save items for later  
-
----
-
-## As a **First-Time User**
-**I want to** explore the app and understand how it works easily  
-**So that** I can sell/buy without any confusion.
-
-**Pain Points / Problems:**
-- Doesn’t know where to start  
-- Too many options on the first screen make it hard to focus  
-
-**Criteria:**
-- Clear navigation and tooltips  
-- Friendly and immersive design  
-- Simple “Buy” vs “Sell” mode selection  
-
----
-
-## As a **Buyer**
-**I want to** see seller reviews and ratings  
-**So that** I can make sure I’m buying from a trustworthy person.
-
-**Pain Points / Problems:**
-- Fear of scams or poor-quality products  
-- Hard to know if a seller is reliable  
-
-**Criteria:**
-- Seller rating and review system  
-- “Verified Seller” badge for trusted users  
-
----
-
-## As a **Seller**
-**I want to** upload and manage my listings easily from my phone  
-**So that** I can sell my used items faster and track interest.
-
-**Pain Points / Problems:**
-- Uploading listings takes too long on other platforms  
-- Hard to manage listings on mobile  
-
-**Criteria:**
-- Can upload photos and details directly from mobile  
-- Can edit listings easily  
-- Can see the status of my listings at a glance  
-
----
-
-## As a **Top-Rated Seller**
-**I want to** make my shop feel like a small premium boutique  
-**So that** customers trust my listings more.
-
-**Pain Points / Problems:**
-- Other apps make every seller look the same  
-- Hard to build a brand identity  
-
-**Criteria:**
-- Customizable profile banner and logo  
-- Verified badge + “Top Seller” tag  
-- Option to feature listings for extra visibility  
-
----
-
-## As a **Conscious Consumer**
-**I want to** give my unused items a new life  
-**So that** I reduce waste and earn something in return.
-
-**Pain Points / Problems:**
-- Other marketplaces feel too commercial  
-- Lack of community or shared values  
-
-**Criteria:**
-- Profile badges for sustainable sellers  
-- Monthly “eco impact” summary  
-- “Bundle sell” option for related items  
-
-
+| Role | Goal (**I want to...**) | Benefit (**So that...**) | Key Pain Points / Problems | Criteria |
+| :--- | :--- | :--- | :--- | :--- |
+| **Casual Buyer** | browse and search listings easily | I can quickly find second-hand items I like without wasting time. | * Too many irrelevant results when searching <br> * Slow or cluttered interfaces in other apps | * Can browse by category (e.g., electronics, fashion, books) <br> * Can filter by price range and condition (new/used) <br> * Can favorite or save items for later |
+| **First-Time User** | explore the app and understand how it works easily | I can sell/buy without any confusion. | * Doesn’t know where to start <br> * Too many options on the first screen make it hard to focus | * Clear navigation and tooltips <br> * Friendly and immersive design <br> * Simple “Buy” vs “Sell” mode selection |
+| **Buyer** | see seller reviews and ratings | I can make sure I’m buying from a trustworthy person. | * Fear of scams or poor-quality products <br> * Hard to know if a seller is reliable | * Seller rating and review system <br> * “Verified Seller” badge for trusted users |
+| **Seller** | upload and manage my listings easily from my phone | I can sell my used items faster and track interest. | * Uploading listings takes too long on other platforms <br> * Hard to manage listings on mobile | * Can upload photos and details directly from mobile <br> * Can edit listings easily <br> * Can see the status of my listings at a glance |
+| **Top-Rated Seller** | make my shop feel like a small premium boutique | customers trust my listings more. | * Other apps make every seller look the same <br> * Hard to build a brand identity | * Customizable profile banner and logo <br> * Verified badge + “Top Seller” tag <br> * Option to feature listings for extra visibility |
+| **Conscious Consumer** | give my unused items a new life | I reduce waste and earn something in return. | * Other marketplaces feel too commercial <br> * Lack of community or shared values | * Profile badges for sustainable sellers <br> * Monthly “eco impact” summary <br> * “Bundle sell” option for related items |
 
 ## Project Management
 - [Kanban Board](https://github.com/orgs/spe-uob/projects/310/views/1)
