@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../pages/profile_page.dart';
 import '../pages/create_listing_page.dart';
 import '../pages/favourites_page.dart';
+import '../pages/messages_page.dart';
 
 class Header extends StatelessWidget {
   Header({super.key});
@@ -70,7 +71,10 @@ class Header extends StatelessWidget {
           ),
           IconButton(
             onPressed: () {
-              // Navigate to messages page
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const MessagesPage()),
+              );
             },
             tooltip: 'Messages',
             icon: const Icon(Icons.chat_bubble_outline, size: 30),
