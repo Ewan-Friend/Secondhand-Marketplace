@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../pages/profile_page.dart';
 import '../pages/create_listing_page.dart';
+import '../pages/favourites_page.dart';
 
 class Header extends StatelessWidget {
   Header({super.key});
@@ -59,7 +60,10 @@ class Header extends StatelessWidget {
           // Action icons
           IconButton(
             onPressed: () {
-              // Navigate to wishlist page
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const FavouritesPage()),
+              );
             },
             tooltip: 'Wishlist',
             icon: const Icon(Icons.favorite_border, size: 30),
