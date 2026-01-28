@@ -50,6 +50,7 @@
 │   ├── requirements.txt            # Contains necessary dependencies for the backend
 │   ├── Dockerfile                  # Contains build information for docker container
 ├── docs                            # Contains project information
+├── .env.template                   # Template for .env file holding API keys
 ├── docker-compose.yml              # Defines and runs multi-container applications (frontend / backend)
 ```
 
