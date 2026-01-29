@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
 import '../widgets/header.dart';
+import '../widgets/item_widget.dart';
+import '../models/item_model.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,11 +15,10 @@ class _HomePageState extends State<HomePage> {
   int _selectedCategoryIndex = 0;
   final TextEditingController _searchController = TextEditingController();
 
-  // --- API HEALTH CHECK STATE ---
   final APIService _apiService = APIService();
-  String _apiMessage = 'Checking backend...';
+  late Future<List<Item>> _futureItems;
+  String _apiMessage = 'Checking API connection...';
 
-  // Placeholder categories
   final List<String> _categories = [
     'Explore',
     'Clothing',
@@ -34,18 +35,21 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    _futureItems = _apiService.getItems();
     _checkApi();
   }
 
   Future<void> _checkApi() async {
     try {
-      final message = await _apiService.checkConnection(); // <-- returns String
+      final message = await _apiService.checkConnection(); // <-- String dönüyor
+      if (!mounted) return;
       setState(() {
         _apiMessage = message;
       });
     } catch (e) {
+      if (!mounted) return;
       setState(() {
-        _apiMessage = 'Backend error: $e';
+        _apiMessage = 'Error: $e';
       });
     }
   }
@@ -56,43 +60,40 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       backgroundColor: cs.surface,
-      appBar: const PreferredSize(
-        preferredSize: Size.fromHeight(80),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(80),
         child: Header(),
       ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ✅ Backend status banner
+            // API message (debug)
             Padding(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(16.0),
               child: Text(
                 _apiMessage,
                 style: const TextStyle(
-                  fontSize: 12,
                   color: Colors.red,
-                  fontWeight: FontWeight.w600,
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
 
-            // Horizontal Category List
+            // Categories
             SizedBox(
               height: 40,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 itemCount: _categories.length,
-                separatorBuilder: (_, _) => const SizedBox(width: 12),
+                separatorBuilder: (_, __) => const SizedBox(width: 12),
                 itemBuilder: (context, index) {
                   final isSelected = index == _selectedCategoryIndex;
-
                   return TextButton(
                     onPressed: () {
-                      setState(() {
-                        _selectedCategoryIndex = index;
-                      });
+                      setState(() => _selectedCategoryIndex = index);
                     },
                     style: TextButton.styleFrom(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -114,12 +115,41 @@ class _HomePageState extends State<HomePage> {
             ),
             const SizedBox(height: 24),
 
-            // ✅ Placeholder 
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              child: Text(
-                'Items will load here (Commit 4).',
-                style: TextStyle(fontSize: 14),
+            // Items grid from API
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: FutureBuilder<List<Item>>(
+                future: _futureItems,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  }
+
+                  final items = snapshot.data ?? [];
+                  if (items.isEmpty) {
+                    return const Center(child: Text('No items found'));
+                  }
+
+                  return GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 500,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
+                      childAspectRatio: 0.76,
+                    ),
+                    itemCount: items.length,
+                    itemBuilder: (context, index) {
+                      return ItemCard(item: items[index]);
+                    },
+                  );
+                },
               ),
             ),
 

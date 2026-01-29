@@ -9,15 +9,35 @@ class APIService {
 
   APIService({http.Client? client}) : _client = client ?? http.Client();
 
+  /// Builds a safe URL by avoiding double slashes and duplicate `/api`.
+  Uri _uri(String path) {
+    final base = AppConfig.apiBaseUrl.trim();
+
+    // Ensure base has no trailing slash
+    final normalizedBase = base.endsWith('/')
+        ? base.substring(0, base.length - 1)
+        : base;
+
+    // Ensure path starts with a slash
+    final normalizedPath = path.startsWith('/') ? path : '/$path';
+
+    return Uri.parse('$normalizedBase$normalizedPath');
+  }
+
+  /// Returns backend status message if reachable; throws otherwise.
   Future<String> checkConnection() async {
-    final url = Uri.parse('${AppConfig.apiBaseUrl}/status');
+    final url = _uri('/status');
 
     try {
       final response = await _client.get(url);
 
       if (response.statusCode == 200) {
-        final data = json.decode(response.body) as Map<String, dynamic>;
-        return (data['message'] as String?) ?? 'Backend reachable';
+        final decoded = json.decode(response.body);
+        if (decoded is Map<String, dynamic>) {
+          final msg = decoded['message'];
+          return (msg is String && msg.isNotEmpty) ? msg : 'Backend reachable';
+        }
+        return 'Backend reachable';
       }
 
       throw Exception('Backend unreachable (${response.statusCode})');
@@ -27,39 +47,69 @@ class APIService {
   }
 
   Future<List<Item>> getItems() async {
-    final url = Uri.parse('${AppConfig.apiBaseUrl}/items');
+    final url = _uri('/items');
 
     try {
       final response = await _client.get(url);
 
-      if (response.statusCode != 200) {
-        throw Exception('Failed to load items (${response.statusCode})');
+      if (response.statusCode == 200) {
+        final decoded = json.decode(response.body);
+        if (decoded is Map<String, dynamic>) {
+          final raw = decoded['table_data'];
+          final list = (raw is List) ? raw : <dynamic>[];
+
+          return list
+              .whereType<Map<String, dynamic>>()
+              .map(Item.fromJson)
+              .toList();
+        }
+        return <Item>[];
       }
 
-      final decoded = json.decode(response.body) as Map<String, dynamic>;
-      final list = (decoded['table_data'] as List<dynamic>? ) ?? [];
-
-      return list
-          .map((e) => Item.fromJson(e as Map<String, dynamic>))
-          .toList();
+      throw Exception('Failed to load items (${response.statusCode})');
     } catch (e) {
       throw Exception('Items fetch failed: $e');
     }
   }
 
-    // ---------------------------------------------------------------------------
-  // TEMP / STUB METHODS
-  // These exist to unblock UI compilation until backend endpoints + auth exist.
-  // Replace with real implementations later.
-  // ---------------------------------------------------------------------------
-
-  Future<List<Item>> getUserItems(String userId) async {
-    // TODO: call GET /api/items?user_id=<userId> or a dedicated endpoint later
-    return <Item>[];
+  // ---- TEMP STUBS (to keep app compiling) ----
+  Future<Map<String, dynamic>> getCurrentUserProfile() async {
+    return {
+      'data': {
+        'id': 0,
+        'email': 'placeholder@example.com',
+        'display_name': 'Placeholder User',
+      },
+      'status_code': 200,
+    };
   }
 
-  Future<List<dynamic>> getUserReviews(String userId) async {
-    // TODO: call GET /api/reviews?user_id=<userId> or a dedicated endpoint later
-    return <dynamic>[];
+  Future<Map<String, dynamic>> getUserItems(int userId) async {
+    return {
+      'data': [],
+      'status_code': 200,
+    };
+  }
+
+  Future<Map<String, dynamic>> getUserReviews(int userId) async {
+    return {
+      'data': [],
+      'status_code': 200,
+    };
+  }
+
+  Future<Map<String, dynamic>> updateUserProfile({
+    String? displayName,
+    String? location,
+  }) async {
+    return {
+      'message': 'Profile update stubbed',
+      'status_code': 200,
+    };
+  }
+
+  /// Optional: call this if you want to close the http client manually.
+  void dispose() {
+    _client.close();
   }
 }
