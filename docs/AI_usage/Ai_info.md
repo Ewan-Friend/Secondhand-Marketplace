@@ -28,3 +28,8 @@
 - Use tailored, specific prompts that reference existing files to provide context
 - Do not generate large code blocks, generate a small block at a time and make sure you understand the core concepts fully before implementing
 - Always ask how concepts work when stuck with what to do
+
+### Example uses 
+- Usually used when creating tests such as:
+    - ```item_model_test```
+    - partially in ```handshake_supabase_test.py```

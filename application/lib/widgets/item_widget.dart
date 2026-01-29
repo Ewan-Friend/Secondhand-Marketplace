@@ -2,6 +2,7 @@ import 'package:application/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/item_model.dart';
+import '../widgets/user_widget.dart';
 
 // Widget that contains the UI needed to represent an 'Item' in the home page 
 class ItemCard extends StatelessWidget{
@@ -11,59 +12,126 @@ class ItemCard extends StatelessWidget{
   static const String noImageUrl = 'https://rakyxzkfdntbmhhjkltp.supabase.co/storage/v1/object/public/item_images/noimage.jpeg';
 
   const ItemCard({
-    super.key, 
-    required this.item
+      super.key, 
+      required this.item
     }); 
+
+  // Simply returns the no image symbol
+  Widget _placeholderImage() {
+    return Image.network(noImageUrl);
+  }
+
+  // Simply builds the image from the corresponding Supabase link
+  Widget buildImage(){
+    if (item.imageUrls.isNotEmpty){
+      return Image.network(item.imageUrls[0],
+      fit: BoxFit.cover,
+      errorBuilder: (context, error, stackTrace) => _placeholderImage(),
+      );
+    }
+    else{
+      return _placeholderImage();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 2,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // 1. Image Area
-          Expanded(
-            child: Ink.image(
-              // TODO: implement image into item_model, currently at placeholder
-              image: NetworkImage(noImageUrl),
-              fit: BoxFit.cover,
-              child: InkWell(
-                onTap: () {
-                  // Navigate to item detail page, passing item.id
-                  Navigator.pushNamed(
-                    context,
-                    '/item',
-                    arguments: item.id
-                  );
-                },
+    return GestureDetector(
+      onTap: () {
+        Navigator.pushNamed(context, '/item', arguments: item.id);
+      },
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(
+          minWidth: 400,
+        ),
+        child: Card(
+          elevation: 0,
+          color: Colors.white,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+          clipBehavior: Clip.antiAlias,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // ~~~~~ IMAGE~~~~~
+              AspectRatio(
+                aspectRatio: 1.2, 
+                child: buildImage(),
               ),
-            ),
-          ),
-          
-          // 2. Details Area (Title, Price)
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  item.title,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                  overflow: TextOverflow.ellipsis, // Prevents text overflow
+              // ~~~~~ ALL OF THE DETAILS ~~~~~
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          // ~~~~~ TITLE ~~~~~
+                          child: Text(
+                            //Use item title
+                            item.title,
+                            style: const TextStyle(
+                                fontWeight: FontWeight.w500, fontSize: 16),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        // ~~~~~ PRICE ~~~~~
+                        Text(
+                          // Use item price
+                          'CHF ${item.price.toString()}',
+                          style: const TextStyle(
+                              fontWeight: FontWeight.w400, fontSize: 20),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          // ~~~~~ LOCATION ~~~~~
+                          children: [
+                            const Icon(Icons.location_on,
+                                size: 16, color: Color(0xFFE36D6D)),
+                            const SizedBox(width: 4),
+                            Text(
+                              'location not implemented',
+                              style: TextStyle(
+                                  fontSize: 14, color: Colors.grey.shade700),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          // ~~~~~ CONDITION ~~~~~
+                          children: [
+                            const Icon(Icons.sell,
+                                size: 16, color: Color(0xFFE36D6D)),
+                            const SizedBox(width: 4),
+                            Text(
+                              'condition not added',
+                              style: TextStyle(
+                                  fontSize: 14, color: Colors.grey.shade700),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    // Seller Info Section
+                    UserWidget(
+                      userName: "Markus Aurelius",
+                      rating: 4.84,
+                      reviews: 23,
+                      avatarUrl: null,
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  '\$${item.price.toStringAsFixed(2)}',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue,
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
