@@ -29,9 +29,10 @@ def get_items():
     user_id = request.args.get('user_id')  # filter by user
     
     # Start building query
+    # Limit number of fetched items to 128 as to not overload (if the app ever scales that high
     query = supabase.table("items").select(
         "id, seller_id, title, created_at, description, rating, price"
-    )
+    ).limit(128)
     
     # Apply filters based on query parameters
     # if status == 'active':
