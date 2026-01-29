@@ -1,4 +1,7 @@
 class AppConfig {
-  static const String apiBaseUrl =
-      'http://secondhand-backend-env-1.eba-jx9gv23c.eu-north-1.elasticbeanstalk.com/api';
+  // Local backend (Flask) for dev
+  static const String apiBaseUrl = 'http://localhost:5000/api';
+
+  // Later (AWS) you can switch to:
+  // static const String apiBaseUrl = 'https://<your-eb-url>/api';
 }
