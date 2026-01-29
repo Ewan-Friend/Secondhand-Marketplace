@@ -1,7 +1,7 @@
 # Imports
 from flask import Blueprint, jsonify, request
 from supabase import create_client, Client
-from services import *
+from .services import fetch_user_by_id
 import os
 
 # Create a blueprint called 'main'
@@ -76,7 +76,7 @@ def get_items():
 
 @bp.route("/profile/<uuid:user_id>", methods=["GET"])
 def get_user_profile(user_id):
-    user_profile = fetch_user_by_id(str(user_id))
+    user_profile = fetch_user_by_id(supabase, str(user_id))
 
     if not user_profile:
         return jsonify({"message": "profile could not be found", "status_code": 404})
