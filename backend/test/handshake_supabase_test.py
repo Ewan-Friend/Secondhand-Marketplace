@@ -58,11 +58,11 @@ def test_get_user_profile_success(client):
     with patch("app.routes.supabase") as mock_supabase:
         mock_response = MagicMock()
         mock_response.data = {
-            "id": "550e8400-e29b-41d4-a716-446655440000", 
-            "username": "testuser",  
-            "location": "London, UK",  
-            "rating_score": 4.5,  
-            "rating_count": 10,  
+            "id": "550e8400-e29b-41d4-a716-446655440000",
+            "username": "testuser",
+            "location": "London, UK",
+            "rating_score": 4.5,
+            "rating_count": 10,
             "avatar_url": "https://example.com/avatar.png",
             "bio": "Hello, I am a tester.",
         }
@@ -89,4 +89,4 @@ def test_get_user_profile_success(client):
 
 
 # run
-# python3 -m pytest test/handshake_supabase_test.py
+# pytest -v -s --cov=app --cov-report=term-missing test/
