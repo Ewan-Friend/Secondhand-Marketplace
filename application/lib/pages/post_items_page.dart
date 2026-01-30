@@ -1,3 +1,4 @@
+import 'package:application/pages/profile_page.dart';
 import 'package:flutter/material.dart';
 
 class PostItemsPage extends StatefulWidget {
@@ -22,7 +23,7 @@ class _PostItemsPage extends State<PostItemsPage> {
                   const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
               child: Column(
                 children: [
-                  const _TopBar(),
+                  Header(),
                   const SizedBox(height: 24),
                   Expanded(
                     child: SingleChildScrollView(
@@ -247,89 +248,135 @@ class _PostItemsPage extends State<PostItemsPage> {
   }
 }
 
-class _TopBar extends StatelessWidget {
-  const _TopBar();
+class Header extends StatelessWidget {
+  Header({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: const [
-            Icon(Icons.location_on, size: 18, color: Colors.redAccent),
-            SizedBox(width: 4),
-            Text(
-              'Bristol, UK',
-              style: TextStyle(fontSize: 14, color: Colors.black87),
-            ),
-          ],
-        ),
-        const SizedBox(width: 16),
+    final cs = Theme.of(context).colorScheme;
 
-        Expanded(
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 480),
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF5F5F7),
-                  borderRadius: BorderRadius.circular(999),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Color(0x11000000),
-                      blurRadius: 2,
-                      offset: Offset(0, 0),
-                    ),
-                  ],
-                ),
-                child: Row(
-                  children: [
-                    const Expanded(
-                      child: TextField(
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          isDense: true,
-                          hintText: 'Search for an item',
-                        ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 80),
+      child: Row(
+        children: [
+          _LocationChip(
+            icon: Icons.location_on,
+            label: 'Bristol, UK',
+            bg: cs.surface.withValues(alpha:0),
+            iconColor: cs.primary,
+            textColor: cs.onSurface,
+          ),
+          const SizedBox(width: 60),
+
+          // Search bar
+          Expanded(
+            child: Container(
+              height: 80,
+              decoration: BoxDecoration(
+                color: Colors.grey.shade200,
+                borderRadius: BorderRadius.circular(28),
+              ),
+              padding: const EdgeInsets.only(left: 30, right: 6),
+              child: Row(
+                children: [
+                  const Expanded(
+                    child: TextField(
+                      decoration: InputDecoration(
+                        hintText: 'Search for an item',
+                        border: InputBorder.none,
                       ),
                     ),
-                    Container(
-                      width: 32,
-                      height: 32,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Color(0xFFFF6C6C),
-                      ),
-                      child: const Icon(
-                        Icons.search,
-                        size: 18,
-                        color: Colors.white,
-                      ),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: cs.primary,
+                      shape: BoxShape.circle,
                     ),
-                  ],
-                ),
+                    width: 40,
+                    height: 40,
+                    child: const Icon(Icons.search, color: Colors.white, size: 24),
+                  ),
+                ],
               ),
             ),
           ),
-        ),
+          const SizedBox(width: 60),
 
-        const SizedBox(width: 16),
+          // Action icons
+          IconButton(
+            onPressed: () {
+              // Navigate to wishlist page
+            },
+            tooltip: 'Wishlist',
+            icon: const Icon(Icons.favorite_border, size: 30),
+          ),
+          IconButton(
+            onPressed: () {
+              // Navigate to messages page
+            },
+            tooltip: 'Messages',
+            icon: const Icon(Icons.chat_bubble_outline, size: 30),
+          ),
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const PostItemsPage()),
+              );
+            },
+            tooltip: 'Post Item',
+            icon: const Icon(Icons.add_circle_outline, size: 30),
+          ),
+          IconButton(
+            tooltip: 'Account',
+            icon: const Icon(Icons.person_outline, size: 30),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ProfilePage()),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
 
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: const [
-            Icon(Icons.favorite_border, size: 22),
-            SizedBox(width: 10),
-            Icon(Icons.chat_bubble_outline, size: 22),
-            SizedBox(width: 10),
-            Icon(Icons.add_circle_outline, size: 22),
-            SizedBox(width: 10),
-            Icon(Icons.person_outline, size: 22),
-          ],
-        )
-      ],
+/// Simple location chip widget (you can move this out to its own file later)
+class _LocationChip extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final Color bg;
+  final Color iconColor;
+  final Color textColor;
+
+  const _LocationChip({
+    required this.icon,
+    required this.label,
+    required this.bg,
+    required this.iconColor,
+    required this.textColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: iconColor, size: 24),
+          const SizedBox(width: 5),
+          Text(
+            label,
+            style: TextStyle(color: textColor, fontWeight: FontWeight.w500, fontSize: 16),
+          ),
+        ],
+      ),
     );
   }
 }
