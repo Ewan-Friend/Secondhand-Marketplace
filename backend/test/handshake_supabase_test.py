@@ -13,7 +13,7 @@ def client():
 
 def test_get_item_data_success(client):
     # Use a "mock" supabase for testting purposes
-    with patch("app.routes.supabase") as mock_supabase:
+    with patch("app.routes.supabase") as mock_supabase, patch("app.routes.fetch_user_by_id") as mock_fetch:
         mock_response = MagicMock()
         mock_response.data = [
             {
@@ -33,6 +33,17 @@ def test_get_item_data_success(client):
 
         # Setup mock response
         mock_supabase.table.return_value.select.return_value.limit.return_value.order.return_value.limit.return_value.execute.return_value = mock_response
+
+        # Returns a mock result of the "fetch_user_by_id" function, which is handled and assigned to Seller info
+        # Seller info contained within the item ( unique seller to each item )
+        mock_fetch.return_value = {
+            "id": "550e8400-e29b-41d4-a716-446655440000",
+            "username": "testuser",
+            "location": "Rome, Italy",
+            "rating_score": 4.5,
+            "rating_count": 76,
+            "avatar_url": "https://example.com/avatar.png",
+        }
 
         # Define response as geting from /items
         response = client.get("/api/items")
@@ -68,6 +79,10 @@ def test_get_item_data_success(client):
         assert isinstance(item["image_urls"], list)
         assert len(item["image_urls"]) == 2
         assert item["image_urls"][0] == "path/to/img1.png"
+
+        # Validate seller info is correctly processed
+        assert item["seller_info"]["username"] == "testuser"
+        assert item["seller_info"]["rating_count"] == 76
 
 
 def test_get_user_profile_success(client):

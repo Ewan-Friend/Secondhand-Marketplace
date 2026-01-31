@@ -59,6 +59,9 @@ def get_items():
     items_list = []
     # Cleans up items into named formats
     for item in data:
+        seller_id = item.get("seller_id")
+        seller_info = fetch_user_by_id(supabase, seller_id)
+
         # Create a list of image URLS
         images = [img.get("image_url") for img in item.get("item_images", [])]
 
@@ -66,6 +69,7 @@ def get_items():
             {
                 "id": item.get("id"),
                 "seller_id": item.get("seller_id"),
+                "seller_info": seller_info,
                 "title": item.get("title"),
                 "created_at": item.get("created_at"),
                 "description": item.get("description"),
