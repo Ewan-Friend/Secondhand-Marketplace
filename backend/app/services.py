@@ -8,7 +8,7 @@ def fetch_user_by_id(supabase_client, user_id):
         return None
 
     try:
-        # try build a response with all fields from the "profile" table
+        # try build a response with all fields from the "profiles" table
         # returns only the profile with the matching user_id
         response = (
             supabase_client.table("profiles")
@@ -31,4 +31,35 @@ def fetch_user_by_id(supabase_client, user_id):
         return response
     except Exception as e:
         print(f"searching for profile returned an error: {e}")
+        return None
+
+
+def fetch_item_by_id(supabase_client, item_id):
+    # Check that item_id exists first
+    if not item_id:
+        return None
+
+    try:
+        # try build a response with all fields from the "items" table
+        # returns only the profile with the matching item_id
+        response = (
+            supabase_client.table("profiles")
+            .select(
+                "id",
+                "seller_id",
+                "title",
+                "description",
+                "rating",
+                "category_id",
+                "created_at",
+                "price",
+            )
+            .eq("id", item_id)
+            .single()
+            .execute()
+        ).data
+
+        return response
+    except Exception as e:
+        print(f"searching for item returned an error: {e}")
         return None
