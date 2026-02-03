@@ -39,26 +39,41 @@ def fetch_item_by_id(supabase_client, item_id):
         return None
 
     try:
-        # try build a response with all fields from the "items" table
+        # try build a response with related from the "item_images" table
         # returns only the profile with the matching item_id
         response = (
-            supabase_client.table("profiles")
+            supabase_client.table("items")
             .select(
-                "id",
-                "seller_id",
-                "title",
-                "description",
-                "rating",
-                "category_id",
-                "created_at",
-                "price",
+                "*, item_images(image_url)"
             )
             .eq("id", item_id)
             .single()
             .execute()
-        ).data
+        )
+        item = response.data
 
-        return response
+        if not item:
+            return None
+
+        seller_id = item.get("seller_id")
+        seller_info = fetch_user_by_id(supabase_client, seller_id)
+
+        images = [img.get("image_url") for img in item.get("item_images", [])]
+
+        # Logic stolen from 'routes'
+        return  {
+            "id": item.get("id"),
+            "seller_id": item.get("seller_id"),
+            "seller_info": seller_info,
+            "title": item.get("title"),
+            "created_at": item.get("created_at"),
+            "description": item.get("description"),
+            "rating": float(item.get("rating")) if item.get("rating") else 0.0,
+            "price": float(item.get("price")) if item.get("price") else 0.0,
+            "image_urls": images,
+            # 'status': item.get('status', 'active'),
+            # 'sold': item.get('sold', False)
+        }
     except Exception as e:
         print(f"searching for item returned an error: {e}")
         return None

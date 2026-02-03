@@ -39,17 +39,39 @@ def test_fetch_user_error(mock_supabase):
 ## --- Tests for fetch_item_by_id ---
 
 def test_fetch_item_success(mock_supabase):
-    expected_item = {"id": "item_456", "title": "Vintage Camera"}
-    mock_supabase.table().select().eq().single().execute.return_value.data = expected_item
+    # 1. Setup mock for the item and its nested image data
+    mock_item_data = {
+        "id": "item_456", 
+        "seller_id": "user_123", 
+        "title": "Vintage Camera",
+        "price": "150.00",
+        "rating": "4.5",
+        "item_images": [{"image_url": "http://example.com/img.jpg"}]
+    }
+    
+    # 2. Setup mock for the seller info (called via fetch_user_by_id)
+    mock_seller_data = {"id": "user_123", "username": "cameraguy"}
+
+    # Configure the mock to return item data first, then seller data
+    # .execute() is called twice: once for items, once for profiles
+    mock_supabase.table().select().eq().single().execute.side_effect = [
+        MagicMock(data=mock_item_data),
+        MagicMock(data=mock_seller_data)
+    ]
 
     result = fetch_item_by_id(mock_supabase, "item_456")
 
-    assert result == expected_item
-    # Check that it correctly targets the profiles table (based on your current code)
-    mock_supabase.table.assert_called_with("profiles") 
+    # 3. Assertions
+    assert result["id"] == "item_456"
+    assert result["seller_info"] == mock_seller_data
+    assert result["price"] == 150.0  # Check float conversion
+    assert "http://example.com/img.jpg" in result["image_urls"]
+    
+    # Verify the item table was queried
+    mock_supabase.table.assert_any_call("items")
 
 def test_fetch_item_not_found(mock_supabase):
-    # Supabase .single() often raises an exception if 0 rows are found
+    # Simulate the item table returning nothing
     mock_supabase.table().select().eq().single().execute.side_effect = Exception("No rows found")
     
     result = fetch_item_by_id(mock_supabase, "invalid_id")
