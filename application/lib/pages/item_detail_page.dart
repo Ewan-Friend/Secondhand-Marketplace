@@ -1,7 +1,28 @@
 import 'package:flutter/material.dart';
+import '../services/api_service.dart';
+import '../models/item_model.dart';
 
-class ItemDetailPage extends StatelessWidget { // overall layout (renamed from ProductDetailPage)
+class ItemDetailPage extends StatefulWidget {
   const ItemDetailPage({super.key});
+  
+  @override
+  State<ItemDetailPage> createState() => _ItemDetailState();
+}
+
+class _ItemDetailState extends State<ItemDetailPage> { // overall layout (renamed from ProductDetailPage)
+
+      // Takes the id that was passed in from the navigator of the item widget
+    late Future<Item> _itemFuture;
+    final APIService _apiService = APIService(); 
+
+    @override
+    void didChangeDependencies() {
+      super.didChangeDependencies();
+      // Extracting arguments is best done here or in build, 
+      final itemId = ModalRoute.of(context)!.settings.arguments;
+      _itemFuture = _apiService.getItemFromID(itemId);
+    }
+
 
   @override
   Widget build(BuildContext context) {
