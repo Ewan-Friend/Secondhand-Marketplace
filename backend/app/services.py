@@ -1,7 +1,6 @@
 import os
 from supabase import create_client, Client
 
-
 def fetch_user_by_id(supabase_client, user_id):
     # Check that user_id exists first
     if not user_id:
