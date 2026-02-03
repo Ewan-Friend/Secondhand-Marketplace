@@ -63,6 +63,30 @@ class APIService {
     }
   }
 
+  Future<Item> getItemFromID(dynamic id) async {
+    //Construt URL
+    final url = Uri.parse('$baseUrl/item/$id');
+
+    try{
+        final response = await http.get(url);
+        // Check status code of single item response by routes.py
+        if (response.statusCode == 200){
+
+          // Return decoded Item
+          final Map<String, dynamic> data = json.decode(response.body);
+          
+          // Return data as an Item
+          return Item.fromJson(data);
+        } else {
+          throw Exception('Failed to load item: Server returned status ${response.statusCode}');
+        }
+    }
+    catch (e){
+      // Handles in case of errors
+      throw Exception('Network/Server error: Ensure Flask server is running. $e');
+    }
+  }
+
   Future<Map<String, dynamic>> getCurrentUserProfile() async {
     // Construct URL
     final url = Uri.parse('$baseUrl/user/profile');
