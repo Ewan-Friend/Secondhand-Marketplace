@@ -47,9 +47,9 @@ class APIService {
           final Map<String, dynamic> responseData = json.decode(response.body);
           final List<dynamic> data = responseData['table_data'];
 
-          if (kDebugMode) {
-            debugPrint(response.body); 
-          }
+          // if (kDebugMode) {
+          //   debugPrint(response.body); 
+          // }
 
           return data.map((json) => Item.fromJson(json)).toList();
         } else {
@@ -64,6 +64,9 @@ class APIService {
   }
 
   Future<Item> getItemFromID(dynamic id) async {
+
+    if (id == null) throw Exception("Item id is Null");
+
     //Construt URL
     final url = Uri.parse('$baseUrl/item/$id');
 
@@ -74,9 +77,13 @@ class APIService {
 
           // Return decoded Item
           final Map<String, dynamic> data = json.decode(response.body);
+
+          if (kDebugMode) {
+            debugPrint(response.body); 
+          }
           
           // Return data as an Item
-          return Item.fromJson(data);
+          return Item.fromJson(data['table_data']);
         } else {
           throw Exception('Failed to load item: Server returned status ${response.statusCode}');
         }

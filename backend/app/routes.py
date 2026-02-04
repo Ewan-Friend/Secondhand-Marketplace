@@ -101,7 +101,7 @@ def get_item(item_id):
     if not item:
         return jsonify({"message": "item could not be found", "status_code": 404})
 
-    return jsonify({"table_data": item, "status_code": 200})
+    return jsonify({"table_data": item, "status_code": 200}), 200
 
 
 @bp.route("/register", methods=["POST"])
