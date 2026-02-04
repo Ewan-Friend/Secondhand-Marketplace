@@ -22,6 +22,8 @@ class _ItemDetailState extends State<ItemDetailPage> {
     _itemFuture = _apiService.getItemFromID(itemId);
   }
 
+  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,7 +59,7 @@ class _ItemDetailState extends State<ItemDetailPage> {
                         children: [
                           Expanded(
                             child: Text(
-                              'Product Title'   ,
+                              item.title  ,
                               style: Theme.of(context)
                                   .textTheme
                                   .headlineSmall
@@ -98,7 +100,7 @@ class _ItemDetailState extends State<ItemDetailPage> {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      _ImageCollage(),
+                                      _ImageCollage(item: item),
                                       SizedBox(height: 20),
                                       _ConditionTag(),
                                       SizedBox(height: 10),
@@ -117,8 +119,8 @@ class _ItemDetailState extends State<ItemDetailPage> {
                                   flex: 3,
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.stretch,
-                                    children: const [
-                                      _Price(text: 'CHF 120'),
+                                    children: [
+                                      _Price(text: "${item.price.toString()} CHF"),
                                       SizedBox(height: 12),
                                       _ContactSellerButton(),
                                       SizedBox(height: 12),
@@ -131,7 +133,7 @@ class _ItemDetailState extends State<ItemDetailPage> {
                           : Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const _ImageCollage(),
+                                 _ImageCollage(item: item),
                                 const SizedBox(height: 16),
                                 const _Price(text: 'CHF 120'),
                                 const SizedBox(height: 12),
@@ -229,7 +231,8 @@ class _Header extends StatelessWidget { // build the top bar: back button, locat
 }
 
 class _ImageCollage extends StatelessWidget {
-  const _ImageCollage();
+  final Item item;  
+  const _ImageCollage({required this.item});
 
   @override
   Widget build(BuildContext context) {
@@ -237,25 +240,43 @@ class _ImageCollage extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
-          flex: 7,
+          flex: 3,
           child: AspectRatio(
             aspectRatio: 4 / 3,
-            child: const _ImagePlaceholder(),
+            child: _buildImage(0),
           ),
         ),
         const SizedBox(width: 16),
         Expanded(
-          flex: 5,
+          flex: 2,
           child: Column(
-            children: const [
-              AspectRatio(aspectRatio: 4 / 3, child: _ImagePlaceholder()),
+            children: [
+              AspectRatio(aspectRatio: 4 / 3, child: _buildImage(1)),
               SizedBox(height: 16),
-              AspectRatio(aspectRatio: 4 / 3, child: _ImagePlaceholder()),
+              AspectRatio(aspectRatio: 4 / 3, child: _buildImage(2)),
             ],
           ),
         ),
       ],
     );
+  }
+
+  // Builds the image, if no image then use placeholder
+  Widget _buildImage(int index) {
+    // Simply builds the image from the corresponding Supabase link
+    if (item.imageUrls.length > index) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: Image.network(
+          item.imageUrls[index],
+          fit: BoxFit.cover,
+          // Use the placeholder if the network request fails
+          errorBuilder: (context, error, stackTrace) => const _ImagePlaceholder(),
+        ),
+      );
+    } else {
+      return const _ImagePlaceholder();
+    }
   }
 }
 
@@ -285,7 +306,7 @@ class _ConditionTag extends StatelessWidget {
       children: [
         Icon(Icons.sell_outlined, size: 18, color: Colors.red.shade400),
         const SizedBox(width: 6),
-        Text('Condition', style: TextStyle(fontSize: 13, color: Colors.grey.shade700)),
+        Text('CONDITION NOT IMPLEMENTED', style: TextStyle(fontSize: 13, color: Colors.grey.shade700)),
       ],
     );
   }
