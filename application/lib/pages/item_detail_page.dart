@@ -126,7 +126,7 @@ class _ItemDetailState extends State<ItemDetailPage> {
                                       SizedBox(height: 12),
                                       _ContactSellerButton(),
                                       SizedBox(height: 12),
-                                      _SellerCard(),
+                                      _SellerCard(sellerInfo: item.sellerInfo,),
                                     ],
                                   ),
                                 ),
@@ -149,7 +149,7 @@ class _ItemDetailState extends State<ItemDetailPage> {
                                 style: const TextStyle(fontSize: 14, height: 1.5)  
                                 ),
                                 SizedBox(height: 16),
-                                _SellerCard(),
+                                _SellerCard(sellerInfo: item.sellerInfo,),
                               ],
                             ),
                     ],
@@ -370,8 +370,8 @@ class _ContactSellerButton extends StatelessWidget {
 }
 
 class _SellerCard extends StatelessWidget {
-  final Map<String, dynamic>? seller; // Accepts the seller_info from Python
-  const _SellerCard({this.seller});
+  final Map<String, dynamic>? sellerInfo; // Accepts the seller_info from Python
+  const _SellerCard({this.sellerInfo});
 
   @override
   Widget build(BuildContext context) {
@@ -388,24 +388,27 @@ class _SellerCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                const CircleAvatar(
+                // ------ PROFILE PICTURE ------
+                CircleAvatar(
                   radius: 26,
                   backgroundColor: Color(0xFFD9D9D9),
-                  child: Icon(Icons.person, color: Colors.white70, size: 30),
+                  backgroundImage:
+                    sellerInfo?["avatar_url"] != null ? NetworkImage(sellerInfo?["avatar_url"]) : null,
+                  child:  sellerInfo?["avatar_url"] == null ? Icon(Icons.person_2, size: 24, color: Colors.grey.shade500) : null,
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Seller Name',
+                       Text(
+                        sellerInfo?["username"],
                         style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
                       ),
                       const SizedBox(height: 2),
                       Row(
                         children: [
-                          const Text('4.12', style: TextStyle(fontSize: 13, color: Colors.black87)),
+                          Text(sellerInfo!["rating_score"].toString(), style: TextStyle(fontSize: 13, color: Colors.black87)),
                           const SizedBox(width: 6),
                           ...List.generate(5, (i) {
                             return Icon(
@@ -422,7 +425,7 @@ class _SellerCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 10),
-            const Text('posting for 7 months',
+            const Text('posting for [NOT IMPLEMENTED] months',
                 style: TextStyle(fontSize: 12, color: Colors.black54)),
             const SizedBox(height: 8),
             TextButton(
@@ -465,20 +468,6 @@ class _LocationChip extends StatelessWidget {
           Text(label, style: TextStyle(color: Colors.grey.shade800)),
         ],
       ),
-    );
-  }
-}
-
-class _LoremIpsum extends StatelessWidget {
-  const _LoremIpsum();
-
-  @override
-  Widget build(BuildContext context) {
-    const text =
-        'Lorem Ipsum is simply dummy text of the printing and typesetting industry.';
-    return Text(
-      text,
-      style: const TextStyle(fontSize: 14, color: Colors.black87, height: 1.5),
     );
   }
 }
