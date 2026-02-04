@@ -3,7 +3,9 @@ import '../services/api_service.dart';
 import '../models/item_model.dart';
 
 class ItemDetailPage extends StatefulWidget {
-  const ItemDetailPage({super.key});
+  // accepts the ID from the
+  final String? itemId;
+  const ItemDetailPage({super.key, this.itemId});
   
   @override
   State<ItemDetailPage> createState() => _ItemDetailState();
@@ -18,7 +20,7 @@ class _ItemDetailState extends State<ItemDetailPage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Extracting arguments is best done here or in build, 
-    final itemId = ModalRoute.of(context)!.settings.arguments;
+    final itemId = widget.itemId;
     _itemFuture = _apiService.getItemFromID(itemId);
   }
 
