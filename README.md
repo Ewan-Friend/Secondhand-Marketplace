@@ -166,9 +166,10 @@ The following diagram illustrates the Secondhand Marketplace software architectu
 - [Gantt Chart](https://github.com/orgs/spe-uob/projects/310/views/2)
 
 ## Other Documentation Links
-- [AI usage docs](https://github.com/spe-uob/2025-SecondhandMarketplace/blob/task/193-improve-conciseness-of-readme/docs/AI_usage/Ai_info.md)
-- [Github naming conventions](https://github.com/spe-uob/2025-SecondhandMarketplace/blob/task/193-improve-conciseness-of-readme/docs/naming_conventions/naming_conventions.md)
-- [Detailed setup guide](https://github.com/spe-uob/2025-SecondhandMarketplace/blob/task/193-improve-conciseness-of-readme/docs/project-setup/project-setup.md)
+- [AI usage docs](https://github.com/spe-uob/2025-SecondhandMarketplace/blob/dev/docs/AI_usage/Ai_info.md)
+- [Database structure](https://github.com/spe-uob/2025-SecondhandMarketplace/blob/dev/docs/database-structure/database-structure.md)
+- [Github naming conventions](https://github.com/spe-uob/2025-SecondhandMarketplace/blob/dev/docs/naming_conventions/naming_conventions.md)
+- [Detailed setup guide](https://github.com/spe-uob/2025-SecondhandMarketplace/blob/dev/docs/project-setup/project-setup.md)
 
 ## Team Members
 | Members | Email |
