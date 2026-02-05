@@ -12,7 +12,7 @@ class ItemDetailPage extends StatelessWidget { // overall layout (renamed from P
       // Header (navigation bar)
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(80),
-        child: Header(), 
+        child: Header(showSearch: false), // search functionality disabled
       ),
       body: SafeArea(
         child: LayoutBuilder(

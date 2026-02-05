@@ -52,43 +52,51 @@ class Header extends StatelessWidget {
             iconColor: cs.primary,
             textColor: cs.onSurface,
           ),
-          const SizedBox(width: 60),
 
           // Search bar
-          if (showSearch) ... [
-            Expanded(
-              child: Container(
-                height: 80,
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade200,
-                  borderRadius: BorderRadius.circular(28),
-                ),
-                padding: const EdgeInsets.only(left: 30, right: 6),
-                child: Row(
-                  children: [
-                    const Expanded(
-                      child: TextField(
-                        decoration: InputDecoration(
-                          hintText: 'Search for an item',
-                          border: InputBorder.none,
+          Expanded(
+            child: Align(
+              alignment: Alignment.center,
+              child: showSearch
+                  ? ConstrainedBox(
+                      constraints: const BoxConstraints(
+                        minWidth: 280,
+                        maxWidth: 620,
+                      ),
+                      child: Container(
+                        height: 80,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade200,
+                          borderRadius: BorderRadius.circular(28),
+                        ),
+                        padding: const EdgeInsets.only(left: 30, right: 6),
+                        child: Row(
+                          children: [
+                            const Expanded(
+                              child: TextField(
+                                decoration: InputDecoration(
+                                  hintText: 'Search for an item',
+                                  border: InputBorder.none,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: cs.primary,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(Icons.search,
+                                  color: Colors.white, size: 24),
+                            ),
+                          ],
                         ),
                       ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: cs.primary,
-                        shape: BoxShape.circle,
-                      ),
-                      width: 40,
-                      height: 40,
-                      child: const Icon(Icons.search, color: Colors.white, size: 24),
-                    ),
-                  ],
-                ),
-              ),
+                    )
+                  : const SizedBox.shrink(),
             ),
-          ],
-          const SizedBox(width: 60),
+          ),
 
           // Action icons
           IconButton(
