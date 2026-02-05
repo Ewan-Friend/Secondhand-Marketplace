@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/header.dart';
 
 class PostItemsPage extends StatefulWidget {
   const PostItemsPage({super.key});
@@ -13,6 +14,11 @@ class _PostItemsPage extends State<PostItemsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: PreferredSize(
+        // top navigation bar
+        preferredSize: Size.fromHeight(80),
+        child: Header(showSearch: false), 
+      ),
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -22,8 +28,6 @@ class _PostItemsPage extends State<PostItemsPage> {
                   const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
               child: Column(
                 children: [
-                  const _TopBar(),
-                  const SizedBox(height: 24),
                   Expanded(
                     child: SingleChildScrollView(
                       child: isWide
