@@ -29,13 +29,17 @@ class _PostItemsPage extends State<PostItemsPage> {
               child: Column(
                 children: [
                   Expanded(
-                    child: SingleChildScrollView(
                       child: isWide
                           ? Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Expanded(child: _buildForm(context)),
+                                Expanded(
+                                  child: SingleChildScrollView(
+                                    child: _buildForm(context),
+                                  ),
+                                ),
                                 const SizedBox(width: 48),
+
                                 const _SideButtons(),
                               ],
                             )
@@ -47,7 +51,6 @@ class _PostItemsPage extends State<PostItemsPage> {
                                 const _SideButtons(),
                               ],
                             ),
-                    ),
                   ),
                 ],
               ),
