@@ -26,74 +26,20 @@ class _HomePageState extends State<HomePage> {
     'Explore', 'Clothing', 'Electronics', 'Home', 'Kids', 'Sports', 'Books & Media', 'Vehicles', 'Hobbies', 'Beauty'
   ];
 
-  // Placeholder product data
-  final List<Map<String, dynamic>> _products = [
-    {
-      'name': 'iPhone 13 Pro',
-      'price': 'CHF 799',
-      'image': Icons.phone_iphone,
-      'condition': 'Like New',
-      'location' : 'Bristol, UK'
-    },
-    {
-      'name': 'Leather Sofa',
-      'price': 'CHF 250',
-      'image': Icons.weekend,
-      'condition': 'Good',
-      'location' : 'Bristol, UK'
-    },
-    {
-      'name': 'Winter Jacket',
-      'price': 'CHF 85',
-      'image': Icons.checkroom,
-      'condition': 'Excellent',
-      'location' : 'Cheltenham, UK'
-    },
-    {
-      'name': 'MacBook Air',
-      'price': 'CHF 650',
-      'image': Icons.laptop_mac,
-      'condition': 'Very Good',
-      'location' : 'Bath, UK'
-    },
-    {
-      'name': 'Gaming Chair',
-      'price': 'CHF 200',
-      'image': Icons.chair,
-      'condition': 'Good',
-      'location' : 'Bristol, UK'
-    },
-    {
-      'name': 'Bicycle',
-      'price': 'CHF 320',
-      'image': Icons.pedal_bike,
-      'condition': 'Excellent',
-      'location' : 'Bristol, UK'
-    },
-  ];
-
   @override 
-  void initState(){
-    super.initState();
-    // Calls check on API
-    _checkApi();
-    _futureItems = _apiService.getItems();
+    void initState(){
+      super.initState();
+      // Start fetching item data immediately
+      _futureItems = _apiService.getItems(); 
+      _checkApi();
   }
 
-  
   void _checkApi() async {
     final apiService = APIService();
-
-    try {
-      final result = await apiService.checkConnection();
-      setState(() {
-        _apiMessage = result['message'] ?? 'Unknown response';
-      });
-    } catch (e) {
-      setState(() {
-        _apiMessage = 'Error: $e';
-      });
-    }
+    final result = await apiService.checkConnection();
+    setState(() {
+      _apiMessage = result['message'] ?? 'Unknown';
+    });
   }
 
   @override
@@ -112,18 +58,6 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-              // API connection check, displays message
-             Padding(
-               padding: const EdgeInsets.all(16.0),
-               child: Text(
-                  _apiMessage, // the message from APIService
-                  style: const TextStyle(
-                  color: Colors.red,
-                  fontSize: 10,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
 
             // Horizontal Category List
             SizedBox(
@@ -164,120 +98,37 @@ class _HomePageState extends State<HomePage> {
             // Product Grid
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: 
-                GridView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 500, // max width per card
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
-                    childAspectRatio: 0.76, // width / height ratio of each card
-                  ),
-                  itemCount: _products.length,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {Navigator.pushNamed(context, '/item');},
-                      child: ConstrainedBox(
-                        constraints: const BoxConstraints(
-                          minWidth: 400,
-                        ),
-                        child: Card(
-                          elevation: 0,
-                          color: Colors.white,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-                          clipBehavior: Clip.antiAlias,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Image
-                              AspectRatio(
-                                aspectRatio: 1.2, // slightly wider than tall
-                                child: Container(
-                                  color: Colors.grey.shade300,
-                                  child: Center(
-                                    child: Icon(
-                                      _products[index]['image'],
-                                      size: 60,
-                                      color: Colors.grey.shade400,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              // Description — fits inside fixed card height
-                              Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Expanded(
-                                          child: Text(
-                                            _products[index]['name'],
-                                            style: const TextStyle(
-                                                fontWeight: FontWeight.w500, fontSize: 22),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
-                                        Text(
-                                          _products[index]['price'],
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.w400, fontSize: 20),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            const Icon(Icons.location_on,
-                                                size: 16, color: Color(0xFFE36D6D)),
-                                            const SizedBox(width: 4),
-                                            Text(
-                                              _products[index]['location'] ?? 'Unknown',
-                                              style: TextStyle(
-                                                  fontSize: 14, color: Colors.grey.shade700),
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            const Icon(Icons.sell,
-                                                size: 16, color: Color(0xFFE36D6D)),
-                                            const SizedBox(width: 4),
-                                            Text(
-                                              _products[index]['condition'] ?? 'Unknown',
-                                              style: TextStyle(
-                                                  fontSize: 14, color: Colors.grey.shade700),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 16),
-                                    UserWidget(
-                                      userName: "Markus Aurelius",
-                                      rating: 4.84,
-                                      reviews: 23,
-                                      avatarUrl: null,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                )
-            ),
+              child: FutureBuilder<List<Item>>(
+                future: _futureItems, // Your API call initialized in initState
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Center(child: Text('No items found'));
+                  }
 
+                  final items = snapshot.data!;
+
+                  return GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 500, // max width per card
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
+                      childAspectRatio: 0.76, // Matches your design ratio
+                    ),
+                    itemCount: items.length,
+                    itemBuilder: (context, index) {
+                      // This replaces the manual GestureDetector/Card block
+                      return ItemCard(item: items[index]);
+                    },
+                  );
+                },
+              ),
+            ),
             const SizedBox(height: 20),
           ],
         ),

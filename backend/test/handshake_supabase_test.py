@@ -19,8 +19,13 @@ def test_get_data_success(client):
             "seller_id": "abc123",
             "title": "test item",
             "created_at": "2001-01-01T12:00:00", #Test formatting may be wrong
+            "description": "this is an example item used for testing purposes",
             "rating": "2.5",
-            "price": "10.10"}]
+            "price": "10.10",
+            "item_images": [
+                {"image_url": "path/to/img1.png"},
+                {"image_url": "path/to/img2.png"}
+            ]}]
         
         mock_supabase.table.return_value.select.return_value.order.return_value.limit.return_value.execute.return_value = mock_response
 
@@ -29,6 +34,9 @@ def test_get_data_success(client):
         data = response.get_json()
 
         items = data.get('table_data', [])
+
+        # Check response structure
+        print(response.get_json())
 
         # Test response was got successfully
         assert response.status_code == 200
@@ -43,7 +51,21 @@ def test_get_data_success(client):
         assert isinstance(item["seller_id"], str)
         assert isinstance(item["title"], str)
         assert isinstance(item["created_at"], str)
+        assert isinstance(item["description"], str)
+
         # Ensure floating point precision
+        assert isinstance(item["rating"], float) 
+        assert item["rating"] == 2.5
         assert isinstance(item["price"], float) 
         assert item["price"] == 10.10
-# run python3 -m pytest test/handshake_supabase_test.py 
+
+        # Check Image URL list was correctly processed
+        assert isinstance(item['image_urls'], list)
+        assert len(item['image_urls']) == 2
+        assert item['image_urls'][0] == "path/to/img1.png"
+
+# without response print
+# python3 -m pytest test/handshake_supabase_test.py 
+
+# with response print
+# python3 -m pytest -s test/handshake_supabase_test.py
