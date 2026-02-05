@@ -1,22 +1,28 @@
 import 'package:flutter/material.dart';
+import '../widgets/header.dart';
 
 class ItemDetailPage extends StatelessWidget { // overall layout (renamed from ProductDetailPage)
   const ItemDetailPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     return Scaffold(
+      backgroundColor: cs.surface,
+      // Header (navigation bar)
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(80),
+        child: Header(), 
+      ),
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
             final isWide = constraints.maxWidth >= 980;
             return SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const _Header(),
-                  const SizedBox(height: 24),
                   // Title row
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -24,10 +30,11 @@ class ItemDetailPage extends StatelessWidget { // overall layout (renamed from P
                       Expanded(
                         child: Text(
                           'Product Title',
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineSmall
-                              ?.copyWith(fontWeight: FontWeight.w700),
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
                         ),
                       ),
                       IconButton(
