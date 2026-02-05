@@ -7,7 +7,12 @@ import '../pages/messages_page.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class Header extends StatelessWidget {
-  Header({super.key});
+  Header({
+    super.key,
+    this.showSearch = true,
+    });
+
+  final bool showSearch;
 
   @override
   Widget build(BuildContext context) {
@@ -50,37 +55,39 @@ class Header extends StatelessWidget {
           const SizedBox(width: 60),
 
           // Search bar
-          Expanded(
-            child: Container(
-              height: 80,
-              decoration: BoxDecoration(
-                color: Colors.grey.shade200,
-                borderRadius: BorderRadius.circular(28),
-              ),
-              padding: const EdgeInsets.only(left: 30, right: 6),
-              child: Row(
-                children: [
-                  const Expanded(
-                    child: TextField(
-                      decoration: InputDecoration(
-                        hintText: 'Search for an item',
-                        border: InputBorder.none,
+          if (showSearch) ... [
+            Expanded(
+              child: Container(
+                height: 80,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade200,
+                  borderRadius: BorderRadius.circular(28),
+                ),
+                padding: const EdgeInsets.only(left: 30, right: 6),
+                child: Row(
+                  children: [
+                    const Expanded(
+                      child: TextField(
+                        decoration: InputDecoration(
+                          hintText: 'Search for an item',
+                          border: InputBorder.none,
+                        ),
                       ),
                     ),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: cs.primary,
-                      shape: BoxShape.circle,
+                    Container(
+                      decoration: BoxDecoration(
+                        color: cs.primary,
+                        shape: BoxShape.circle,
+                      ),
+                      width: 40,
+                      height: 40,
+                      child: const Icon(Icons.search, color: Colors.white, size: 24),
                     ),
-                    width: 40,
-                    height: 40,
-                    child: const Icon(Icons.search, color: Colors.white, size: 24),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
+          ],
           const SizedBox(width: 60),
 
           // Action icons
