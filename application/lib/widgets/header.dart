@@ -1,9 +1,10 @@
+import 'package:application/pages/home_page.dart';
 import 'package:application/pages/post_items_page.dart';
 import 'package:flutter/material.dart';
 import '../pages/profile_page.dart';
-import '../pages/create_listing_page.dart';
 import '../pages/favourites_page.dart';
 import '../pages/messages_page.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class Header extends StatelessWidget {
   Header({super.key});
@@ -13,9 +14,32 @@ class Header extends StatelessWidget {
     final cs = Theme.of(context).colorScheme;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 80),
+      padding: const EdgeInsets.only(top: 16, bottom: 16, left: 15, right: 80),
       child: Row(
         children: [
+          // Logo
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const HomePage()),
+              );
+            },
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(
+              minWidth: 32,
+              minHeight: 32,
+            ),
+            tooltip: 'Home',
+            icon: SvgPicture.asset(
+              'assets/logo/logo-static.svg',
+              height: 80,
+            ),
+          ),
+          
+          const SizedBox(width: 24),
+          
+          // Location
           _LocationChip(
             icon: Icons.location_on,
             label: 'Bristol, UK',
