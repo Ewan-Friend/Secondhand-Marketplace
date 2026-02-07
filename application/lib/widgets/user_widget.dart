@@ -21,7 +21,7 @@ class UserWidget extends StatelessWidget {
       children: [
         // Circular Avatar
         CircleAvatar(
-          radius: 20,
+          radius: 28,
           backgroundColor: Colors.grey.shade300,
           backgroundImage:
               avatarUrl != null ? NetworkImage(avatarUrl!) : null,
@@ -36,7 +36,7 @@ class UserWidget extends StatelessWidget {
               userName,
               style: TextStyle(
                 fontWeight: FontWeight.normal,
-                fontSize: 16,
+                fontSize: 20,
               ),
             ),
             SizedBox(height: 4),
@@ -46,12 +46,12 @@ class UserWidget extends StatelessWidget {
                 SizedBox(width: 4),
                 Text(
                   rating.toStringAsFixed(2),
-                  style: TextStyle(fontSize: 12),
+                  style: TextStyle(fontSize: 14),
                 ),
                 SizedBox(width: 6),
                 Text(
                   '· $reviews reviews',
-                  style: TextStyle(fontSize: 12),
+                  style: TextStyle(fontSize: 14),
                 ),
               ],
             ),
