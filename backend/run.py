@@ -9,9 +9,9 @@ app = create_app()
 if __name__ == "__main__":
     # Enable live reload for developmental purposes
     # Using port 5001 because 5000 is often occupied by AirPlay on macOS
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host="0.0.0.0", port=5000)
 
-'''
+"""
 ~~~~~~~~~~~~~~~~~~ SOME ADVICE FOR RUNNING ~~~~~~~~~~~~~~~~~~~~~
 (code is currently in a testing phase to ensure flask functions correctly)
 
@@ -35,4 +35,4 @@ appending /hello to the end of the url will show output, this is a test of the b
 run.py -> starts server
 create_app() in init.py -> builds the app
 routes.py -> endpoints
-'''
+"""

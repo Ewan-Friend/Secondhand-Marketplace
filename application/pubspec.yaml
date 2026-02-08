@@ -11,6 +11,7 @@ dependencies:
     sdk: flutter
   http: ^1.2.1
   supabase_flutter: ^2.10.3
+  flutter_svg: ^2.0.9
 
 dev_dependencies:
   flutter_test:
@@ -34,3 +35,5 @@ flutter:
         - asset: assets/fonts/Poppins-Italic.ttf
           weight: 400
           style: italic
+  assets:
+    - assets/logo/logo-static.svg

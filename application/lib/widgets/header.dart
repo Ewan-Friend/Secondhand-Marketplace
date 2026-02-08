@@ -1,20 +1,50 @@
+import 'package:application/pages/home_page.dart';
+import 'package:application/pages/post_items_page.dart';
 import 'package:flutter/material.dart';
 import '../pages/profile_page.dart';
-import '../pages/create_listing_page.dart';
 import '../pages/favourites_page.dart';
 import '../pages/messages_page.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class Header extends StatelessWidget {
-  Header({super.key});
+  Header({
+    super.key,
+    this.showSearch = true,
+    });
+
+  final bool showSearch;
 
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 80),
+      padding: const EdgeInsets.only(top: 16, bottom: 16, left: 15, right: 80),
       child: Row(
         children: [
+          // Logo
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const HomePage()),
+              );
+            },
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(
+              minWidth: 32,
+              minHeight: 32,
+            ),
+            tooltip: 'Home',
+            icon: SvgPicture.asset(
+              'assets/logo/logo-static.svg',
+              height: 80,
+            ),
+          ),
+          
+          const SizedBox(width: 24),
+          
+          // Location
           _LocationChip(
             icon: Icons.location_on,
             label: 'Bristol, UK',
@@ -22,52 +52,64 @@ class Header extends StatelessWidget {
             iconColor: cs.primary,
             textColor: cs.onSurface,
           ),
-          const SizedBox(width: 60),
 
           // Search bar
           Expanded(
-            child: Container(
-              height: 80,
-              decoration: BoxDecoration(
-                color: Colors.grey.shade200,
-                borderRadius: BorderRadius.circular(28),
-              ),
-              padding: const EdgeInsets.only(left: 30, right: 6),
-              child: Row(
-                children: [
-                  const Expanded(
-                    child: TextField(
-                      decoration: InputDecoration(
-                        hintText: 'Search for an item',
-                        border: InputBorder.none,
+            child: Align(
+              alignment: Alignment.center,
+              child: showSearch
+                  ? ConstrainedBox(
+                      constraints: const BoxConstraints(
+                        minWidth: 280,
+                        maxWidth: 620,
                       ),
-                    ),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: cs.primary,
-                      shape: BoxShape.circle,
-                    ),
-                    width: 40,
-                    height: 40,
-                    child: const Icon(Icons.search, color: Colors.white, size: 24),
-                  ),
-                ],
-              ),
+                      child: Container(
+                        height: 80,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade200,
+                          borderRadius: BorderRadius.circular(28),
+                        ),
+                        padding: const EdgeInsets.only(left: 30, right: 6),
+                        child: Row(
+                          children: [
+                            const Expanded(
+                              child: TextField(
+                                decoration: InputDecoration(
+                                  hintText: 'Search for an item',
+                                  border: InputBorder.none,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: cs.primary,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(Icons.search,
+                                  color: Colors.white, size: 24),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  : const SizedBox.shrink(),
             ),
           ),
-          const SizedBox(width: 60),
 
           // Action icons
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const FavouritesPage()),
-              );
-            },
-            tooltip: 'Wishlist',
-            icon: const Icon(Icons.favorite_border, size: 30),
+          _HoverScale(
+            child: IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const FavouritesPage()),
+                );
+              },
+              tooltip: 'Wishlist',
+              icon: const Icon(Icons.favorite_border, size: 30),
+            ),
           ),
           IconButton(
             onPressed: () {
@@ -83,7 +125,7 @@ class Header extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const CreateListingPage()),
+                MaterialPageRoute(builder: (context) => const PostItemsPage()),
               );
             },
             tooltip: 'Post Item',
@@ -138,6 +180,39 @@ class _LocationChip extends StatelessWidget {
             style: TextStyle(color: textColor, fontWeight: FontWeight.w500, fontSize: 16),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Hover scale animation wrapper for subtle scale effect on mouse hover.
+class _HoverScale extends StatefulWidget {
+  final Widget child;
+  final double hoverScale;
+
+  const _HoverScale({
+    required this.child,
+    this.hoverScale = 1.1,
+  });
+
+  @override
+  State<_HoverScale> createState() => _HoverScaleState();
+}
+
+class _HoverScaleState extends State<_HoverScale> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: AnimatedScale(
+        scale: _isHovered ? widget.hoverScale : 1.0,
+        duration: const Duration(milliseconds: 120),
+        curve: Curves.easeOut,
+        child: widget.child,
       ),
     );
   }
