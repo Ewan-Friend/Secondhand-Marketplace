@@ -121,10 +121,10 @@ class ItemCard extends StatelessWidget{
                     const SizedBox(height: 16),
                     // Seller Info Section
                     UserWidget(
-                      userName: "Markus Aurelius",
-                      rating: 4.84,
-                      reviews: 23,
-                      avatarUrl: null,
+                      userName: item.sellerInfo["username"],
+                      rating: item.sellerInfo["rating_score"],
+                      reviews: item.sellerInfo["rating_count"],
+                      avatarUrl: item.sellerInfo["avatar_url"],
                     ),
                   ],
                 ),

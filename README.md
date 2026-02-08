@@ -17,6 +17,7 @@
 - [Stakeholders](#stakeholders)
 - [User Stories](#user-stories)
 - [Project Management](#project-management)
+- [Other Documentation Links](#other-documentation-links)
 - [Team Members](#team-members)
 
 ## Project description
@@ -92,30 +93,22 @@ venv/Scripts/Activate.ps1
 ```bash
 pip install -r backend/requirements.txt
 ```
-> Run once per venv (or after dependency updates).
-
 4) **Run Flask backend**
 ```bash
 python backend/run.py
 ```
-> Run from project root. If you are already in `backend/`, use `python run.py`.
-
 5) **Install frontend dependencies**
 ```bash
 cd application
 flutter pub get
 ```
-> Run once (or after updates / `flutter clean`).  
-> From project root; if you are in `backend/`, use `cd backend/application`.
-
 6) **Run Flutter frontend**
 ```bash
 flutter run
 # or specify a device:
 flutter run -d [environment name - e.g: chrome]
 ```
-> Make sure you are in the `application/` folder.
-
+*if you are having issues, find a more detailed guide to local setup [here](https://github.com/spe-uob/2025-SecondhandMarketplace/blob/task/193-improve-conciseness-of-readme/docs/project-setup/project-setup.md#local-development)*
 ### Approach 2: Docker (recommended for quick start)
 This approach only requires Docker Desktop (or alternatives). All dependencies run inside containers.
 
@@ -125,17 +118,15 @@ git clone https://github.com/spe-uob/2025-SecondhandMarketplace.git
 # or (SSH)
 git clone git@github.com:spe-uob/2025-SecondhandMarketplace.git
 ```
-
 2) **Build + launch**
 ```bash
 docker compose up --build
 ```
-> Containers can then be run/managed in Docker Desktop (or alternative).
-
 3) **Access**
 - Frontend: http://localhost:8080
 - Backend: http://localhost:5000
 
+*if you are having issues, find a more detailed guide to docker setup [here](https://github.com/spe-uob/2025-SecondhandMarketplace/blob/task/193-improve-conciseness-of-readme/docs/project-setup/project-setup.md#docker)*
 ## Software architecture
 The following diagram illustrates the Secondhand Marketplace software architecture and the interaction between the Flutter frontend and the Python-Flask backend.
 <p align="left">
@@ -173,6 +164,12 @@ The following diagram illustrates the Secondhand Marketplace software architectu
 ## Project Management
 - [Kanban Board](https://github.com/orgs/spe-uob/projects/310/views/1)
 - [Gantt Chart](https://github.com/orgs/spe-uob/projects/310/views/2)
+
+## Other Documentation Links
+- [AI usage docs](https://github.com/spe-uob/2025-SecondhandMarketplace/blob/dev/docs/AI_usage/Ai_info.md)
+- [Database structure](https://github.com/spe-uob/2025-SecondhandMarketplace/blob/dev/docs/database-structure/database-structure.md)
+- [Github naming conventions](https://github.com/spe-uob/2025-SecondhandMarketplace/blob/dev/docs/naming_conventions/naming_conventions.md)
+- [Detailed setup guide](https://github.com/spe-uob/2025-SecondhandMarketplace/blob/dev/docs/project-setup/project-setup.md)
 
 ## Team Members
 | Members | Email |
