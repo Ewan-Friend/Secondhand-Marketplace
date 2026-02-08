@@ -6,7 +6,6 @@ import 'pages/profile_page.dart';
 import 'pages/login_page.dart';
 import 'pages/post_items_page.dart';
 import 'pages/sign_up_page.dart';
-import 'pages/create_listing_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,7 +29,6 @@ class MainApp extends StatelessWidget {
         '/':   (_) => const HomePage(),
         '/login':  (_) => const LoginPage(),
         '/signup': (_) => const SignUpPage(),
-        '/create': (_) => const CreateListingPage(),
         '/profile':(_) => const ProfilePage(),
         '/post':   (_) => const PostItemsPage(),
       },

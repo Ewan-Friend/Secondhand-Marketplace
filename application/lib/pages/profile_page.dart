@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
+import '../widgets/header.dart';
 
 class ProfilePage extends StatefulWidget {
   final String? userId; // If null, shows current user's profile
@@ -179,45 +180,10 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Row(
-          children: [
-            const Icon(Icons.location_on, color: Color(0xFFFF7B7B), size: 20),
-            const SizedBox(width: 4),
-            Text(
-              _userData?['location']?.split(',').first ?? 'Bristol, UK',
-              style: const TextStyle(
-                fontSize: 16,
-                color: Colors.black,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.favorite_border, color: Colors.black),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: const Icon(Icons.chat_bubble_outline, color: Colors.black),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: const Icon(Icons.add_circle_outline, color: Colors.black),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: const Icon(Icons.person_outline, color: Colors.black),
-            onPressed: () {},
-          ),
-        ],
+      appBar: PreferredSize(
+        // top navigation bar
+        preferredSize: Size.fromHeight(80),
+        child: Header(showSearch: false), 
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())

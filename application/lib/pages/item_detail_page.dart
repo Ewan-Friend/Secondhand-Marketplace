@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/header.dart';
 import '../services/api_service.dart';
 import '../models/item_model.dart';
 
@@ -28,7 +29,14 @@ class _ItemDetailState extends State<ItemDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     return Scaffold(
+      backgroundColor: cs.surface,
+      // Header (navigation bar)
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(80),
+        child: Header(showSearch: false), // search functionality disabled
+      ),
       body: SafeArea(
         // CREATE THE ITEM INFO HOORAY
         child: FutureBuilder<Item>(
@@ -62,10 +70,11 @@ class _ItemDetailState extends State<ItemDetailPage> {
                           Expanded(
                             child: Text(
                               item.title  ,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headlineSmall
-                                  ?.copyWith(fontWeight: FontWeight.w700),
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                              )
                             ),
                           ),
                           IconButton(
