@@ -60,15 +60,17 @@ class Header extends StatelessWidget {
           const SizedBox(width: 60),
 
           // Action icons
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const FavouritesPage()),
-              );
-            },
-            tooltip: 'Wishlist',
-            icon: const Icon(Icons.favorite_border, size: 30),
+          _HoverScale(
+            child: IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const FavouritesPage()),
+                );
+              },
+              tooltip: 'Wishlist',
+              icon: const Icon(Icons.favorite_border, size: 30),
+            ),
           ),
           IconButton(
             onPressed: () {
@@ -139,6 +141,39 @@ class _LocationChip extends StatelessWidget {
             style: TextStyle(color: textColor, fontWeight: FontWeight.w500, fontSize: 16),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Hover scale animation wrapper for subtle scale effect on mouse hover.
+class _HoverScale extends StatefulWidget {
+  final Widget child;
+  final double hoverScale;
+
+  const _HoverScale({
+    required this.child,
+    this.hoverScale = 1.1,
+  });
+
+  @override
+  State<_HoverScale> createState() => _HoverScaleState();
+}
+
+class _HoverScaleState extends State<_HoverScale> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: AnimatedScale(
+        scale: _isHovered ? widget.hoverScale : 1.0,
+        duration: const Duration(milliseconds: 120),
+        curve: Curves.easeOut,
+        child: widget.child,
       ),
     );
   }
