@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
 import '../widgets/header.dart';
-import '../widgets/user_widget.dart';
 import '../widgets/item_widget.dart';
 import '../models/item_model.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
-  
+
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -15,31 +14,44 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedCategoryIndex = 0;
   final TextEditingController _searchController = TextEditingController();
-  
-  // --- DYNAMIC STATE ---
-  final APIService _apiService = APIService(); 
+
+  final APIService _apiService = APIService();
   late Future<List<Item>> _futureItems;
   String _apiMessage = 'Checking API connection...';
 
-  // Placeholder categories
   final List<String> _categories = [
-    'Explore', 'Clothing', 'Electronics', 'Home', 'Kids', 'Sports', 'Books & Media', 'Vehicles', 'Hobbies', 'Beauty'
+    'Explore',
+    'Clothing',
+    'Electronics',
+    'Home',
+    'Kids',
+    'Sports',
+    'Books & Media',
+    'Vehicles',
+    'Hobbies',
+    'Beauty'
   ];
 
-  @override 
-    void initState(){
-      super.initState();
-      // Start fetching item data immediately
-      _futureItems = _apiService.getItems(); 
-      _checkApi();
+  @override
+  void initState() {
+    super.initState();
+    _futureItems = _apiService.getItems();
+    _checkApi();
   }
 
-  void _checkApi() async {
-    final apiService = APIService();
-    final result = await apiService.checkConnection();
-    setState(() {
-      _apiMessage = result['message'] ?? 'Unknown';
-    });
+  Future<void> _checkApi() async {
+    try {
+      final message = await _apiService.checkConnection(); // <-- String dönüyor
+      if (!mounted) return;
+      setState(() {
+        _apiMessage = message;
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _apiMessage = 'Error: $e';
+      });
+    }
   }
 
   @override
@@ -49,43 +61,51 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: cs.surface,
       appBar: PreferredSize(
-        // top navigation bar
-        preferredSize: Size.fromHeight(80),
-        child: Header(showSearch: true), 
+        preferredSize: const Size.fromHeight(80),
+        child: Header(),
       ),
       body: SingleChildScrollView(
-        
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // API message (debug)
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                _apiMessage,
+                style: const TextStyle(
+                  color: Colors.red,
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
 
-            // Horizontal Category List
+            // Categories
             SizedBox(
               height: 40,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 itemCount: _categories.length,
-                separatorBuilder: (_,_) => const SizedBox(width: 12),
+                separatorBuilder: (_, __) => const SizedBox(width: 12),
                 itemBuilder: (context, index) {
                   final isSelected = index == _selectedCategoryIndex;
-
                   return TextButton(
                     onPressed: () {
-                      setState(() {
-                        _selectedCategoryIndex = index;
-                      });
+                      setState(() => _selectedCategoryIndex = index);
                     },
                     style: TextButton.styleFrom(
-                      padding: EdgeInsets.only(right: 16, left: 16),
-                      minimumSize: const Size(0, 0), // avoid oversized buttons
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      minimumSize: const Size(0, 0),
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
                     child: Text(
                       _categories[index],
                       style: TextStyle(
                         fontSize: 18,
-                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                        fontWeight:
+                            isSelected ? FontWeight.bold : FontWeight.normal,
                         color: Colors.black,
                       ),
                     ),
@@ -95,40 +115,44 @@ class _HomePageState extends State<HomePage> {
             ),
             const SizedBox(height: 24),
 
-            // Product Grid
+            // Items grid from API
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: FutureBuilder<List<Item>>(
-                future: _futureItems, // Your API call initialized in initState
+                future: _futureItems,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
-                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return const Center(child: Text('No items found'));
                   }
 
-                  final items = snapshot.data!;
+                  if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  }
+
+                  final items = snapshot.data ?? [];
+                  if (items.isEmpty) {
+                    return const Center(child: Text('No items found'));
+                  }
 
                   return GridView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 500, // max width per card
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 500,
                       crossAxisSpacing: 16,
                       mainAxisSpacing: 16,
-                      childAspectRatio: 0.76, // Matches your design ratio
+                      childAspectRatio: 0.76,
                     ),
                     itemCount: items.length,
                     itemBuilder: (context, index) {
-                      // This replaces the manual GestureDetector/Card block
                       return ItemCard(item: items[index]);
                     },
                   );
                 },
               ),
             ),
+
             const SizedBox(height: 20),
           ],
         ),
