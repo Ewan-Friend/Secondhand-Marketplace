@@ -51,7 +51,7 @@ class _HomePageState extends State<HomePage> {
       appBar: PreferredSize(
         // top navigation bar
         preferredSize: Size.fromHeight(80),
-        child: Header(), 
+        child: Header(showSearch: true), 
       ),
       body: SingleChildScrollView(
         
