@@ -1,5 +1,6 @@
+import 'package:application/pages/profile_page.dart';
 import 'package:flutter/material.dart';
-import '../widgets/header.dart';
+import 'package:application/widgets/header.dart';
 
 class PostItemsPage extends StatefulWidget {
   const PostItemsPage({super.key});
@@ -28,6 +29,8 @@ class _PostItemsPage extends State<PostItemsPage> {
                   const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
               child: Column(
                 children: [
+                  Header(),
+                  const SizedBox(height: 24),
                   Expanded(
                       child: isWide
                           ? Row(
@@ -249,93 +252,6 @@ class _PostItemsPage extends State<PostItemsPage> {
             ),
           ],
         ),
-      ],
-    );
-  }
-}
-
-class _TopBar extends StatelessWidget {
-  const _TopBar();
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: const [
-            Icon(Icons.location_on, size: 18, color: Colors.redAccent),
-            SizedBox(width: 4),
-            Text(
-              'Bristol, UK',
-              style: TextStyle(fontSize: 14, color: Colors.black87),
-            ),
-          ],
-        ),
-        const SizedBox(width: 16),
-
-        Expanded(
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 480),
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF5F5F7),
-                  borderRadius: BorderRadius.circular(999),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Color(0x11000000),
-                      blurRadius: 2,
-                      offset: Offset(0, 0),
-                    ),
-                  ],
-                ),
-                child: Row(
-                  children: [
-                    const Expanded(
-                      child: TextField(
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          isDense: true,
-                          hintText: 'Search for an item',
-                        ),
-                      ),
-                    ),
-                    Container(
-                      width: 32,
-                      height: 32,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Color(0xFFFF6C6C),
-                      ),
-                      child: const Icon(
-                        Icons.search,
-                        size: 18,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-
-        const SizedBox(width: 16),
-
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: const [
-            Icon(Icons.favorite_border, size: 22),
-            SizedBox(width: 10),
-            Icon(Icons.chat_bubble_outline, size: 22),
-            SizedBox(width: 10),
-            Icon(Icons.add_circle_outline, size: 22),
-            SizedBox(width: 10),
-            Icon(Icons.person_outline, size: 22),
-          ],
-        )
       ],
     );
   }
