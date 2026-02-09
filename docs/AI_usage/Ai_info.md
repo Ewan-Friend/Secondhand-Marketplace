@@ -3,13 +3,15 @@
 ### Tools & Scope
 #### Tools used:
 - Github Copilot: For code completion / suggestions
-- Chatgpt 4 / 5 / Google Gemini: for brainstorming ideas and code structuring
+- Chatgpt 4 / 5 / Google Gemini: for brainstorming ideas and code structuring / Claude Sonnet 4.5
 
 #### Scope of use:
 - Generating boilerplate code
 - Generating unit tests
 - Refactoring
 - Structuring some documentation content
+- Helping design a basic continuous deployment (CD) setup for the backend
+- Asist with structuring and refactoring the Flutter frontend API wiring
 
 #### Prohibited use:
 - Generating images or videos
@@ -18,7 +20,7 @@
 
 ### Procedure
 #### Policies:
-- Always subject AI generated code to the same standard of peer review as with cgroupmates
+- Always subject AI generated code to the same standard of peer review as with groupmates
 - The human developer is always held accountable for generated code
 #### Coding standards
 - AI generated code should be refactored to hold to project code standardisation
@@ -79,6 +81,3 @@ def test_get_user_profile_success(client):
         assert isinstance(profile["username"], str)
         assert isinstance(profile["id"], str)
 ```
-For Task #160, AI tools has used to assist with structuring and refactoring the Flutter frontend API wiring (API service methods and basic UI integration). All generated code was manually reviewed, adjusted, and verified by running the app locally. No secrets, credentials, or deployment-related code were generated using AI.
-
-For task #208, AI tools were also used to help design a basic continuous deployment (CD) setup for the backend, mainly for outlining pipeline steps and deployment flow. The configuration was kept simple and all decisions and final implementations were reviewed and adjusted manually.
