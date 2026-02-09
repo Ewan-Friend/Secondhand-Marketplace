@@ -111,15 +111,17 @@ class Header extends StatelessWidget {
               icon: const Icon(Icons.favorite_border, size: 30),
             ),
           ),
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const MessagesPage()),
-              );
-            },
-            tooltip: 'Messages',
-            icon: const Icon(Icons.chat_bubble_outline, size: 30),
+          _HoverScale(
+            child: IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const MessagesPage()),
+                );
+              },
+              tooltip: 'Messages',
+              icon: const Icon(Icons.chat_bubble_outline, size: 30),
+            ),
           ),
           IconButton(
             onPressed: () {
