@@ -4,9 +4,11 @@
 [![Flutter](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)](https://flutter.dev/)
 [![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![Flask](https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white)](https://palletsprojects.com/p/flask/)
-[![AWS Cloud](https://img.shields.io/badge/AWS-FF9900?style=for-the-badge&logo=amazons3&logoColor=white)](https://aws.amazon.com/)
+[![AWS Cloud](https://img.shields.io/badge/AWS_eb-FF9900?style=for-the-badge&logo=amazons3&logoColor=white)](https://aws.amazon.com/)
 [![Supabase](https://img.shields.io/badge/Supabase-181818?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com/)
-![Docker](https://img.shields.io/badge/Docker-deepskyblue?style=for-the-badge&logo=docker&logoColor=white&labelColor=%231D63ED&color=%231D63ED)
+[![Docker](https://img.shields.io/badge/Docker-deepskyblue?style=for-the-badge&logo=docker&logoColor=white&labelColor=%231D63ED&color=%231D63ED)](https://www.docker.com/)
+[![Ruff](https://img.shields.io/badge/Ruff-galaxy?style=for-the-badge&logo=ruff&logoColor=black&logoSize=auto)](https://docs.astral.sh/ruff/)
+[![Pytest](https://img.shields.io/badge/Pytest-%230A9EDC?style=for-the-badge&logo=pytest&logoColor=white&logoSize=auto)](https://docs.pytest.org/en/stable/)
 
 ## Contents
 - [Project description](#project-description)
@@ -142,24 +144,22 @@ The following diagram illustrates the Secondhand Marketplace software architectu
 
 ### To buy items
 
-<p align="center">
-  <img width="750" alt="purchase item" src="https://github.com/user-attachments/assets/f6795b9b-cc2c-488b-a9d9-d64eeae5eab0">
-</p>
-
 - To browse or purchase a product from the home page, click on the product you would like to look at to open the "item detail page", where there is a prompt to contact the seller.
-
 - All critical information about quality, price and other details are displayed on the item detail page.
 
-
 ### To sell items
-<p align="center">
-  <img width="750" alt="create listing" src="https://github.com/user-attachments/assets/55be299f-48e3-4ac2-80f1-9a7407dd84e1";>
-</p>
 
 - Click the '+' icon on the header to navigate to the "post item page"
 - Fill in the corresponding fields for the item you would like to sell, make sure all details are filled in absolutely correct as first impressions count
+- after filling in required information, you are able to post your item immediately, or check what it would look like with the draft option
+  
+### To view your profile
 
-### To 
+- Click on the "profile" icon on the header to navigate to your "profile page"
+- This page contains information about your account, inclueding items you have listed and your seller rating
+- You are also to change your profile information on this screen
+
+*if you want a visual guide to some of the pages, check out our [Visual user instructions](https://github.com/spe-uob/2025-SecondhandMarketplace/blob/dev/docs/user-instructions/user-instructions.md)*
 
 ## Stakeholders
 
@@ -198,6 +198,7 @@ The following diagram illustrates the Secondhand Marketplace software architectu
 - [Database structure](https://github.com/spe-uob/2025-SecondhandMarketplace/blob/dev/docs/database-structure/database-structure.md)
 - [Github naming conventions](https://github.com/spe-uob/2025-SecondhandMarketplace/blob/dev/docs/naming_conventions/naming_conventions.md)
 - [Detailed setup guide](https://github.com/spe-uob/2025-SecondhandMarketplace/blob/dev/docs/project-setup/project-setup.md)
+- [Visual user instructions](https://github.com/spe-uob/2025-SecondhandMarketplace/blob/dev/docs/user-instructions/user-instructions.md)
 
 ## Team Members
 | Members | Email |
