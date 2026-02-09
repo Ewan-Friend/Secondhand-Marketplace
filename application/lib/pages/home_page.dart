@@ -5,7 +5,9 @@ import '../widgets/item_widget.dart';
 import '../models/item_model.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({super.key, this.apiService});
+
+  final APIService? apiService;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -15,7 +17,7 @@ class _HomePageState extends State<HomePage> {
   int _selectedCategoryIndex = 0;
   final TextEditingController _searchController = TextEditingController();
 
-  final APIService _apiService = APIService();
+  late APIService _apiService;
   late Future<List<Item>> _futureItems;
   String _apiMessage = 'Checking API connection...';
 
@@ -35,6 +37,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    _apiService = widget.apiService ?? APIService();
     _futureItems = _apiService.getItems();
     _checkApi();
   }
