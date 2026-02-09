@@ -79,3 +79,6 @@ def test_get_user_profile_success(client):
         assert isinstance(profile["username"], str)
         assert isinstance(profile["id"], str)
 ```
+For Task #160, AI tools has used to assist with structuring and refactoring the Flutter frontend API wiring (API service methods and basic UI integration). All generated code was manually reviewed, adjusted, and verified by running the app locally. No secrets, credentials, or deployment-related code were generated using AI.
+
+For task #208, AI tools were also used to help design a basic continuous deployment (CD) setup for the backend, mainly for outlining pipeline steps and deployment flow. The configuration was kept simple and all decisions and final implementations were reviewed and adjusted manually.
