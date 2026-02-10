@@ -38,7 +38,7 @@ class ItemCard extends StatelessWidget{
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, '/item', arguments: item.id);
+        Navigator.pushNamed(context, '/item/${item.id}', arguments: item.id);
       },
       child: ConstrainedBox(
         constraints: const BoxConstraints(
