@@ -21,18 +21,30 @@ class MainApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Secondhand Marketplace',
 
-      // Single Entry Point
-      home: const HomePage(),
+      // start off at home page (can change to login at some point)
+      initialRoute: '/',
 
-      // Routing table
+      // Static routing table
       routes: {
-        '/home':   (_) => const HomePage(),
-        '/item':   (_) => const ItemDetailPage(),
+        '/':   (_) => const HomePage(),
         '/login':  (_) => const LoginPage(),
         '/signup': (_) => const SignUpPage(),
         '/profile':(_) => const ProfilePage(),
         '/post':   (_) => const PostItemsPage(),
       },
+
+      // Dynamic route
+      onGenerateRoute: (proposedRoute){
+        // open unique item page
+        if (proposedRoute != null && proposedRoute.name!.startsWith("/item")){
+          // Take the ID by removing everything before the last '/'
+          final String itemId = proposedRoute.name!.split('/').last;
+
+          return MaterialPageRoute(
+            builder: (context) => ItemDetailPage(itemId: itemId)
+          );
+        }
+      } ,
 
       // Unknown route protection: redirect to login page
       onUnknownRoute: (_) =>
