@@ -1,4 +1,4 @@
-    ## 🤖 AI Usage in This Project
+## 🤖 AI Usage in This Project
 
 ### Tools & Scope
 #### Tools used:
@@ -13,10 +13,10 @@
 - Helping design a basic continuous deployment (CD) setup for the backend
 - Asist with structuring and refactoring the Flutter frontend API wiring
 
-    #### Prohibited use:
-    - Generating images or videos
-    - Generating text for documentation
-    - Generating code that handles secret keys
+ #### Prohibited use:
+- Generating images or videos
+- Generating text for documentation
+- Generating code that handles secret keys
 
 ### Procedure
 #### Policies:
@@ -34,7 +34,7 @@
     ### Example usages
 
     ## Prompt - Ewan
-    "create a similiar test but for get_user_profile()"
+    "create a similar test but for get_user_profile()"
     *context: provided my test for get_items, to be integrated into the same suite*
 
     #### Response [code snippet] - Gemini
@@ -160,7 +160,7 @@ def test_fetch_item_not_found(mock_supabase):
 
 ## Prompt - Ewan
 "create a test for the api service with mock http responses"
-*Github copilot recieved ```api_service.dart``` and made contextual changes*
+*Github copilot received ```api_service.dart``` and made contextual changes*
 
 ## Response - GitHub Copilot
 
