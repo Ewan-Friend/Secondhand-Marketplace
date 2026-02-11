@@ -120,5 +120,167 @@ def test_get_user_profile_success(client):
         assert isinstance(profile["id"], str)
 
 
+def test_get_status(client):
+    """Test the /status endpoint"""
+    response = client.get("/api/status")
+    data = response.get_json()
+    
+    assert response.status_code == 200
+    assert data["status_code"] == 200
+    assert "message" in data
+    assert "successfully connected" in data["message"].lower()
+
+
+def test_get_items_with_user_filter(client):
+    """Test /items endpoint with user_id filter"""
+    with patch("app.routes.supabase") as mock_supabase, patch("app.routes.fetch_user_by_id") as mock_fetch:
+        mock_response = MagicMock()
+        mock_response.data = [
+            {
+                "id": 1,
+                "seller_id": "user1",
+                "title": "Filtered Item",
+                "created_at": "2024-01-01T12:00:00",
+                "description": "Item by specific user",
+                "rating": "4.0",
+                "price": "25.00",
+                "item_images": [{"image_url": "path/to/img.png"}],
+            }
+        ]
+        
+        mock_supabase.table.return_value.select.return_value.limit.return_value.eq.return_value.order.return_value.limit.return_value.execute.return_value = mock_response
+        mock_fetch.return_value = {"username": "user1", "rating_count": 5}
+        
+        response = client.get("/api/items?user_id=user1")
+        data = response.get_json()
+        
+        assert response.status_code == 200
+        assert data["status_code"] == 200
+        assert len(data.get("table_data", [])) == 1
+        assert data["table_data"][0]["title"] == "Filtered Item"
+
+def test_get_item_success(client):
+    """Test /item/<id> endpoint successful retrieval"""
+    with patch("app.routes.fetch_item_by_id") as mock_fetch:
+        mock_fetch.return_value = {
+            "id": 1,
+            "title": "Test Item",
+            "price": 99.99,
+            "seller_id": "user1"
+        }
+        
+        test_uuid = "550e8400-e29b-41d4-a716-446655440000"
+        response = client.get(f"/api/item/{test_uuid}")
+        data = response.get_json()
+        
+        assert response.status_code == 200
+        assert data["status_code"] == 200
+        assert data["table_data"]["title"] == "Test Item"
+
+
+def test_register_user_missing_email(client):
+    """Test registration without email"""
+    response = client.post("/api/register", json={
+        "username": "newuser",
+        "password": "SecurePass123!"
+    })
+    data = response.get_json()
+    
+    assert response.status_code == 400
+    assert "Email and password are required" in data["message"]
+
+
+def test_register_user_missing_username(client):
+    """Test registration without username"""
+    response = client.post("/api/register", json={
+        "email": "newuser@example.com",
+        "password": "SecurePass123!"
+    })
+    data = response.get_json()
+    
+    assert response.status_code == 400
+    assert "Username is required" in data["message"]
+
+
+def test_register_user_duplicate_email(client):
+    """Test registration with duplicate email"""
+    with patch("app.routes.supabase") as mock_supabase:
+        mock_supabase.auth.sign_up.side_effect = Exception(
+            "duplicate key value violates unique constraint"
+        )
+        
+        response = client.post("/api/register", json={
+            "email": "existing@example.com",
+            "username": "newuser",
+            "password": "SecurePass123!"
+        })
+        data = response.get_json()
+        
+        assert response.status_code == 409
+        assert "Email already registered" in data["message"]
+
+
+def test_get_current_user(client):
+    """Test GET /me endpoint"""
+    response = client.get("/api/me")
+    data = response.get_json()
+    
+    assert response.status_code == 200
+    assert data["status_code"] == 200
+    assert "data" in data
+    assert data["data"]["display_name"] == "John Doe"
+    assert data["data"]["rating"] == 4.7
+
+
+def test_update_current_user_success(client):
+    """Test PATCH /me endpoint with valid data"""
+    response = client.patch("/api/me", json={
+        "display_name": "Jane Doe",
+        "location": "Manchester, UK",
+        "avatar_url": "https://example.com/avatar.jpg"
+    })
+    data = response.get_json()
+    
+    assert response.status_code == 200
+    assert data["status_code"] == 200
+    assert "Profile updated successfully" in data["message"]
+    assert data["data"]["display_name"] == "Jane Doe"
+    assert data["data"]["location"] == "Manchester, UK"
+
+
+def test_update_current_user_display_name_too_long(client):
+    """Test PATCH /me with display name exceeding 40 chars"""
+    response = client.patch("/api/me", json={
+        "display_name": "A" * 41  # 41 characters
+    })
+    data = response.get_json()
+    
+    assert response.status_code == 400
+    assert "40 characters or less" in data["message"]
+
+
+def test_get_reviews_default_user(client):
+    """Test GET /reviews endpoint"""
+    response = client.get("/api/reviews")
+    data = response.get_json()
+    
+    assert response.status_code == 200
+    assert data["status_code"] == 200
+    assert "data" in data
+    assert isinstance(data["data"], list)
+    assert len(data["data"]) > 0
+    assert data["data"][0]["rating"] == 5
+
+
+def test_get_reviews_with_user_id(client):
+    """Test GET /reviews with user_id query param"""
+    response = client.get("/api/reviews?user_id=550e8400-e29b-41d4-a716-446655440000")
+    data = response.get_json()
+    
+    assert response.status_code == 200
+    assert data["status_code"] == 200
+    assert isinstance(data["data"], list)
+
+
 # run
 # pytest -v -s --cov=app --cov-report=term-missing test/
