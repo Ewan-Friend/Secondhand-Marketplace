@@ -58,50 +58,17 @@ class APIService {
           final raw = decoded['table_data'];
           final list = (raw is List) ? raw : <dynamic>[];
 
-          // if (kDebugMode) {
-          //   debugPrint(response.body); 
-          // }
-
-          return data.map((json) => Item.fromJson(json)).toList();
-        } else {
-          // If status code is not 200, return the actual status code
-          throw Exception('Failed to load items: Server returned status ${response.statusCode}');
+          return list
+              .whereType<Map<String, dynamic>>()
+              .map(Item.fromJson)
+              .toList();
         }
-    }
-    catch (e){
-        // Handle in case of errors
-        throw Exception('Network/Server error: Ensure Flask server is running. $e');
-    }
-  }
+        return <Item>[];
+      }
 
-  Future<Item> getItemFromID(dynamic id) async {
-
-    if (id == null) throw Exception("Item id is Null");
-
-    //Construt URL
-    final url = Uri.parse('$baseUrl/item/$id');
-
-    try{
-        final response = await http.get(url);
-        // Check status code of single item response by routes.py
-        if (response.statusCode == 200){
-
-          // Return decoded Item
-          final Map<String, dynamic> data = json.decode(response.body);
-
-          if (kDebugMode) {
-            debugPrint(response.body); 
-          }
-          
-          // Return data as an Item
-          return Item.fromJson(data['table_data']);
-        } else {
-          throw Exception('Failed to load item: Server returned status ${response.statusCode}');
-        }
-    }
-    catch (e){
-      // Handles in case of errors
-      throw Exception('Network/Server error: Ensure Flask server is running. $e');
+      throw Exception('Failed to load items (${response.statusCode})');
+    } catch (e) {
+      throw Exception('Items fetch failed: $e');
     }
   }
 
@@ -144,5 +111,41 @@ class APIService {
   /// Optional: call this if you want to close the http client manually.
   void dispose() {
     _client.close();
+  }
+
+  /// Fetch a single item by its ID from the backend and convert to `Item`.
+  ///
+  /// Accepts a nullable `itemId` because callers may pass null; throws if
+  /// `itemId` is null or if the request/response is invalid.
+  Future<Item> getItemFromID(String? itemId) async {
+    if (itemId == null || itemId.isEmpty) {
+      throw ArgumentError('itemId must be provided');
+    }
+
+    final url = _uri('/item/$itemId');
+
+    try {
+      final response = await _client.get(url);
+
+      if (response.statusCode == 200) {
+        final decoded = json.decode(response.body);
+
+        if (decoded is Map<String, dynamic>) {
+          final raw = decoded['table_data'];
+          if (raw is Map<String, dynamic>) {
+            return Item.fromJson(raw);
+          }
+          throw Exception('Unexpected item format in response');
+        }
+
+        throw Exception('Invalid response from server');
+      } else if (response.statusCode == 404) {
+        throw Exception('Item not found (404)');
+      }
+
+      throw Exception('Failed to load item (${response.statusCode})');
+    } catch (e) {
+      throw Exception('getItemFromID failed: $e');
+    }
   }
 }

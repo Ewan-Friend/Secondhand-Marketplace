@@ -64,7 +64,6 @@ class ItemCard extends StatelessWidget{
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
                           // ~~~~~ TITLE ~~~~~
@@ -76,13 +75,6 @@ class ItemCard extends StatelessWidget{
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
-                        ),
-                        // ~~~~~ PRICE ~~~~~
-                        Text(
-                          // Use item price
-                          'CHF ${item.price.toString()}',
-                          style: const TextStyle(
-                              fontWeight: FontWeight.w400, fontSize: 20),
                         ),
                       ],
                     ),
@@ -97,7 +89,7 @@ class ItemCard extends StatelessWidget{
                                 size: 16, color: Color(0xFFE36D6D)),
                             const SizedBox(width: 4),
                             Text(
-                              'location not implemented',
+                              'no location',
                               style: TextStyle(
                                   fontSize: 14, color: Colors.grey.shade700),
                             ),
@@ -110,7 +102,7 @@ class ItemCard extends StatelessWidget{
                                 size: 16, color: Color(0xFFE36D6D)),
                             const SizedBox(width: 4),
                             Text(
-                              'condition not added',
+                              'no condition',
                               style: TextStyle(
                                   fontSize: 14, color: Colors.grey.shade700),
                             ),
@@ -119,12 +111,26 @@ class ItemCard extends StatelessWidget{
                       ],
                     ),
                     const SizedBox(height: 16),
-                    // Seller Info Section
-                    UserWidget(
-                      userName: item.sellerInfo["username"],
-                      rating: item.sellerInfo["rating_score"],
-                      reviews: item.sellerInfo["rating_count"],
-                      avatarUrl: item.sellerInfo["avatar_url"],
+                    // Seller Info Section with price aligned to the right
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: UserWidget(
+                            userName: item.sellerInfo["username"],
+                            rating: item.sellerInfo["rating_score"],
+                            reviews: item.sellerInfo["rating_count"],
+                            avatarUrl: item.sellerInfo["avatar_url"],
+                          ),
+                        ),
+                        // Price on the same row as seller info
+                        Text(
+                          'CHF ${item.price.toString()}',
+                          style: const TextStyle(
+                              fontWeight: FontWeight.w500, fontSize: 18),
+                        ),
+                      ],
                     ),
                   ],
                 ),
