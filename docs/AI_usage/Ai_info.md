@@ -157,3 +157,30 @@ def test_fetch_item_not_found(mock_supabase):
 > created ```home_page_test.dart``` in application/test
 
 "Added an injectable APIService hook on HomePage so the widget can be rendered deterministically in tests, then created a widget test that pumps the page with a fake service and a minimal SVG asset bundle. This validates the page renders its core UI and empty state without hitting the network. Changes are in home_page.dart and the new test at home_page_test.dart."
+
+## Prompt - Ewan
+"create a test for the api service with mock http responses"
+*Github copilot recieved ```api_service.dart``` and made contextual changes*
+
+## Response - GitHub Copilot
+
+> created ```api_service_test.dart``` in application/test
+> created ```api_service_test.mocks.dart``` in application/test
+
+"Created a comprehensive test suite for APIService with 10 test cases covering:
+
+checkConnection()
+
+Returns message when backend is reachable
+Returns default message when no message field
+Throws exception on non-200 status
+Throws exception on network error
+getItems()
+
+Returns list of items on success
+Returns empty list when table_data is empty
+Returns empty list when response is empty object
+Throws exception on non-200 status
+Throws exception on invalid JSON
+Filters out non-map items from malformed data
+Added mockito and build_runner dependencies, generated mocks, and all tests are passing."
