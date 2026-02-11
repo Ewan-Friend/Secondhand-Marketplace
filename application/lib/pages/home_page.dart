@@ -120,7 +120,7 @@ class _HomePageState extends State<HomePage> {
 
             // Items grid from API
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 12),
               child: FutureBuilder<List<Item>>(
                 future: _futureItems,
                 builder: (context, snapshot) {
@@ -142,9 +142,9 @@ class _HomePageState extends State<HomePage> {
                     physics: const NeverScrollableScrollPhysics(),
                     gridDelegate:
                         const SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 500,
-                      crossAxisSpacing: 16,
-                      mainAxisSpacing: 16,
+                      maxCrossAxisExtent: 360,
+                      crossAxisSpacing: 12,
+                      mainAxisSpacing: 12,
                       childAspectRatio: 0.76,
                     ),
                     itemCount: items.length,

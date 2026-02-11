@@ -112,4 +112,40 @@ class APIService {
   void dispose() {
     _client.close();
   }
+
+  /// Fetch a single item by its ID from the backend and convert to `Item`.
+  ///
+  /// Accepts a nullable `itemId` because callers may pass null; throws if
+  /// `itemId` is null or if the request/response is invalid.
+  Future<Item> getItemFromID(String? itemId) async {
+    if (itemId == null || itemId.isEmpty) {
+      throw ArgumentError('itemId must be provided');
+    }
+
+    final url = _uri('/item/$itemId');
+
+    try {
+      final response = await _client.get(url);
+
+      if (response.statusCode == 200) {
+        final decoded = json.decode(response.body);
+
+        if (decoded is Map<String, dynamic>) {
+          final raw = decoded['table_data'];
+          if (raw is Map<String, dynamic>) {
+            return Item.fromJson(raw);
+          }
+          throw Exception('Unexpected item format in response');
+        }
+
+        throw Exception('Invalid response from server');
+      } else if (response.statusCode == 404) {
+        throw Exception('Item not found (404)');
+      }
+
+      throw Exception('Failed to load item (${response.statusCode})');
+    } catch (e) {
+      throw Exception('getItemFromID failed: $e');
+    }
+  }
 }

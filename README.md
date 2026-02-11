@@ -4,9 +4,11 @@
 [![Flutter](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)](https://flutter.dev/)
 [![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![Flask](https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white)](https://palletsprojects.com/p/flask/)
-[![AWS Cloud](https://img.shields.io/badge/AWS-FF9900?style=for-the-badge&logo=amazons3&logoColor=white)](https://aws.amazon.com/)
+[![AWS Cloud](https://img.shields.io/badge/AWS_eb-FF9900?style=for-the-badge&logo=amazons3&logoColor=white)](https://aws.amazon.com/)
 [![Supabase](https://img.shields.io/badge/Supabase-181818?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com/)
-![Docker](https://img.shields.io/badge/Docker-deepskyblue?style=for-the-badge&logo=docker&logoColor=white&labelColor=%231D63ED&color=%231D63ED)
+[![Docker](https://img.shields.io/badge/Docker-deepskyblue?style=for-the-badge&logo=docker&logoColor=white&labelColor=%231D63ED&color=%231D63ED)](https://www.docker.com/)
+[![Ruff](https://img.shields.io/badge/Ruff-galaxy?style=for-the-badge&logo=ruff&logoColor=black&logoSize=auto)](https://docs.astral.sh/ruff/)
+[![Pytest](https://img.shields.io/badge/Pytest-%230A9EDC?style=for-the-badge&logo=pytest&logoColor=white&logoSize=auto)](https://docs.pytest.org/en/stable/)
 
 ## Contents
 - [Project description](#project-description)
@@ -14,6 +16,7 @@
 - [Project structure](#project-structure)
 - [Project setup](#project-setup)
 - [Software architecture](#software-architecture)
+- [User instructions](#user-instructions)
 - [Stakeholders](#stakeholders)
 - [User Stories](#user-stories)
 - [Project Management](#project-management)
@@ -130,8 +133,33 @@ docker compose up --build
 ## Software architecture
 The following diagram illustrates the Secondhand Marketplace software architecture and the interaction between the Flutter frontend and the Python-Flask backend.
 <p align="left">
-  <img width="918" alt="architecture image" src="./docs/architecture/architecture2.png" style="box-shadow: 5px 5px 10px rgba(0,0,0,0.5)";>
+  <img width="918" alt="architecture image" src="./docs/architecture/architecture2.png";>
 </p>
+
+## User instructions
+
+### Startup
+- You will initially be prompted to login to the website - with the option to sign up if you dont have an established account, where you login using your email and password.
+- You are then immediately sent to the sites home page, where you may navigate multiple pages, there are also a list of items that you may browse
+
+### To buy items
+
+- To browse or purchase a product from the home page, click on the product you would like to look at to open the "item detail page", where there is a prompt to contact the seller.
+- All critical information about quality, price and other details are displayed on the item detail page.
+
+### To sell items
+
+- Click the '+' icon on the header to navigate to the "post item page"
+- Fill in the corresponding fields for the item you would like to sell, make sure all details are filled in absolutely correct as first impressions count
+- after filling in required information, you are able to post your item immediately, or check what it would look like with the draft option
+  
+### To view your profile
+
+- Click on the "profile" icon on the header to navigate to your "profile page"
+- This page contains information about your account, inclueding items you have listed and your seller rating
+- You are also to change your profile information on this screen
+
+*if you want a visual guide to some of the pages, check out our [Visual user instructions](https://github.com/spe-uob/2025-SecondhandMarketplace/blob/dev/docs/user-instructions/user-instructions.md)*
 
 ## Stakeholders
 
@@ -170,6 +198,7 @@ The following diagram illustrates the Secondhand Marketplace software architectu
 - [Database structure](https://github.com/spe-uob/2025-SecondhandMarketplace/blob/dev/docs/database-structure/database-structure.md)
 - [Github naming conventions](https://github.com/spe-uob/2025-SecondhandMarketplace/blob/dev/docs/naming_conventions/naming_conventions.md)
 - [Detailed setup guide](https://github.com/spe-uob/2025-SecondhandMarketplace/blob/dev/docs/project-setup/project-setup.md)
+- [Visual user instructions](https://github.com/spe-uob/2025-SecondhandMarketplace/blob/dev/docs/user-instructions/user-instructions.md)
 
 ## Team Members
 | Members | Email |
