@@ -5,6 +5,7 @@ import '../pages/profile_page.dart';
 import '../pages/favourites_page.dart';
 import '../pages/messages_page.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:application/widgets/hover_scale.dart';
 
 class Header extends StatelessWidget {
   Header({
@@ -99,7 +100,7 @@ class Header extends StatelessWidget {
           ),
 
           // Action icons
-          _HoverScale(
+          HoverScale(
             child: IconButton(
               onPressed: () {
                 Navigator.push(
@@ -111,35 +112,41 @@ class Header extends StatelessWidget {
               icon: const Icon(Icons.favorite_border, size: 30),
             ),
           ),
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const MessagesPage()),
-              );
-            },
-            tooltip: 'Messages',
-            icon: const Icon(Icons.chat_bubble_outline, size: 30),
+          HoverScale(
+            child: IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const MessagesPage()),
+                );
+              },
+              tooltip: 'Messages',
+              icon: const Icon(Icons.chat_bubble_outline, size: 30),
+            ),
           ),
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const PostItemsPage()),
-              );
-            },
-            tooltip: 'Post Item',
-            icon: const Icon(Icons.add_circle_outline, size: 30),
+          HoverScale(
+            child: IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const PostItemsPage()),
+                );
+              },
+              tooltip: 'Post Item',
+              icon: const Icon(Icons.add_circle_outline, size: 30),
+            ),
           ),
-          IconButton(
-            tooltip: 'Account',
-            icon: const Icon(Icons.person_outline, size: 30),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const ProfilePage()),
-              );
-            },
+          HoverScale(
+            child: IconButton(
+              tooltip: 'Account',
+              icon: const Icon(Icons.person_outline, size: 30),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ProfilePage()),
+                );
+              },
+            ),
           ),
         ],
       ),
@@ -180,39 +187,6 @@ class _LocationChip extends StatelessWidget {
             style: TextStyle(color: textColor, fontWeight: FontWeight.w500, fontSize: 16),
           ),
         ],
-      ),
-    );
-  }
-}
-
-/// Hover scale animation wrapper for subtle scale effect on mouse hover.
-class _HoverScale extends StatefulWidget {
-  final Widget child;
-  final double hoverScale;
-
-  const _HoverScale({
-    required this.child,
-    this.hoverScale = 1.1,
-  });
-
-  @override
-  State<_HoverScale> createState() => _HoverScaleState();
-}
-
-class _HoverScaleState extends State<_HoverScale> {
-  bool _isHovered = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
-      child: AnimatedScale(
-        scale: _isHovered ? widget.hoverScale : 1.0,
-        duration: const Duration(milliseconds: 120),
-        curve: Curves.easeOut,
-        child: widget.child,
       ),
     );
   }
