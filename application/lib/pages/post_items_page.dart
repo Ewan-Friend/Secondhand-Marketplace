@@ -29,7 +29,6 @@ class _PostItemsPage extends State<PostItemsPage> {
                   const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
               child: Column(
                 children: [
-                  Header(),
                   const SizedBox(height: 24),
                   Expanded(
                       child: isWide
