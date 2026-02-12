@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
 import '../widgets/header.dart';
+import '../widgets/item_widget.dart';
+import '../models/item_model.dart';
 
 class ProfilePage extends StatefulWidget {
   final String? userId; // If null, shows current user's profile
@@ -57,117 +59,7 @@ class _ProfilePageState extends State<ProfilePage> {
         }
       }
 
-      // Add mock listings if empty (for demo purposes)
-      if (_userListings.isEmpty) {
-        _userListings = [
-          {
-            'id': '1',
-            'title': 'Vintage Camera',
-            'price': 150.0,
-            'status': 'Like New',
-            'location': 'Redland, Bristol, UK',
-          },
-          {
-            'id': '2',
-            'title': 'Leather Jacket',
-            'price': 85.0,
-            'status': 'Good',
-            'location': 'Redland, Bristol, UK',
-          },
-          {
-            'id': '3',
-            'title': 'Gaming Laptop',
-            'price': 650.0,
-            'status': 'Excellent',
-            'location': 'Redland, Bristol, UK',
-          },
-          {
-            'id': '4',
-            'title': 'Coffee Table',
-            'price': 45.0,
-            'status': 'Good',
-            'location': 'Redland, Bristol, UK',
-          },
-          {
-            'id': '5',
-            'title': 'Bicycle',
-            'price': 120.0,
-            'status': 'Very Good',
-            'location': 'Redland, Bristol, UK',
-          },
-          {
-            'id': '6',
-            'title': 'Desk Lamp',
-            'price': 25.0,
-            'status': 'Like New',
-            'location': 'Redland, Bristol, UK',
-          },
-        ];
-      }
 
-      // Mock favorites for demo purposes
-      _userFavorites = [
-        {
-          'id': 'fav1',
-          'title': 'Wireless Headphones',
-          'price': 95.0,
-          'status': 'Excellent',
-          'location': 'Clifton, Bristol, UK',
-          'seller_name': 'Emma Wilson',
-          'seller_rating': 4.8,
-          'seller_reviews': 45,
-        },
-        {
-          'id': 'fav2',
-          'title': 'Yoga Mat',
-          'price': 20.0,
-          'status': 'Like New',
-          'location': 'Redland, Bristol, UK',
-          'seller_name': 'Sarah Jones',
-          'seller_rating': 4.5,
-          'seller_reviews': 28,
-        },
-        {
-          'id': 'fav3',
-          'title': 'Running Shoes',
-          'price': 55.0,
-          'status': 'Good',
-          'location': 'Southville, Bristol, UK',
-          'seller_name': 'Mike Brown',
-          'seller_rating': 4.3,
-          'seller_reviews': 19,
-        },
-        {
-          'id': 'fav4',
-          'title': 'Office Chair',
-          'price': 110.0,
-          'status': 'Very Good',
-          'location': 'Cotham, Bristol, UK',
-          'seller_name': 'Lisa Davis',
-          'seller_rating': 4.9,
-          'seller_reviews': 52,
-        },
-        {
-          'id': 'fav5',
-          'title': 'Kitchen Blender',
-          'price': 35.0,
-          'status': 'Excellent',
-          'location': 'Bishopston, Bristol, UK',
-          'seller_name': 'Tom Harris',
-          'seller_rating': 4.6,
-          'seller_reviews': 31,
-        },
-        {
-          'id': 'fav6',
-          'title': 'Winter Coat',
-          'price': 75.0,
-          'status': 'Like New',
-          'location': 'Clifton, Bristol, UK',
-          'seller_name': 'Amy Clark',
-          'seller_rating': 4.7,
-          'seller_reviews': 38,
-        },
-      ];
 
     } catch (e) {
       print('Error loading profile: $e');
@@ -178,8 +70,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     return Scaffold(
-      backgroundColor: Colors.grey.shade50,
+      backgroundColor: cs.surface,
       appBar: PreferredSize(
         // top navigation bar
         preferredSize: Size.fromHeight(80),
@@ -213,7 +106,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget _buildProfileHeader() {
     return Container(
-      color: Colors.white,
+      color: Theme.of(context).colorScheme.surface,
       padding: const EdgeInsets.all(24),
       child: Row(
         children: [
@@ -336,7 +229,7 @@ class _ProfilePageState extends State<ProfilePage> {
     final reviewCount = _userData?['review_count'] ?? _userReviews.length;
     
     return Container(
-      color: Colors.white,
+      color: Theme.of(context).colorScheme.surface,
       padding: const EdgeInsets.all(24),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -443,7 +336,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       },
                       style: TextButton.styleFrom(
                         backgroundColor: Colors.grey.shade200,
-                        foregroundColor: Colors.black,
+                        foregroundColor: Theme.of(context).colorScheme.onSurface,
                         padding: const EdgeInsets.symmetric(
                           horizontal: 16,
                           vertical: 8,
@@ -481,7 +374,7 @@ class _ProfilePageState extends State<ProfilePage> {
         return Icon(
           index < rating.floor() ? Icons.star : Icons.star_border,
           size: 16,
-          color: const Color(0xFFFF7B7B),
+          color: Theme.of(context).colorScheme.primary,
         );
       }),
     );
@@ -493,7 +386,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.grey.shade50,
+        color: Theme.of(context).colorScheme.background,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -627,111 +520,9 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   itemCount: _userListings.length,
                   itemBuilder: (context, index) {
-                    final item = _userListings[index];
-                    return GestureDetector(
-                      onTap: () {
-                        // Navigate to item detail
-                      },
-                      child: Card(
-                        elevation: 2,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Product Image Placeholder
-                            Expanded(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.grey.shade300,
-                                  borderRadius: const BorderRadius.only(
-                                    topLeft: Radius.circular(12),
-                                    topRight: Radius.circular(12),
-                                  ),
-                                ),
-                                child: const Center(
-                                  child: Icon(Icons.image, size: 50, color: Colors.grey),
-                                ),
-                              ),
-                            ),
-                            // Product Details
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // Item name and price
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          item['title'] ?? 'Item Name',
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14,
-                                          ),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                      Text(
-                                        'CHF ${item['price']?.toStringAsFixed(0) ?? '200'}',
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 14,
-                                          color: Color(0xFFFF7B7B),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 4),
-                                  // Location
-                                  Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.location_on,
-                                        size: 12,
-                                        color: Color(0xFFFF7B7B),
-                                      ),
-                                      const SizedBox(width: 2),
-                                      Expanded(
-                                        child: Text(
-                                          _userData?['location'] ?? 'Redland, Bristol, UK',
-                                          style: TextStyle(
-                                            fontSize: 11,
-                                            color: Colors.grey.shade600,
-                                          ),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 4),
-                                  // Condition badge
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey.shade200,
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                    child: Text(
-                                      item['status'] ?? 'Condition',
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                        color: Colors.grey.shade700,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
+                    final raw = _userListings[index];
+                    final item = _toItem(raw);
+                    return ItemCard(item: item);
                   },
                 ),
         ],
@@ -764,174 +555,40 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             itemCount: _userFavorites.length,
             itemBuilder: (context, index) {
-              final item = _userFavorites[index];
-              return GestureDetector(
-                onTap: () {
-                  // Navigate to item detail
-                },
-                child: Card(
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Product Image Placeholder with favorite icon
-                      Expanded(
-                        child: Stack(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade300,
-                                borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(12),
-                                  topRight: Radius.circular(12),
-                                ),
-                              ),
-                              child: const Center(
-                                child: Icon(Icons.image, size: 50, color: Colors.grey),
-                              ),
-                            ),
-                            // Favorite icon
-                            Positioned(
-                              top: 8,
-                              right: 8,
-                              child: GestureDetector(
-                                onTap: () {
-                                  // Remove from favorites
-                                  setState(() {
-                                    _userFavorites.removeAt(index);
-                                  });
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text('Removed from favorites'),
-                                      duration: Duration(seconds: 2),
-                                    ),
-                                  );
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.all(6),
-                                  decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: const Icon(
-                                    Icons.favorite,
-                                    color: Color(0xFFFF7B7B),
-                                    size: 16,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      // Product Details
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Item name and price
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    item['title'] ?? 'Item Name',
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                                Text(
-                                  'CHF ${item['price']?.toStringAsFixed(0) ?? '200'}',
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                    color: Color(0xFFFF7B7B),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 4),
-                            // Location
-                            Row(
-                              children: [
-                                const Icon(
-                                  Icons.location_on,
-                                  size: 12,
-                                  color: Color(0xFFFF7B7B),
-                                ),
-                                const SizedBox(width: 2),
-                                Expanded(
-                                  child: Text(
-                                    item['location'] ?? 'Redland, Bristol, UK',
-                                    style: TextStyle(
-                                      fontSize: 11,
-                                      color: Colors.grey.shade600,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 4),
-                            // Seller info
-                            Row(
-                              children: [
-                                CircleAvatar(
-                                  radius: 8,
-                                  backgroundColor: Colors.grey.shade300,
-                                  child: Icon(
-                                    Icons.person,
-                                    size: 10,
-                                    color: Colors.grey.shade600,
-                                  ),
-                                ),
-                                const SizedBox(width: 4),
-                                Expanded(
-                                  child: Text(
-                                    item['seller_name'] ?? 'User Name',
-                                    style: const TextStyle(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                                const Icon(
-                                  Icons.star,
-                                  size: 10,
-                                  color: Color(0xFFFF7B7B),
-                                ),
-                                Text(
-                                  ' ${item['seller_rating']?.toStringAsFixed(1) ?? '4.1'}',
-                                  style: TextStyle(
-                                    fontSize: 10,
-                                    color: Colors.grey.shade600,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
+              final raw = _userFavorites[index];
+              final item = _toItem(raw);
+              return ItemCard(item: item);
             },
           ),
         ],
       ),
     );
+  }
+
+  // Helper to convert dynamic/map data into an `Item` object for ItemCard
+  Item _toItem(dynamic raw) {
+    if (raw is Item) return raw;
+    final map = Map<String, dynamic>.from(raw as Map);
+
+    if (!map.containsKey('seller_info')) {
+      map['seller_info'] = {
+        'username': map['seller_name'] ?? 'Seller',
+        'rating_score': map['seller_rating'] ?? 0.0,
+        'rating_count': map['seller_reviews'] ?? 0,
+        'avatar_url': map['seller_avatar'] ?? null,
+      };
+    }
+
+    if (!map.containsKey('image_urls')) {
+      map['image_urls'] = [];
+    }
+
+    // Ensure numeric types are consistent
+    if (map['price'] is String) {
+      map['price'] = double.tryParse(map['price']) ?? 0.0;
+    }
+
+    return Item.fromJson(map);
   }
 
   void _showEditProfileDialog() {
