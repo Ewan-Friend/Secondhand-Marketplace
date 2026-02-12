@@ -1,6 +1,6 @@
-import 'package:application/pages/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:application/widgets/header.dart';
+import '../widgets/upload_image.dart';
 
 class PostItemsPage extends StatefulWidget {
   const PostItemsPage({super.key});
@@ -76,7 +76,7 @@ class _PostItemsPage extends State<PostItemsPage> {
           ),
         ),
         const SizedBox(height: 8),
-        _UploadArea(),
+        UploadImage(),
         const SizedBox(height: 20),
 
         /// Title + AI
@@ -253,44 +253,6 @@ class _PostItemsPage extends State<PostItemsPage> {
           ],
         ),
       ],
-    );
-  }
-}
-
-class _UploadArea extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 230,
-      decoration: BoxDecoration(
-        color: const Color(0xFFFAFAFA),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: const Color(0xFFDADCE0),
-          width: 1.3,
-        ), 
-      ),
-      child: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 46,
-              height: 46,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: const Color(0xFFE0E0E0)),
-              ),
-              child: const Icon(Icons.file_upload_outlined, size: 26),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'Click or drag files to upload',
-              style: TextStyle(fontSize: 13, color: Colors.grey),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
