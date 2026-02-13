@@ -220,6 +220,10 @@ class _SignUpPageState extends State<SignUpPage> {
   String _apiMessage = "Checking API connection...";
   String _registrationMessage = "";
 
+  // UI state only
+  bool _rememberMe = true;
+  bool _obscurePassword = true;
+
   @override
   void initState() {
     super.initState();
@@ -305,89 +309,222 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isSuccess = _registrationMessage.toLowerCase().contains('success') ||
+        _registrationMessage.toLowerCase().contains('successfully');
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Sign Up')),
-      body: SingleChildScrollView(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Sign Up Page',
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.w800),
-                ),
-                Text(
-                  _apiMessage,
-                  style: const TextStyle(
-                    color: Colors.red,
-                    fontSize: 10,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 50),
-                const Text(
-                  'Create Your Account',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 30),
-                TextFormField(
-                  controller: _emailController,
-                  decoration: const InputDecoration(
-                    labelText: 'Email',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: _usernameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Username',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: _passwordController,
-                  decoration: const InputDecoration(
-                    labelText: 'Password',
-                    border: OutlineInputBorder(),
-                  ),
-                  obscureText: true,
-                ),
-                const SizedBox(height: 24),
-                ElevatedButton(
-                  onPressed: _registerUser,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 15,
-                      horizontal: 30,
-                    ),
-                  ),
-                  child: const Text('Register', style: TextStyle(fontSize: 35)),
-                ),
-                const SizedBox(height: 20),
-                if (_registrationMessage.isNotEmpty)
-                  Center(
-                    child: Text(
-                      _registrationMessage,
-                      style: TextStyle(
-                        color: _registrationMessage
-                                    .toLowerCase()
-                                    .contains('success') ||
-                                _registrationMessage
-                                    .toLowerCase()
-                                    .contains('successfully')
-                            ? Colors.green
-                            : Colors.red,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
+      backgroundColor: Colors.transparent,
+      body: Container(
+        decoration: const BoxDecoration(gradient: _bgGradient),
+        child: SafeArea(
+          child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 430),
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 26),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(26),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.12),
+                        blurRadius: 24,
+                        offset: const Offset(0, 16),
                       ),
-                      textAlign: TextAlign.center,
-                    ),
+                    ],
                   ),
-              ],
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const _LockBadge(),
+                      const SizedBox(height: 14),
+
+                      _GradientText(
+                        "Create Account",
+                        style: const TextStyle(
+                          fontSize: 26,
+                          fontWeight: FontWeight.w800,
+                          height: 1.1,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      const Text(
+                        "Sign up to continue",
+                        style: TextStyle(color: Colors.black54),
+                      ),
+
+                      const SizedBox(height: 10),
+                      Text(
+                        _apiMessage,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          color: Colors.red,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+
+                      const SizedBox(height: 20),
+
+                      _AuthTextField(
+                        controller: _emailController,
+                        hintText: "Email",
+                        icon: Icons.alternate_email_rounded,
+                        keyboardType: TextInputType.emailAddress,
+                      ),
+                      const SizedBox(height: 14),
+
+                      _AuthTextField(
+                        controller: _usernameController,
+                        hintText: "Username",
+                        icon: Icons.person_outline_rounded,
+                      ),
+                      const SizedBox(height: 14),
+
+                      _AuthTextField(
+                        controller: _passwordController,
+                        hintText: "Password",
+                        icon: Icons.lock_outline_rounded,
+                        obscureText: _obscurePassword,
+                        suffix: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _obscurePassword = !_obscurePassword;
+                            });
+                          },
+                          icon: Icon(
+                            _obscurePassword
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined,
+                            color: Colors.black54,
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 10),
+
+                      Row(
+                        children: [
+                          Checkbox(
+                            value: _rememberMe,
+                            onChanged: (v) {
+                              setState(() {
+                                _rememberMe = v ?? true;
+                              });
+                            },
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            side: BorderSide(color: Colors.black.withOpacity(0.2)),
+                            activeColor: const Color(0xFF717BFB),
+                          ),
+                          const Text(
+                            "Remember me",
+                            style: TextStyle(color: Colors.black87),
+                          ),
+                          const Spacer(),
+                          TextButton(
+                            onPressed: () {
+                              // Optional: forgot password
+                            },
+                            child: const Text(
+                              "Forgot password?",
+                              style: TextStyle(color: Color(0xFFFF5A66)),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      const SizedBox(height: 6),
+
+                      _GradientButton(
+                        text: "Register",
+                        onPressed: _registerUser,
+                      ),
+
+                      const SizedBox(height: 12),
+
+                      AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 200),
+                        child: _registrationMessage.isEmpty
+                            ? const SizedBox.shrink()
+                            : Text(
+                                _registrationMessage,
+                                key: ValueKey(_registrationMessage),
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: isSuccess ? Colors.green : Colors.red,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                      ),
+
+                      const SizedBox(height: 18),
+                      const _OrDivider(),
+                      const SizedBox(height: 14),
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          _SocialIconButton(
+                            onTap: () {
+                              // Optional: Google sign-in
+                            },
+                            child: const Text(
+                              "G",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w800,
+                                color: Color(0xFF717BFB),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 14),
+                          _SocialIconButton(
+                            onTap: () {
+                              // Optional: Apple sign-in
+                            },
+                            child: const Icon(
+                              Icons.apple,
+                              color: Color(0xFF717BFB),
+                              size: 22,
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      const SizedBox(height: 18),
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            "Already have an account? ",
+                            style: TextStyle(color: Colors.black54),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text(
+                              "Sign In",
+                              style: TextStyle(
+                                color: Colors.black87,
+                                fontWeight: FontWeight.w800,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ),
         ),
@@ -403,3 +540,4 @@ class _SignUpPageState extends State<SignUpPage> {
     super.dispose();
   }
 }
+
