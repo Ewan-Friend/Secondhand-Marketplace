@@ -73,27 +73,6 @@ class APIService {
     }
   }
 
-  Future<Item> getItemFromID(dynamic id) async {
-    if (id == null) throw Exception("Item id is Null");
-
-    final url = _uri('/item/$id');
-
-    try {
-      final response = await _client.get(url);
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> data = json.decode(response.body);
-        if (kDebugMode) {
-          debugPrint(response.body);
-        }
-        return Item.fromJson(data['table_data']);
-      } else {
-        throw Exception('Failed to load item: Server returned status ${response.statusCode}');
-      }
-    } catch (e) {
-      throw Exception('Network/Server error: Ensure Flask server is running. $e');
-    }
-  }
-
   // ---- TEMP STUBS (to keep app compiling) ----
   Future<Map<String, dynamic>> getCurrentUserProfile() async {
     return {
