@@ -12,7 +12,10 @@ class PostItemsPage extends StatefulWidget {
 class _PostItemsPage extends State<PostItemsPage> {
   String? condition;
   // Retrieves values that user has entered
-  final detailController = TextEditingController(); 
+  final titleController = TextEditingController(); 
+  final descriptionController = TextEditingController();
+  final priceController = TextEditingController();
+  final locationController = TextEditingController();   
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +47,12 @@ class _PostItemsPage extends State<PostItemsPage> {
                                 ),
                                 const SizedBox(width: 48),
 
-                                const _SideButtons(),
+                                _SideButtons(
+                                  titleController,
+                                  descriptionController,
+                                  priceController,
+                                  locationController,
+                                ),
                               ],
                             )
                           : Column(
@@ -52,7 +60,12 @@ class _PostItemsPage extends State<PostItemsPage> {
                               children: [
                                 _buildForm(context),
                                 const SizedBox(height: 24),
-                                const _SideButtons(),
+                                _SideButtons(
+                                  titleController,
+                                  descriptionController,
+                                  priceController,
+                                  locationController,
+                                ),
                               ],
                             ),
                   ),
@@ -84,8 +97,8 @@ class _PostItemsPage extends State<PostItemsPage> {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Expanded(
-              child: _TitleField(),
+            Expanded(
+              child: _TitleField(titleController),
             ),
             const SizedBox(width: 12),
             const _AIGenerateButton(),
@@ -94,19 +107,19 @@ class _PostItemsPage extends State<PostItemsPage> {
         const SizedBox(height: 18),
 
         /// Description
-        const _DescriptionField(),
+        _DescriptionField(descriptionController),
         const SizedBox(height: 18),
 
         /// Price + Location
         Row(
-          children: const [
+          children: [
             SizedBox(
               width: 180,
-              child: _PriceField(),
+              child: _PriceField(priceController),
             ),
-            SizedBox(width: 14),
+            const SizedBox(width: 14),
             Expanded(
-              child: _LocationField(),
+              child: _LocationField(locationController),
             ),
           ],
         ),
@@ -149,7 +162,9 @@ class _FieldLabel extends StatelessWidget {
 }
 
 class _TitleField extends StatelessWidget {
-  const _TitleField();
+  final TextEditingController titleController;
+
+  const _TitleField(this.titleController);
 
   @override
   Widget build(BuildContext context) {
@@ -161,6 +176,7 @@ class _TitleField extends StatelessWidget {
           decoration: const InputDecoration(
             hintText: 'What are you selling?',
           ),
+          controller: titleController
         ),
       ],
     );
@@ -208,7 +224,9 @@ class _AIGenerateButton extends StatelessWidget {
 }
 
 class _DescriptionField extends StatelessWidget {
-  const _DescriptionField();
+  final TextEditingController controller;
+
+  const _DescriptionField(this.controller);
 
   @override
   Widget build(BuildContext context) {
@@ -218,6 +236,7 @@ class _DescriptionField extends StatelessWidget {
         const _FieldLabel('Description'),
         const SizedBox(height: 4),
         TextFormField(
+          controller: controller,
           maxLines: 5,
           decoration: InputDecoration(
             hintText: 'Describe what are you selling',
@@ -241,7 +260,9 @@ class _DescriptionField extends StatelessWidget {
 }
 
 class _PriceField extends StatelessWidget {
-  const _PriceField();
+  final TextEditingController controller;
+
+  const _PriceField(this.controller);
 
   @override
   Widget build(BuildContext context) {
@@ -266,6 +287,7 @@ class _PriceField extends StatelessWidget {
               const SizedBox(width: 8),
               Expanded(
                 child: TextField(
+                  controller: controller,
                   decoration: const InputDecoration(
                     border: InputBorder.none,
                     hintText: '0.00',
@@ -285,17 +307,20 @@ class _PriceField extends StatelessWidget {
 }
 
 class _LocationField extends StatelessWidget {
-  const _LocationField();
+  final TextEditingController controller;
+
+  const _LocationField(this.controller);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: const [
-        _FieldLabel('Location'),
-        SizedBox(height: 4),
+      children: [
+        const _FieldLabel('Location'),
+        const SizedBox(height: 4),
         TextField(
-          decoration: InputDecoration(
+          controller: controller,
+          decoration: const InputDecoration(
             hintText: 'Start typing location',
           ),
         ),
@@ -324,7 +349,7 @@ class _ConditionField extends StatelessWidget {
           decoration: const InputDecoration(
             hintText: 'Pick a condition',
           ),
-          value: value,
+          initialValue: value,
           items: const [
             DropdownMenuItem(value: 'new', child: Text('New')),
             DropdownMenuItem(
@@ -360,7 +385,17 @@ class _CategoryField extends StatelessWidget {
 }
 
 class _SideButtons extends StatelessWidget {
-  const _SideButtons();
+  final TextEditingController titleController;
+  final TextEditingController descriptionController;
+  final TextEditingController priceController;
+  final TextEditingController locationController;
+
+  const _SideButtons(
+    this.titleController,
+    this.descriptionController,
+    this.priceController,
+    this.locationController
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -377,7 +412,9 @@ class _SideButtons extends StatelessWidget {
               elevation: 6,
               shadowColor: const Color(0x55FF6C6C),
             ),
-            onPressed: () {},
+            onPressed: () {
+              
+            },
             child: const Text(
               'Publish',
               style: TextStyle(color: Colors.white, fontSize: 15),
