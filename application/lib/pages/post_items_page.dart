@@ -11,6 +11,8 @@ class PostItemsPage extends StatefulWidget {
 
 class _PostItemsPage extends State<PostItemsPage> {
   String? condition;
+  // Retrieves values that user has entered
+  final detailController = TextEditingController(); 
 
   @override
   Widget build(BuildContext context) {
@@ -82,136 +84,29 @@ class _PostItemsPage extends State<PostItemsPage> {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const _FieldLabel('Title'),
-                  TextFormField(
-                    decoration: const InputDecoration(
-                      hintText: 'What are you selling?',
-                    ),
-                  ),
-                ],
-              ),
+            const Expanded(
+              child: _TitleField(),
             ),
             const SizedBox(width: 12),
-            SizedBox(
-              width: 150,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  const Text(
-                    'AI Title & Description',
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  OutlinedButton(
-                    style: OutlinedButton.styleFrom(
-                      shape: StadiumBorder(
-                        side: BorderSide(
-                          color: Colors.grey.shade300,
-                        ),
-                      ),
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      backgroundColor: const Color(0xFFF8F8F8),
-                    ),
-                    onPressed: () {},
-                    child: const Text(
-                      'Generate',
-                      style: TextStyle(fontSize: 13),
-                    ),
-                  ),
-                ],
-              ),
-            )
+            const _AIGenerateButton(),
           ],
         ),
         const SizedBox(height: 18),
 
         /// Description
-        const _FieldLabel('Description'),
-        const SizedBox(height: 4),
-        TextFormField(
-          maxLines: 5,
-          decoration: InputDecoration(
-            hintText: 'Describe what are you selling',
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
-              borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
-              borderSide:
-                  const BorderSide(color: Color(0xFFFF6C6C), width: 1.5),
-            ),
-          ),
-        ),
+        const _DescriptionField(),
         const SizedBox(height: 18),
 
         /// Price + Location
         Row(
-          children: [
+          children: const [
             SizedBox(
               width: 180,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const _FieldLabel('Price'),
-                  const SizedBox(height: 4),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(24),
-                      border:
-                          Border.all(color: const Color(0xFFE0E0E0), width: 1),
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    child: Row(
-                      children: [
-                        const Text(
-                          'CHF',
-                          style: TextStyle(
-                              fontSize: 13, color: Colors.grey, height: 1.4),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: TextField(
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,
-                              hintText: '0.00',
-                            ),
-                            keyboardType:
-                                const TextInputType.numberWithOptions(
-                              decimal: true,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+              child: _PriceField(),
             ),
-            const SizedBox(width: 14),
+            SizedBox(width: 14),
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  _FieldLabel('Location'),
-                  SizedBox(height: 4),
-                  TextField(
-                    decoration: InputDecoration(
-                      hintText: 'Start typing location',
-                    ),
-                  ),
-                ],
-              ),
+              child: _LocationField(),
             ),
           ],
         ),
@@ -221,28 +116,11 @@ class _PostItemsPage extends State<PostItemsPage> {
         Row(
           children: [
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const _FieldLabel('Condition'),
-                  const SizedBox(height: 4),
-                  DropdownButtonFormField<String>(
-                    decoration: const InputDecoration(
-                      hintText: 'Pick a condition',
-                    ),
-                    value: condition,
-                    items: const [
-                      DropdownMenuItem(value: 'new', child: Text('New')),
-                      DropdownMenuItem(
-                          value: 'like_new', child: Text('Like New')),
-                      DropdownMenuItem(value: 'good', child: Text('Good')),
-                      DropdownMenuItem(value: 'used', child: Text('Used')),
-                    ],
-                    onChanged: (value) {
-                      setState(() => condition = value);
-                    },
-                  ),
-                ],
+              child: _ConditionField(
+                value: condition,
+                onChanged: (value) {
+                  setState(() => condition = value);
+                },
               ),
             ),
             const SizedBox(width: 14),
@@ -266,6 +144,197 @@ class _FieldLabel extends StatelessWidget {
     return Text(
       text,
       style: const TextStyle(fontSize: 13, color: Colors.black87),
+    );
+  }
+}
+
+class _TitleField extends StatelessWidget {
+  const _TitleField();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const _FieldLabel('Title'),
+        TextFormField(
+          decoration: const InputDecoration(
+            hintText: 'What are you selling?',
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _AIGenerateButton extends StatelessWidget {
+  const _AIGenerateButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 150,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          const Text(
+            'AI Title & Description',
+            style: TextStyle(
+              fontSize: 11,
+              color: Colors.grey,
+            ),
+          ),
+          const SizedBox(height: 4),
+          OutlinedButton(
+            style: OutlinedButton.styleFrom(
+              shape: StadiumBorder(
+                side: BorderSide(
+                  color: Colors.grey.shade300,
+                ),
+              ),
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              backgroundColor: const Color(0xFFF8F8F8),
+            ),
+            onPressed: () {},
+            child: const Text(
+              'Generate',
+              style: TextStyle(fontSize: 13),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _DescriptionField extends StatelessWidget {
+  const _DescriptionField();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const _FieldLabel('Description'),
+        const SizedBox(height: 4),
+        TextFormField(
+          maxLines: 5,
+          decoration: InputDecoration(
+            hintText: 'Describe what are you selling',
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide:
+                  const BorderSide(color: Color(0xFFFF6C6C), width: 1.5),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _PriceField extends StatelessWidget {
+  const _PriceField();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const _FieldLabel('Price'),
+        const SizedBox(height: 4),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(color: const Color(0xFFE0E0E0), width: 1),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          child: Row(
+            children: [
+              const Text(
+                'CHF',
+                style: TextStyle(
+                    fontSize: 13, color: Colors.grey, height: 1.4),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: TextField(
+                  decoration: const InputDecoration(
+                    border: InputBorder.none,
+                    hintText: '0.00',
+                  ),
+                  keyboardType:
+                      const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _LocationField extends StatelessWidget {
+  const _LocationField();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: const [
+        _FieldLabel('Location'),
+        SizedBox(height: 4),
+        TextField(
+          decoration: InputDecoration(
+            hintText: 'Start typing location',
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _ConditionField extends StatelessWidget {
+  final String? value;
+  final void Function(String?) onChanged;
+
+  const _ConditionField({
+    required this.value,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const _FieldLabel('Condition'),
+        const SizedBox(height: 4),
+        DropdownButtonFormField<String>(
+          decoration: const InputDecoration(
+            hintText: 'Pick a condition',
+          ),
+          value: value,
+          items: const [
+            DropdownMenuItem(value: 'new', child: Text('New')),
+            DropdownMenuItem(
+                value: 'like_new', child: Text('Like New')),
+            DropdownMenuItem(value: 'good', child: Text('Good')),
+            DropdownMenuItem(value: 'used', child: Text('Used')),
+          ],
+          onChanged: onChanged,
+        ),
+      ],
     );
   }
 }
