@@ -413,7 +413,7 @@ class _SideButtons extends StatelessWidget {
               shadowColor: const Color(0x55FF6C6C),
             ),
             onPressed: () {
-              
+
             },
             child: const Text(
               'Publish',

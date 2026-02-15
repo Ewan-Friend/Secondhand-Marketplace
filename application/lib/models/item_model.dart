@@ -37,4 +37,19 @@ class Item {
       // listingDate:  json['created_at'] as String,
     );
   }
+
+  Map<String, dynamic> toJson(){
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    
+    data['id'] = id;
+    data['seller_id'] = sellerId;
+    data['title'] = title;
+    data['description'] = description;
+    data['rating'] = rating;
+    data['price'] = price;
+    data['image_urls'] = imageUrls;
+    data['seller_info'] = sellerInfo;
+
+    return data;
+  }
 }
