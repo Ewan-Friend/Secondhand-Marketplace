@@ -6,16 +6,18 @@ import 'package:http/http.dart' as http;
 import '../config/app_config.dart';
 import '../services/api_service.dart';
 
-/// =========================
-/// UI helpers (only UI layer)
-/// =========================
+
+
+const _brandPrimary = Color(0xFFE36D6D);  
+const _brandPrimaryLight = Color(0xFFF2A0A0); 
+const _surfaceTint = Color(0xFFFFF1F1); 
 
 const _bgGradient = LinearGradient(
   begin: Alignment.topLeft,
   end: Alignment.bottomRight,
   colors: [
-    Color(0xFF6F95FA),
-    Color(0xFF7AC6E6),
+    _brandPrimary,
+    _brandPrimaryLight,
   ],
 );
 
@@ -23,8 +25,8 @@ const _primaryGradient = LinearGradient(
   begin: Alignment.centerLeft,
   end: Alignment.centerRight,
   colors: [
-    Color(0xFF717BFB),
-    Color(0xFF64D3E9),
+    _brandPrimary,
+    _brandPrimaryLight,
   ],
 );
 
@@ -57,12 +59,12 @@ class _LockBadge extends StatelessWidget {
       width: 56,
       height: 56,
       decoration: BoxDecoration(
-        color: const Color(0xFFF2F5FF),
+        color: _surfaceTint, // ✅
         borderRadius: BorderRadius.circular(18),
       ),
       child: const Icon(
         Icons.lock_outline_rounded,
-        color: Color(0xFF717BFB),
+        color: _brandPrimary, // ✅
         size: 30,
       ),
     );
@@ -95,15 +97,19 @@ class _AuthTextField extends StatelessWidget {
       obscureText: obscureText,
       decoration: InputDecoration(
         hintText: hintText,
-        prefixIcon: Icon(icon, color: const Color(0xFF717BFB)),
-        suffixIcon: suffix,
+        prefixIcon: const Icon(Icons.abc, color: Colors.transparent),
+
+        prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
         filled: true,
-        fillColor: const Color(0xFFF6F8FF),
+        fillColor: const Color(0xFFFFF6F6), 
         contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
           borderSide: BorderSide.none,
         ),
+      ).copyWith(
+        prefixIcon: Icon(icon, color: _brandPrimary), //
+        suffixIcon: suffix,
       ),
     );
   }
@@ -126,7 +132,7 @@ class _GradientButton extends StatelessWidget {
       width: double.infinity,
       child: DecoratedBox(
         decoration: BoxDecoration(
-          gradient: _primaryGradient,
+          gradient: _primaryGradient, 
           borderRadius: BorderRadius.circular(14),
           boxShadow: [
             BoxShadow(
@@ -196,7 +202,7 @@ class _SocialIconButton extends StatelessWidget {
         width: 54,
         height: 54,
         decoration: BoxDecoration(
-          color: const Color(0xFFF2F5FF),
+          color: _surfaceTint, // ✅
           borderRadius: BorderRadius.circular(16),
         ),
         child: Center(child: child),
@@ -234,7 +240,7 @@ class _SignUpPageState extends State<SignUpPage> {
     final apiService = APIService();
 
     try {
-      final message = await apiService.checkConnection(); // <-- String dönüyor
+      final message = await apiService.checkConnection();
       if (!mounted) return;
 
       setState(() {
@@ -261,7 +267,6 @@ class _SignUpPageState extends State<SignUpPage> {
       return;
     }
 
-    // ✅ APIService.baseUrl yok -> AppConfig.apiBaseUrl kullan
     final url = Uri.parse('${AppConfig.apiBaseUrl}/register');
 
     final Map<String, String> body = {
@@ -406,6 +411,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
                       const SizedBox(height: 10),
 
+                      
                       Row(
                         children: [
                           Checkbox(
@@ -419,21 +425,11 @@ class _SignUpPageState extends State<SignUpPage> {
                               borderRadius: BorderRadius.circular(6),
                             ),
                             side: BorderSide(color: Colors.black.withOpacity(0.2)),
-                            activeColor: const Color(0xFF717BFB),
+                            activeColor: _brandPrimary, // ✅
                           ),
                           const Text(
                             "Remember me",
                             style: TextStyle(color: Colors.black87),
-                          ),
-                          const Spacer(),
-                          TextButton(
-                            onPressed: () {
-                              // Optional: forgot password
-                            },
-                            child: const Text(
-                              "Forgot password?",
-                              style: TextStyle(color: Color(0xFFFF5A66)),
-                            ),
                           ),
                         ],
                       ),
@@ -471,26 +467,22 @@ class _SignUpPageState extends State<SignUpPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           _SocialIconButton(
-                            onTap: () {
-                              // Optional: Google sign-in
-                            },
+                            onTap: () {},
                             child: const Text(
                               "G",
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w800,
-                                color: Color(0xFF717BFB),
+                                color: _brandPrimary, // ✅
                               ),
                             ),
                           ),
                           const SizedBox(width: 14),
                           _SocialIconButton(
-                            onTap: () {
-                              // Optional: Apple sign-in
-                            },
+                            onTap: () {},
                             child: const Icon(
                               Icons.apple,
-                              color: Color(0xFF717BFB),
+                              color: _brandPrimary, // ✅
                               size: 22,
                             ),
                           ),
@@ -540,4 +532,3 @@ class _SignUpPageState extends State<SignUpPage> {
     super.dispose();
   }
 }
-
