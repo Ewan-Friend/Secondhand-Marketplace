@@ -12,6 +12,9 @@ dependencies:
   http: ^1.2.1
   supabase_flutter: ^2.10.3
   flutter_svg: ^2.0.9
+  image_picker: ^1.2.1
+  file_picker: ^10.3.10
+  mocktail: ^1.0.4
 
 dev_dependencies:
   flutter_test:
