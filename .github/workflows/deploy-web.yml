@@ -4,7 +4,7 @@ name: Deploy Web (S3 + CloudFront)
 on:
  push:
    branches:
-     - dev
+     - feature/247-connecting-flutter-deployment-with-githubactions 
 
 
 jobs:
