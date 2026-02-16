@@ -46,6 +46,12 @@ class _PostItemsPage extends State<PostItemsPage> {
     final item = createItem();
     final apiService = APIService();
     try {
+        titleController.clear();
+        descriptionController.clear();
+        priceController.clear();
+        locationController.clear();
+        setState(() => condition = null);
+
       await apiService.postNewItem(item.toJson());
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
