@@ -58,7 +58,6 @@ class _SignUpPageState extends State<SignUpPage> {
       return;
     }
 
-    // ✅ APIService.baseUrl yok -> AppConfig.apiBaseUrl kullan
     final url = Uri.parse('${AppConfig.apiBaseUrl}/register');
 
     final Map<String, String> body = {

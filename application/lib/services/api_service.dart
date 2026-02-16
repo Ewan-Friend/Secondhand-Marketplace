@@ -8,21 +8,25 @@ import '../models/item_model.dart';
 class APIService {
   final http.Client _client;
 
+  static bool _firstRequestLogged = false;
+
   APIService({http.Client? client}) : _client = client ?? http.Client();
 
-  /// Builds a safe URL by avoiding double slashes and duplicate `/api`.
+  /// Builds a safe URL: base (e.g. /api) + path (e.g. /items) → /api/items.
+  /// Avoids double slashes and duplicate /api.
   Uri _uri(String path) {
     final base = AppConfig.apiBaseUrl.trim();
-
-    // Ensure base has no trailing slash
-    final normalizedBase = base.endsWith('/')
-        ? base.substring(0, base.length - 1)
-        : base;
-
-    // Ensure path starts with a slash
+    final normalizedBase =
+        base.endsWith('/') ? base.substring(0, base.length - 1) : base;
     final normalizedPath = path.startsWith('/') ? path : '/$path';
+    final url = '$normalizedBase$normalizedPath';
 
-    return Uri.parse('$normalizedBase$normalizedPath');
+    if (kDebugMode && !_firstRequestLogged) {
+      _firstRequestLogged = true;
+      debugPrint('Requesting: $url');
+    }
+
+    return Uri.parse(url);
   }
 
   /// Returns backend status message if reachable; throws otherwise.
