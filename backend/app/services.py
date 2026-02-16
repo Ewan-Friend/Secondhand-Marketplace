@@ -1,5 +1,7 @@
 import os
+from flask import jsonify
 from supabase import create_client, Client
+
 
 def fetch_user_by_id(supabase_client, user_id):
     # Check that user_id exists first
@@ -43,9 +45,7 @@ def fetch_item_by_id(supabase_client, item_id):
         # returns only the profile with the matching item_id
         response = (
             supabase_client.table("items")
-            .select(
-                "*, item_images(image_url)"
-            )
+            .select("*, item_images(image_url)")
             .eq("id", item_id)
             .single()
             .execute()
@@ -61,7 +61,7 @@ def fetch_item_by_id(supabase_client, item_id):
         images = [img.get("image_url") for img in item.get("item_images", [])]
 
         # Logic stolen from 'routes'
-        return  {
+        return {
             "id": item.get("id"),
             "seller_id": item.get("seller_id"),
             "seller_info": seller_info,

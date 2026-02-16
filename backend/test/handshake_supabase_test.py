@@ -13,7 +13,10 @@ def client():
 
 def test_get_item_data_success(client):
     # Use a "mock" supabase for testting purposes
-    with patch("app.routes.supabase") as mock_supabase, patch("app.routes.fetch_user_by_id") as mock_fetch:
+    with (
+        patch("app.routes.supabase") as mock_supabase,
+        patch("app.routes.fetch_user_by_id") as mock_fetch,
+    ):
         mock_response = MagicMock()
         mock_response.data = [
             {
