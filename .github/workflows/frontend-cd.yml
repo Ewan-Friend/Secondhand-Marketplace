@@ -4,9 +4,8 @@ on:
   push:
     branches:
       - dev
-      - "feature/**"
-      - "test/**"
-    paths:
+    
+    aths:
       - 'application/**'
       - '.github/workflows/frontend-cd.yml'
   workflow_dispatch:
