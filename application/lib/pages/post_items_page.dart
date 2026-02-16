@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import '../services/api_service.dart';
 import 'package:application/widgets/header.dart';
 import '../widgets/upload_image.dart';
 import '../models/item_model.dart';
@@ -40,14 +41,25 @@ class _PostItemsPage extends State<PostItemsPage> {
     );
   } 
 
-  // Called by _SideButtons on the publish button press
   // Simply creates the item, then converts to JSON
-  dynamic onPublish()  {
+  Future<void> onPublish() async {
     final item = createItem();
-    if (kDebugMode){
-        print('Created item: ${item.toJson()}');
+    final apiService = APIService();
+    try {
+      await apiService.postNewItem(item.toJson());
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Item posted successfully!')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
+      }
     }
-  }  
+  }
 
   @override
   Widget build(BuildContext context) {
