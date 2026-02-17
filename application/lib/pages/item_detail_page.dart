@@ -61,7 +61,6 @@ class _ItemDetailState extends State<ItemDetailPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const _Header(),
                       const SizedBox(height: 24),
                       // Title row
                       Row(
