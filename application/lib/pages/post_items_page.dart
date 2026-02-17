@@ -18,7 +18,7 @@ class _PostItemsPage extends State<PostItemsPage> {
       appBar: PreferredSize(
         // top navigation bar
         preferredSize: Size.fromHeight(80),
-        child: Header(showSearch: false), 
+        child: Header(showSearch: false, showBackButton: true), 
       ),
       body: SafeArea(
         child: LayoutBuilder(
