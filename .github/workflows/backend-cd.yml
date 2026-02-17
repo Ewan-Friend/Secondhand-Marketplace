@@ -6,6 +6,7 @@ name: Backend CD
 on:
   push:
     branches:
+      - feature/247-connecting-flutter-deployment-with-githubactions
       - dev
     paths:
       - 'backend/**'  # Only trigger when backend code changes
