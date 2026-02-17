@@ -12,23 +12,8 @@ const _brandPrimary = Color(0xFFE36D6D);
 const _brandPrimaryLight = Color(0xFFF2A0A0); 
 const _surfaceTint = Color(0xFFFFF1F1); 
 
-const _bgGradient = LinearGradient(
-  begin: Alignment.topLeft,
-  end: Alignment.bottomRight,
-  colors: [
-    _brandPrimary,
-    _brandPrimaryLight,
-  ],
-);
-
-const _primaryGradient = LinearGradient(
-  begin: Alignment.centerLeft,
-  end: Alignment.centerRight,
-  colors: [
-    _brandPrimary,
-    _brandPrimaryLight,
-  ],
-);
+const _bgColor = _brandPrimary;
+const _buttonColor = _brandPrimary;
 
 class _GradientText extends StatelessWidget {
   const _GradientText(
@@ -42,10 +27,9 @@ class _GradientText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ShaderMask(
-      shaderCallback: (bounds) => _primaryGradient.createShader(bounds),
-      blendMode: BlendMode.srcIn,
-      child: Text(text, style: style),
+    return Text(
+      text,
+      style: style.copyWith(color: _brandPrimary),
     );
   }
 }
@@ -132,7 +116,7 @@ class _GradientButton extends StatelessWidget {
       width: double.infinity,
       child: DecoratedBox(
         decoration: BoxDecoration(
-          gradient: _primaryGradient, 
+          color: _buttonColor,
           borderRadius: BorderRadius.circular(14),
           boxShadow: [
             BoxShadow(
@@ -286,13 +270,22 @@ class _SignUpPageState extends State<SignUpPage> {
         body: jsonEncode(body),
       );
 
-      final dynamic decoded = jsonDecode(response.body);
-      final Map<String, dynamic> responseData =
-          decoded is Map<String, dynamic> ? decoded : <String, dynamic>{};
+      Map<String, dynamic> responseData = <String, dynamic>{};
+      try {
+        final dynamic decoded = jsonDecode(response.body);
+        if (decoded is Map<String, dynamic>) {
+          responseData = decoded;
+        }
+      } catch (e) {
+        // Non-JSON response: include raw body as message fallback
+        responseData = {'message': response.body};
+      }
 
       if (!mounted) return;
 
-      if (response.statusCode == 201 || response.statusCode == 202) {
+      if (response.statusCode == 200 ||
+          response.statusCode == 201 ||
+          response.statusCode == 202) {
         setState(() {
           _registrationMessage =
               (responseData['message'] as String?) ?? 'Registration successful!';
@@ -320,7 +313,7 @@ class _SignUpPageState extends State<SignUpPage> {
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Container(
-        decoration: const BoxDecoration(gradient: _bgGradient),
+        decoration: const BoxDecoration(color: _bgColor),
         child: SafeArea(
           child: Center(
             child: SingleChildScrollView(
