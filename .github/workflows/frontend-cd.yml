@@ -4,33 +4,34 @@ on:
   push:
     branches:
       - dev
+      - "feature/**"
+      - "test/**"
     paths:
-      - 'frontend/**'
+      - 'application/**'
       - '.github/workflows/frontend-cd.yml'
+  workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: application
 
     steps:
-      # Checkout the repository code
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Install Flutter
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
+          channel: stable
 
-      # Build Flutter Web
       - name: Build web
-        working-directory: ./frontend
         run: |
           flutter pub get
-          flutter build web --release
+          flutter build web --release --dart-define=API_BASE_URL=${{ secrets.API_BASE_URL }}
 
-      # Configure AWS credentials 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -38,7 +39,5 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      # Upload build output to S3
       - name: Deploy to S3
-        run: |
-          aws s3 sync frontend/build/web s3://${{ secrets.S3_BUCKET_NAME }} --delete
+        run: aws s3 sync build/web s3://${{ secrets.AWS_S3_BUCKET }} --delete
