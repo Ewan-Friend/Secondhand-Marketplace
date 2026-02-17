@@ -38,26 +38,38 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> _loadProfileData() async {
     setState(() => _isLoading = true);
 
+    // hardcode userID for testing
+    final userID = widget.userId ?? '55d89a2e-d30c-4b20-a51d-6a979ba6b7da';
+
     try {
-      // Load user profile
-      final profileResponse = await _apiService.getCurrentUserProfile();
-      if (profileResponse['data'] != null) {
-        _userData = profileResponse['data'];
+      // Fetch full profile for the chosen id so `_userData` has avatar/name/location
+      try {
+        final profileResponse = await _apiService.getUserById(userID);
+        if (profileResponse != null) {
+          if (profileResponse['table_data'] != null) {
+            _userData = Map<String, dynamic>.from(profileResponse['table_data']);
+          } else if (profileResponse['data'] != null) {
+            _userData = Map<String, dynamic>.from(profileResponse['data']);
+          } else if (profileResponse is Map<String, dynamic>) {
+            _userData = profileResponse;
+          }
+        }
+      } catch (_) {
+        _userData = {'id': userID};
       }
 
-      // Load user listings
-      if (_userData != null && _userData!['id'] != null) {
-        final itemsResponse = await _apiService.getUserItems(_userData!['id']);
-        if (itemsResponse['table_data'] != null) {
-          _userListings = itemsResponse['table_data'];
-        }
-
-        // Load reviews
-        final reviewsResponse = await _apiService.getUserReviews(_userData!['id']);
-        if (reviewsResponse['data'] != null) {
-          _userReviews = reviewsResponse['data'];
-        }
+      // Load user listings for the chosen id
+      final itemsResponse = await _apiService.getUserItems(userID);
+      if (itemsResponse['table_data'] != null) {
+        _userListings = itemsResponse['table_data'];
       }
+
+      // Load reviews for the chosen id
+      final reviewsResponse = await _apiService.getUserReviews(userID);
+      if (reviewsResponse['data'] != null) {
+        _userReviews = reviewsResponse['data'];
+      }
+      
 
 
 
@@ -133,7 +145,7 @@ class _ProfilePageState extends State<ProfilePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  _userData?['display_name'] ?? 'Full Name',
+                  _userData?['username'] ?? 'Full Name',
                   style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -512,11 +524,11 @@ class _ProfilePageState extends State<ProfilePage> {
               : GridView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    childAspectRatio: 0.85,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 360,
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
+                    childAspectRatio: 0.76,
                   ),
                   itemCount: _userListings.length,
                   itemBuilder: (context, index) {

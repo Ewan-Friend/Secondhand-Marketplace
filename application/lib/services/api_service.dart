@@ -93,6 +93,47 @@ class APIService {
     }
   }
 
+  /// Get a user's profile by their UUID from backend
+  Future<Map<String, dynamic>> getUserById(String userId) async {
+    final url = _uri('/profile/$userId');
+
+    try {
+      final response = await _client.get(url);
+
+      if (response.statusCode == 200) {
+        final decoded = json.decode(response.body);
+        return decoded is Map<String, dynamic>
+            ? decoded
+            : {'table_data': null, 'status_code': response.statusCode};
+      } else if (response.statusCode == 404) {
+        return {'table_data': null, 'status_code': 404};
+      }
+
+      throw Exception('Failed to load profile (${response.statusCode})');
+    } catch (e) {
+      throw Exception('getUserById failed: $e');
+    }
+  }
+  /// Get user profile by ID from backend
+  Future<Map<String, dynamic>> getUserByID(String userId) async {
+    final url = _uri('/user/$userId');
+    
+    try {
+      final response = await _client.get(url);
+      
+      if (response.statusCode == 200) {
+        final decoded = json.decode(response.body);
+        return decoded is Map<String, dynamic>
+            ? decoded
+            : {'data': null, 'status_code': 200};
+      }
+      
+      throw Exception('Failed to load profile (${response.statusCode})');
+    } catch (e) {
+      throw Exception('getUserByID failed: $e');
+    }
+  }
+
   /// Get user listings by ID from backend
   Future<Map<String, dynamic>> getUserItems(dynamic userId) async {
     final url = _uri('/items?user_id=$userId');
