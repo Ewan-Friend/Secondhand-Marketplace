@@ -11,9 +11,11 @@ class Header extends StatelessWidget {
   Header({
     super.key,
     this.showSearch = true,
+    this.showBackButton = false,
     });
 
   final bool showSearch;
+  final bool showBackButton;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +44,17 @@ class Header extends StatelessWidget {
               height: 80,
             ),
           ),
-          
+
+          // back button
+          if (showBackButton)
+            IconButton(
+              icon: const Icon(Icons.arrow_back, size: 28),
+              tooltip: 'Back',
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+
           const SizedBox(width: 24),
           
           // Location
