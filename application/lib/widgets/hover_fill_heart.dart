@@ -45,7 +45,35 @@ class _HoverFillHeartState extends State<HoverFillHeart> {
     final duration = widget.duration ?? const Duration(milliseconds: 180);
     final curve = widget.curve ?? Curves.easeOut;
 
-    
+    Widget content = MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => _hovering = true),
+      onExit: (_) => setState(() => _hovering = false),
+      child: SizedBox(
+        width: widget.iconSize,
+        height: widget.iconSize,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Icon(
+              Icons.favorite_border,
+              size: widget.iconSize,
+              color: outlineColor,
+            ),
+            AnimatedOpacity(
+              opacity: _hovering ? 1 : 0,
+              duration: duration,
+              curve: curve,
+              child: Icon(
+                Icons.favorite,
+                size: widget.iconSize,
+                color: filledColor,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
 
     if (widget.tooltip != null && widget.tooltip!.isNotEmpty) {
       content = Tooltip(
