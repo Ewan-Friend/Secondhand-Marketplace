@@ -3,6 +3,8 @@ class Item {
   final String sellerId;
   final String title;
   final String description;
+  final String location;
+  final String condition;
   final double rating;
   final double price;
   final List<String> imageUrls;
@@ -17,7 +19,9 @@ class Item {
     required this.rating, 
     required this.price,
     required this.imageUrls,
-    required this.sellerInfo
+    required this.sellerInfo,
+    required this.location,
+    required this.condition,
     // required this.listingDate
   });
 
@@ -28,8 +32,12 @@ class Item {
       id:           (json['id'] ?? '')  as String,
       sellerId:     (json['seller_id'] ?? '')as String,
       title:        (json['title'] ?? 'Untitled')as String,
-      description:  (json['description'] ?? '[No description]') as String,
+      description:  (json['description'] ?? 'No description') as String,
       rating:       (json['rating'] as num? ?? 0.0).toDouble(),
+      location:     (json['seller_info'] != null && json['seller_info']['location'] != null 
+              ? json['seller_info']['location'] 
+              : (json['location'] ?? 'no location')) as String,
+      condition:    (json['condition'] ?? 'no condition') as String,
       price:        (json['price'] as num? ?? 0.0).toDouble(),
       // Choose between a converted list of strings or (if null) all empty list
       imageUrls:    (json['image_urls'] != null ? List<String>.from(json['image_urls']) : []),
