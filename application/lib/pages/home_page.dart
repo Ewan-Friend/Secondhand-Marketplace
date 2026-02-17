@@ -65,7 +65,7 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: cs.surface,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(80),
-        child: Header(),
+        child: Header(),// not show search and back button on home page
       ),
       body: SingleChildScrollView(
         child: Column(
