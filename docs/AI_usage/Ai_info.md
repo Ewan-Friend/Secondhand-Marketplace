@@ -3,7 +3,9 @@
 ### Tools & Scope
 #### Tools used:
 - Github Copilot: For code completion / suggestions
-- Chatgpt 4 / 5 / Google Gemini: for brainstorming ideas and code structuring / Claude Sonnet 4.5
+- Chatgpt 4 / 5 / Google Gemini: for brainstorming ideas and code structuring
+- Claude Sonnet 4.5 / Chatgpt 5 / Gemini: For brainstroming and getting help for creating the s3 bucket and cloudfront stuff in aws system.
+  
 
 #### Scope of use:
 - Generating boilerplate code
@@ -12,6 +14,9 @@
 - Structuring some documentation content
 - Helping design a basic continuous deployment (CD) setup for the backend
 - Asist with structuring and refactoring the Flutter frontend API wiring
+- Assisted with AWS CloudFront + S3 configuration
+- OIDC IAM role setup for GitHub Action
+- CI/CD pipeline structuring for Flutter web deployment.
 
 #### Prohibited use:
 - Generating images or videos
