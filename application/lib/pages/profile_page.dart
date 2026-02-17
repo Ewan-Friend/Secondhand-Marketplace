@@ -153,7 +153,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
                 const SizedBox(height: 4),
                 Text(
-                  '@${_userData?['email']?.split('@').first ?? 'user_name_291'}',
+                  '@${_userData?['username'] ?? 'user_name_291'}',
                   style: TextStyle(
                     fontSize: 14,
                     color: Colors.grey.shade600,
@@ -191,9 +191,21 @@ class _ProfilePageState extends State<ProfilePage> {
                     ],
                   ),
                 ),
+                const SizedBox(height: 8),
+                // User bio
+                Text(
+                  _userData?['bio'] ?? 'This user has no bio yet.',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey.shade600,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ],
             ),
           ),
+
           
           // Edit Profile / Message button
           widget.isOwnProfile
@@ -237,8 +249,8 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _buildLocationAndRating() {
-    final rating = _userData?['rating']?.toDouble() ?? 4.12;
-    final reviewCount = _userData?['review_count'] ?? _userReviews.length;
+    final rating = _userData?['rating_score']?.toDouble() ?? 4.12;
+    final reviewCount = _userData?['rating_count'] ?? _userReviews.length;
     
     return Container(
       color: Theme.of(context).colorScheme.surface,
@@ -280,8 +292,8 @@ class _ProfilePageState extends State<ProfilePage> {
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-            Text(
-                            'BS6, United Kingdom',
+                          Text(
+                            _userData?['postal_code'] ?? 'BS6, United Kingdom',
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.grey.shade600,
@@ -332,7 +344,15 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          'posting for 7 months',
+                          'posting for ${_userData?['member_since'] ?? '7 months'}',
+                          style: TextStyle(
+                            fontSize: 12,
+                color: Colors.grey.shade600,
+                          ),
+                        ),
+                        const SizedBox(height: 3),
+                        Text(
+                          '$reviewCount reviews',
                           style: TextStyle(
                             fontSize: 12,
                 color: Colors.grey.shade600,
