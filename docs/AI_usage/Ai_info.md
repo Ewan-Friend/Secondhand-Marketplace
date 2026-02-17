@@ -38,7 +38,7 @@
 
 ### Example usages
 
-#### Prompt (case 1)
+#### Prompt (case 1) -Ewan
 "create a similiar test but for get_user_profile()"
 *context: provided my test for get_items, to be integrated into the same suite*
 
@@ -88,7 +88,7 @@ def test_get_user_profile_success(client):
         assert isinstance(profile["id"], str)
 ```
 
-#### Prompt (case 2)
+#### Prompt (case 2) - Ewan
 "add tests in python for these helper functions that connect to supabase"
 *context: provided my ```services.py```, so i could get tests for both functions held within*
 
@@ -151,3 +151,54 @@ def test_fetch_item_not_found(mock_supabase):
     result = fetch_item_by_id(mock_supabase, "invalid_id")
     assert result is None
 ```
+    #### Prompt (case 3) - Emir
+    Create a GitHub Actions workflow for deploying a Flutter web app to AWS S3 
+    and invalidating CloudFront.
+
+    Constraints:
+    - Use GitHub OIDC (no long-lived AWS keys)
+    - Assume an IAM role
+    - Sync build/web to S3
+    - Invalidate CloudFront distribution
+    - The Flutter project is inside the "application/" directory
+    - Use release build
+    - Provide clear placeholder comments for role ARN, bucket name, and distribution ID.
+
+    #### Response [code snippet] (case 3)
+    name: Deploy Web (S3 + CloudFront)
+
+    on:
+    push:
+        branches:
+        - 
+
+    jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        permissions:
+        id-token: write
+        contents: read
+
+    defaults:
+      run:
+        working-directory: application
+
+    steps:
+      - uses: 
+
+      - uses: 
+        with:
+          channel: 
+
+      - run: flutter pub get
+      - run: flutter build web --release
+
+      - uses: 
+        with:
+          role-to-assume: ${{}}
+          aws-region: 
+
+      - run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ }} \
+            --paths "/*"
