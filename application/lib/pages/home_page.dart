@@ -65,7 +65,7 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: cs.surface,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(80),
-        child: Header(),
+        child: Header(),// not show search and back button on home page
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -142,7 +142,7 @@ class _HomePageState extends State<HomePage> {
                     physics: const NeverScrollableScrollPhysics(),
                     gridDelegate:
                         const SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 360,
+                      maxCrossAxisExtent: 400,
                       crossAxisSpacing: 12,
                       mainAxisSpacing: 12,
                       childAspectRatio: 0.76,
