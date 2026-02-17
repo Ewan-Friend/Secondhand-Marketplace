@@ -107,6 +107,8 @@ def get_item(item_id):
 
 @bp.route("/items", methods=["POST"])
 def post_item():
+
+    # TODO: add categories   
     MISCELLANEOUS_PLACEHOLDER = "37d39021-f90e-4c62-9be4-2723864e3ceb"
     # Get the JSON data from the request
     data = request.get_json()
