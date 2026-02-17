@@ -45,18 +45,22 @@ class Header extends StatelessWidget {
             ),
           ),
 
-          // back button
-          if (showBackButton)
-            IconButton(
-              icon: const Icon(Icons.arrow_back, size: 28),
-              tooltip: 'Back',
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-
           const SizedBox(width: 24),
           
+          // Back button
+          SizedBox(
+            width: 48,
+            child: showBackButton
+                ? IconButton(
+                    icon: const Icon(Icons.arrow_back, size: 28),
+                    tooltip: 'Back',
+                    onPressed: () {
+                      Navigator.pop(context);
+                    }                    
+                  )
+                : const SizedBox(),
+          ),
+
           // Location
           _LocationChip(
             icon: Icons.location_on,
