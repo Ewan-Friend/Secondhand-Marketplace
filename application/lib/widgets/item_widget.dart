@@ -46,7 +46,7 @@ class ItemCard extends StatelessWidget{
         ),
         child: Card(
           elevation: 0,
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.surface,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
           clipBehavior: Clip.antiAlias,
           child: Column(
@@ -85,29 +85,29 @@ class ItemCard extends StatelessWidget{
                         Row(
                           // ~~~~~ LOCATION ~~~~~
                           children: [
-                            const Icon(Icons.location_on,
-                                size: 16, color: Color(0xFFE36D6D)),
+                            Icon(Icons.location_on,
+                                        size: 16, color: Theme.of(context).colorScheme.primary),
                             const SizedBox(width: 4),
                             Text(
                               'no location',
                               style: TextStyle(
-                                  fontSize: 14, color: Colors.grey.shade700),
+                                  fontSize: 14, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
                             ),
                           ],
                         ),
-                        Row(
-                          // ~~~~~ CONDITION ~~~~~
-                          children: [
-                            const Icon(Icons.sell,
-                                size: 16, color: Color(0xFFE36D6D)),
-                            const SizedBox(width: 4),
-                            Text(
-                              'no condition',
-                              style: TextStyle(
-                                  fontSize: 14, color: Colors.grey.shade700),
-                            ),
-                          ],
-                        ),
+                                Row(
+                                  // ~~~~~ CONDITION ~~~~~
+                                  children: [
+                                    Icon(Icons.sell,
+                                        size: 16, color: Theme.of(context).colorScheme.primary),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      'no condition',
+                                      style: TextStyle(
+                                          fontSize: 14, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
+                                    ),
+                                  ],
+                                ),
                       ],
                     ),
                     const SizedBox(height: 16),
