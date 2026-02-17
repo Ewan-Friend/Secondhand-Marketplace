@@ -35,7 +35,7 @@ def get_items():
     query = (
         supabase.table("items")
         .select(
-            "id, seller_id, title, created_at, description, rating, price, item_images(image_url)"
+            "id, seller_id, title, created_at, description, condition, rating, price, item_images(image_url)"
         )
         .limit(128)
     )
@@ -73,6 +73,7 @@ def get_items():
                 "title": item.get("title"),
                 "created_at": item.get("created_at"),
                 "description": item.get("description"),
+                "condition": item.get("condition"),
                 "rating": float(item.get("rating")) if item.get("rating") else 0.0,
                 "price": float(item.get("price")) if item.get("price") else 0.0,
                 "image_urls": images,

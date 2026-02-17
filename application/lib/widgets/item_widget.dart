@@ -89,7 +89,7 @@ class ItemCard extends StatelessWidget{
                                 size: 16, color: Color(0xFFE36D6D)),
                             const SizedBox(width: 4),
                             Text(
-                              'no location',
+                              item.location,
                               style: TextStyle(
                                   fontSize: 14, color: Colors.grey.shade700),
                             ),
@@ -102,7 +102,7 @@ class ItemCard extends StatelessWidget{
                                 size: 16, color: Color(0xFFE36D6D)),
                             const SizedBox(width: 4),
                             Text(
-                              'no condition',
+                              item.condition,
                               style: TextStyle(
                                   fontSize: 14, color: Colors.grey.shade700),
                             ),
