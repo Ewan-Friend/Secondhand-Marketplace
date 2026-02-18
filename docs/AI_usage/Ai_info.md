@@ -13,7 +13,7 @@
 - Helping design a basic continuous deployment (CD) setup for the backend
 - Asist with structuring and refactoring the Flutter frontend API wiring
 
- #### Prohibited use:
+#### Prohibited use:
 - Generating images or videos
 - Generating text for documentation
 - Generating code that handles secret keys
