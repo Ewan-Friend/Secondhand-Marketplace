@@ -4,8 +4,7 @@ on:
   push:
     branches:
       - dev
-      - "feature/**"
-      - "test/**"
+    
     paths:
       - 'application/**'
       - '.github/workflows/frontend-cd.yml'

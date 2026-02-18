@@ -1,0 +1,65 @@
+name: Deploy Web (S3 + CloudFront)
+
+
+on:
+ push:
+   branches:
+     - feature/247-connecting-flutter-deployment-with-githubactions 
+
+
+jobs:
+ deploy:
+   runs-on: ubuntu-latest
+
+
+   # id-token: required for OIDC federation; allows this workflow to request
+   # a short-lived token and assume the AWS IAM role.
+   # contents: read is needed for actions/checkout to clone the repo.
+   permissions:
+     id-token: write
+     contents: read
+
+
+   defaults:
+     run:
+       # Flutter app lives in application/; build output is application/build/web
+       working-directory: application
+
+
+   steps:
+     - name: Checkout repository
+       uses: actions/checkout@v4
+
+
+     - name: Set up Flutter
+       uses: subosito/flutter-action@v2
+       with:
+         channel: stable
+
+
+     - name: Install dependencies
+       run: flutter pub get
+
+
+     - name: Build web (release)
+       run: flutter build web --release
+
+
+     - name: Configure AWS credentials (OIDC)
+       uses: aws-actions/configure-aws-credentials@v4
+       with:
+         role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+         aws-region: ${{ vars.AWS_REGION }}
+
+
+     - name: Sync to S3
+       run: aws s3 sync build/web s3://${{ vars.AWS_S3_BUCKET }} --delete
+
+
+     - name: Invalidate CloudFront
+       run: |
+         aws cloudfront create-invalidation \
+          --distribution-id ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }} \
+          --paths "/*"
+
+
