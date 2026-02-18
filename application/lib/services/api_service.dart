@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../config/app_config.dart';
 import '../models/item_model.dart';
@@ -99,28 +100,103 @@ class APIService {
 
   // ---- TEMP STUBS (to keep app compiling) ----
   Future<Map<String, dynamic>> getCurrentUserProfile() async {
-    return {
-      'data': {
-        'id': 0,
-        'email': 'placeholder@example.com',
-        'display_name': 'Placeholder User',
-      },
-      'status_code': 200,
-    };
+    final url = _uri('/me');
+    
+    try {
+      final response = await _client.get(url);
+      
+      if (response.statusCode == 200) {
+        final decoded = json.decode(response.body);
+        return decoded is Map<String, dynamic>
+            ? decoded
+            : {'data': null, 'status_code': 200};
+      }
+      
+      throw Exception('Failed to load profile (${response.statusCode})');
+    } catch (e) {
+      throw Exception('getCurrentUserProfile failed: $e');
+    }
   }
 
-  Future<Map<String, dynamic>> getUserItems(int userId) async {
-    return {
-      'data': [],
-      'status_code': 200,
-    };
+  /// Get a user's profile by their UUID from backend
+  Future<Map<String, dynamic>> getUserById(String userId) async {
+    final url = _uri('/profile/$userId');
+
+    try {
+      final response = await _client.get(url);
+
+      if (response.statusCode == 200) {
+        final decoded = json.decode(response.body);
+        return decoded is Map<String, dynamic>
+            ? decoded
+            : {'table_data': null, 'status_code': response.statusCode};
+      } else if (response.statusCode == 404) {
+        return {'table_data': null, 'status_code': 404};
+      }
+
+      throw Exception('Failed to load profile (${response.statusCode})');
+    } catch (e) {
+      throw Exception('getUserById failed: $e');
+    }
+  }
+  /// Get user profile by ID from backend
+  Future<Map<String, dynamic>> getUserByID(String userId) async {
+    final url = _uri('/user/$userId');
+    
+    try {
+      final response = await _client.get(url);
+      
+      if (response.statusCode == 200) {
+        final decoded = json.decode(response.body);
+        return decoded is Map<String, dynamic>
+            ? decoded
+            : {'data': null, 'status_code': 200};
+      }
+      
+      throw Exception('Failed to load profile (${response.statusCode})');
+    } catch (e) {
+      throw Exception('getUserByID failed: $e');
+    }
   }
 
-  Future<Map<String, dynamic>> getUserReviews(int userId) async {
-    return {
-      'data': [],
-      'status_code': 200,
-    };
+  /// Get user listings by ID from backend
+  Future<Map<String, dynamic>> getUserItems(dynamic userId) async {
+    final url = _uri('/items?user_id=$userId');
+    
+    try {
+      final response = await _client.get(url);
+      
+      if (response.statusCode == 200) {
+        final decoded = json.decode(response.body);
+        return decoded is Map<String, dynamic>
+            ? decoded
+            : {'table_data': [], 'status_code': 200};
+      }
+      
+      throw Exception('Failed to load items (${response.statusCode})');
+    } catch (e) {
+      throw Exception('getUserItems failed: $e');
+    }
+  }
+
+  /// Get reviews for a user by ID from backend
+  Future<Map<String, dynamic>> getUserReviews(dynamic userId) async {
+    final url = _uri('/reviews?user_id=$userId');
+    
+    try {
+      final response = await _client.get(url);
+      
+      if (response.statusCode == 200) {
+        final decoded = json.decode(response.body);
+        return decoded is Map<String, dynamic>
+            ? decoded
+            : {'data': [], 'status_code': 200};
+      }
+      
+      throw Exception('Failed to load reviews (${response.statusCode})');
+    } catch (e) {
+      throw Exception('getUserReviews failed: $e');
+    }
   }
 
   Future<Map<String, dynamic>> updateUserProfile({

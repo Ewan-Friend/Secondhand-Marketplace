@@ -23,6 +23,7 @@ def fetch_user_by_id(supabase_client, user_id):
                 "rating_count",
                 "avatar_url",
                 "bio",
+                "postal_code",
             )
             .eq("id", user_id)
             .single()
