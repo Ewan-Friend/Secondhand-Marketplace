@@ -41,7 +41,7 @@ class ItemCard extends StatelessWidget{
         Navigator.pushNamed(context, '/item/${item.id}', arguments: item.id);
       },
       child: ConstrainedBox(
-        constraints: const BoxConstraints(
+        constraints: BoxConstraints(
           minWidth: 400,
         ),
         child: Card(
@@ -59,7 +59,7 @@ class ItemCard extends StatelessWidget{
               ),
               // ~~~~~ ALL OF THE DETAILS ~~~~~
               Padding(
-                padding: const EdgeInsets.all(10),
+                padding: EdgeInsets.all(10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -70,15 +70,15 @@ class ItemCard extends StatelessWidget{
                           child: Text(
                             //Use item title
                             item.title,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.w500, fontSize: 16),
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500, fontSize: 16),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -87,30 +87,30 @@ class ItemCard extends StatelessWidget{
                           children: [
                             Icon(Icons.location_on,
                                         size: 16, color: Theme.of(context).colorScheme.primary),
-                            const SizedBox(width: 4),
+                            SizedBox(width: 4),
                             Text(
-                              'no location',
+                              item.location,
                               style: TextStyle(
-                                  fontSize: 14, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
+                                  fontSize: 14, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8)),
                             ),
                           ],
                         ),
-                                Row(
-                                  // ~~~~~ CONDITION ~~~~~
-                                  children: [
-                                    Icon(Icons.sell,
-                                        size: 16, color: Theme.of(context).colorScheme.primary),
-                                    const SizedBox(width: 4),
-                                    Text(
-                                      'no condition',
-                                      style: TextStyle(
-                                          fontSize: 14, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
-                                    ),
-                                  ],
-                                ),
+                        Row(
+                          // ~~~~~ CONDITION ~~~~~~~
+                          children: [
+                            Icon(Icons.sell,
+                              size: 16, color: Theme.of(context).colorScheme.primary),
+                            SizedBox(width: 4),
+                            Text(
+                              item.condition,
+                              style: TextStyle(
+                                  fontSize: 14, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8)),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16),
                     // Seller Info Section with price aligned to the right
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -127,7 +127,7 @@ class ItemCard extends StatelessWidget{
                         // Price on the same row as seller info
                         Text(
                           'CHF ${item.price.toString()}',
-                          style: const TextStyle(
+                            style: TextStyle(
                               fontWeight: FontWeight.w500, fontSize: 18),
                         ),
                       ],

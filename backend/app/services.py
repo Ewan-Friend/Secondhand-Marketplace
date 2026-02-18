@@ -69,6 +69,7 @@ def fetch_item_by_id(supabase_client, item_id):
             "title": item.get("title"),
             "created_at": item.get("created_at"),
             "description": item.get("description"),
+            "condition": item.get("condition"),
             "rating": float(item.get("rating")) if item.get("rating") else 0.0,
             "price": float(item.get("price")) if item.get("price") else 0.0,
             "image_urls": images,
