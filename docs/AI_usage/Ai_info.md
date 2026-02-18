@@ -38,11 +38,11 @@
 
 ### Example usages
 
-#### Prompt (case 1) -Ewan
+#### Prompt - Ewan (case 1) 
 "create a similiar test but for get_user_profile()"
 *context: provided my test for get_items, to be integrated into the same suite*
 
-#### Response [code snippet] (case 1)
+#### Response [code snippet] - Gemini (case 1)
 
 ```python
 from unittest.mock import patch, MagicMock
@@ -88,11 +88,11 @@ def test_get_user_profile_success(client):
         assert isinstance(profile["id"], str)
 ```
 
-#### Prompt (case 2) - Ewan
+#### Prompt - Ewan (case 2)
 "add tests in python for these helper functions that connect to supabase"
 *context: provided my ```services.py```, so i could get tests for both functions held within*
 
-#### Response [code snippet] (case 2)
+#### Response [code snippet] - Gemini (case 2)
 ```python
 import pytest
 from unittest.mock import MagicMock
@@ -101,104 +101,98 @@ from app.services import fetch_user_by_id, fetch_item_by_id
 
 @pytest.fixture
 def mock_supabase():
-    """Creates a mock Supabase client with chained method support."""
-    mock_client = MagicMock()
-    # This allows us to chain methods like .table().select().eq()
-    mock_client.table.return_value.select.return_value.eq.return_value.single.return_value.execute.return_value = MagicMock()
-    return mock_client
+...
 
-## --- Tests for fetch_user_by_id ---
-
-def test_fetch_user_success(mock_supabase):
-    # Setup mock data
-    expected_data = {"id": "123", "username": "test_user"}
-    mock_supabase.table().select().eq().single().execute.return_value.data = expected_data
-
-    # Call the function
-    result = fetch_user_by_id(mock_supabase, "123")
-
-    # Assertions
-    assert result == expected_data
-    mock_supabase.table.assert_called_with("profiles")
-
-def test_fetch_user_none_id(mock_supabase):
-    assert fetch_user_by_id(mock_supabase, None) is None
-
-def test_fetch_user_error(mock_supabase):
-    # Simulate an exception during the execute() call
-    mock_supabase.table().select().eq().single().execute.side_effect = Exception("DB Error")
-    
-    result = fetch_user_by_id(mock_supabase, "123")
-    assert result is None
-
-
-## --- Tests for fetch_item_by_id ---
-
-def test_fetch_item_success(mock_supabase):
-    expected_item = {"id": "item_456", "title": "Vintage Camera"}
-    mock_supabase.table().select().eq().single().execute.return_value.data = expected_item
-
-    result = fetch_item_by_id(mock_supabase, "item_456")
-
-    assert result == expected_item
-    # Check that it correctly targets the profiles table (based on your current code)
-    mock_supabase.table.assert_called_with("profiles") 
-
-def test_fetch_item_not_found(mock_supabase):
-    # Supabase .single() often raises an exception if 0 rows are found
-    mock_supabase.table().select().eq().single().execute.side_effect = Exception("No rows found")
-    
-    result = fetch_item_by_id(mock_supabase, "invalid_id")
-    assert result is None
 ```
-    #### Prompt (case 3) - Emir
-    Create a GitHub Actions workflow for deploying a Flutter web app to AWS S3 
-    and invalidating CloudFront.
 
-    Constraints:
-    - Use GitHub OIDC (no long-lived AWS keys)
-    - Assume an IAM role
-    - Sync build/web to S3
-    - Invalidate CloudFront distribution
-    - The Flutter project is inside the "application/" directory
-    - Use release build
-    - Provide clear placeholder comments for role ARN, bucket name, and distribution ID.
+#### Prompt - Ewan
+"create a test in tests to test that the home.dart correctly renders"
+*GitHub copilot can read my whole repo to make contextual changes*
 
-    #### Response [code snippet] (case 3)
-    name: Deploy Web (S3 + CloudFront)
+#### Response - GitHub Copilot
 
-    on:
-    push:
-        branches:
-        - 
+> created ```home_page_test.dart``` in application/test
 
-    jobs:
-    deploy:
-        runs-on: ubuntu-latest
-        permissions:
-        id-token: write
-        contents: read
+"Added an injectable APIService hook on HomePage so the widget can be rendered deterministically in tests, then created a widget test that pumps the page with a fake service and a minimal SVG asset bundle. This validates the page renders its core UI and empty state without hitting the network. Changes are in home_page.dart and the new test at home_page_test.dart."
 
-    defaults:
-      run:
-        working-directory: application
+#### Prompt - Ewan  (case 3)
+"create a test for the api service with mock http responses"
+*Github copilot received ```api_service.dart``` and made contextual changes*
 
-    steps:
-      - uses: 
+#### Response - GitHub Copilot  (case 3)
 
-      - uses: 
-        with:
-          channel: 
+> created ```api_service_test.dart``` in application/test
+> created ```api_service_test.mocks.dart``` in application/test
 
-      - run: flutter pub get
-      - run: flutter build web --release
+"Created a comprehensive test suite for APIService with 10 test cases covering:
 
-      - uses: 
-        with:
-          role-to-assume: ${{}}
-          aws-region: 
+checkConnection()
 
-      - run: |
-          aws cloudfront create-invalidation \
-            --distribution-id ${{ }} \
-            --paths "/*"
+Returns message when backend is reachable
+Returns default message when no message field
+Throws exception on non-200 status
+Throws exception on network error
+getItems()
+
+Returns list of items on success
+Returns empty list when table_data is empty
+Returns empty list when response is empty object
+Throws exception on non-200 status
+Throws exception on invalid JSON
+Filters out non-map items from malformed data
+Added mockito and build_runner dependencies, generated mocks, and all tests are passing."
+
+
+#### Prompt - Emir  (case 4)
+Create a GitHub Actions workflow for deploying a Flutter web app to AWS S3 
+and invalidating CloudFront.
+
+Constraints:
+- Use GitHub OIDC (no long-lived AWS keys)
+- Assume an IAM role
+- Sync build/web to S3
+- Invalidate CloudFront distribution
+- The Flutter project is inside the "application/" directory
+- Use release build
+- Provide clear placeholder comments for role ARN, bucket name, and distribution ID.
+
+#### Response [code snippet] (case 4)
+```
+name: Deploy Web (S3 + CloudFront)
+
+on:
+push:
+    branches:
+    - 
+
+jobs:
+deploy:
+    runs-on: ubuntu-latest
+    permissions:
+    id-token: write
+    contents: read
+
+defaults:
+  run:
+    working-directory: application
+
+steps:
+  - uses: 
+
+  - uses: 
+    with:
+      channel: 
+
+  - run: flutter pub get
+  - run: flutter build web --release
+
+  - uses: 
+    with:
+      role-to-assume: ${{}}
+      aws-region: 
+
+  - run: |
+      aws cloudfront create-invalidation \
+        --distribution-id ${{ }} \
+        --paths "/*"
+ ```

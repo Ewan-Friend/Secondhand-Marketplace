@@ -18,7 +18,7 @@ class _PostItemsPage extends State<PostItemsPage> {
       appBar: PreferredSize(
         // top navigation bar
         preferredSize: Size.fromHeight(80),
-        child: Header(showSearch: false), 
+        child: Header(showSearch: false, showBackButton: true), 
       ),
       body: SafeArea(
         child: LayoutBuilder(
@@ -26,10 +26,9 @@ class _PostItemsPage extends State<PostItemsPage> {
             final bool isWide = constraints.maxWidth > 900;
             return Padding(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+                  const EdgeInsets.symmetric(horizontal: 24.0, vertical: 0),
               child: Column(
                 children: [
-                  Header(),
                   const SizedBox(height: 24),
                   Expanded(
                       child: isWide
