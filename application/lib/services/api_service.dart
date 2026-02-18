@@ -78,7 +78,31 @@ class APIService {
     }
   }
 
-  /// Get current authenticated user's profile from backend
+  Future<Map<String, dynamic>> postNewItem(Map<String, dynamic> data) async {
+  final url = _uri('/items');
+
+  try {
+    final response = await _client.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode(data),
+    );
+
+    if (response.statusCode == 201 || response.statusCode == 200) {
+      final decoded = json.decode(response.body);
+      if (kDebugMode) {
+        debugPrint('Item posted successfully: ${response.body}');
+      }
+      return decoded is Map<String, dynamic> ? decoded : {'status': 'success'};
+    }
+
+    throw Exception('Failed to post item (${response.statusCode})');
+  } catch (e) {
+    throw Exception('Post item failed: $e');
+  }
+}
+
+  // ---- TEMP STUBS (to keep app compiling) ----
   Future<Map<String, dynamic>> getCurrentUserProfile() async {
     final url = _uri('/me');
     

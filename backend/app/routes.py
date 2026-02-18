@@ -95,6 +95,7 @@ def get_user_profile(user_id):
 
     return jsonify({"table_data": user_profile, "status_code": 200})
 
+
 @bp.route("/item/<uuid:item_id>", methods=["GET"])
 def get_item(item_id):
     item = fetch_item_by_id(supabase, str(item_id))
@@ -103,6 +104,78 @@ def get_item(item_id):
         return jsonify({"message": "item could not be found", "status_code": 404})
 
     return jsonify({"table_data": item, "status_code": 200}), 200
+
+
+@bp.route("/items", methods=["POST"])
+def post_item():
+
+    # TODO: add categories   
+    MISCELLANEOUS_PLACEHOLDER = "37d39021-f90e-4c62-9be4-2723864e3ceb"
+    # Get the JSON data from the request
+    data = request.get_json()
+
+    # Validate that data exists
+    if not data:
+        return jsonify({"message": "No data provided", "status_code": 400}), 400
+
+    # Extract required fields from frontend
+    title = data.get("title", "").strip()
+    description = data.get("description", "").strip()
+    price = data.get("price")
+    seller_id = data.get("seller_id")
+    # image_urls = data.get("image_urls", [])
+
+    # Validate required fields
+    if not title or price is None or not seller_id:
+        # Insert item into Supabase
+        return jsonify(
+            {
+                "message": "Missing required fields: title, price, seller_id",
+                "status_code": 400,
+            }
+        ), 400
+
+    if not description:
+        description = "no description has been provided for this item"
+
+    try:
+        print(
+            f"Attempting to insert item: title={title}, price={price}, seller_id={seller_id}"
+        )
+        # Insert item into Supabase
+        response = (
+            supabase.table("items")
+            .insert(
+                {
+                    "title": title,
+                    "description": description,
+                    "rating": 0.0,
+                    "price": float(price),
+                    "seller_id": seller_id,
+                    "category_id": MISCELLANEOUS_PLACEHOLDER,
+                }
+            )
+            .execute()
+        )
+
+        print("created response")
+
+        return jsonify(
+            {
+                "message": "Item posted successfully",
+                "status_code": 201,
+                "data": response.data,
+            }
+        ), 201
+    except Exception as e:
+        print(f"Error posting item: {str(e)}")  # This will show the actual error
+        print(f"Error type: {type(e)}")
+        import traceback
+
+        traceback.print_exc()
+        return jsonify(
+            {"message": f"Failed to post item: {str(e)}", "status_code": 400}
+        ), 400
 
 
 @bp.route("/register", methods=["POST"])
