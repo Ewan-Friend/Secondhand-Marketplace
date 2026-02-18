@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widget_previews.dart';
 
 class SearchBarWidget extends StatelessWidget {
   final TextEditingController? controller;
@@ -67,4 +68,3 @@ class SearchBarWidget extends StatelessWidget {
     );
   }
 }
-
