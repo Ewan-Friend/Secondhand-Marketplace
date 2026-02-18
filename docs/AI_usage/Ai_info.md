@@ -26,68 +26,68 @@
 - AI generated code should be refactored to hold to project code standardisation
 - Provide example code when needed
 
-### How to generate quality AI-written code
-- Use tailored, specific prompts that reference existing files to provide context
-- Do not generate large code blocks, generate a small block at a time and make sure you understand the core concepts fully before implementing
-- Always ask how concepts work when stuck with what to do
+    ### How to generate quality AI-written code
+    - Use tailored, specific prompts that reference existing files to provide context
+    - Do not generate large code blocks, generate a small block at a time and make sure you understand the core concepts fully before implementing
+    - Always ask how concepts work when stuck with what to do
 
-### Example usages
+    ### Example usages
 
-#### Prompt (case 1)
-"create a similiar test but for get_user_profile()"
-*context: provided my test for get_items, to be integrated into the same suite*
+    ## Prompt - Ewan
+    "create a similar test but for get_user_profile()"
+    *context: provided my test for get_items, to be integrated into the same suite*
 
-#### Response [code snippet] (case 1)
+    #### Response [code snippet] - Gemini
 
-```python
-from unittest.mock import patch, MagicMock
+    ```python
+    from unittest.mock import patch, MagicMock
 
-def test_get_user_profile_success(client):
-    # Use a "mock" supabase specifically in the services file where it's now defined
-    with patch("services.supabase") as mock_supabase:
-        # Mocking the Supabase response for a single profile record
-        mock_response = MagicMock()
-        mock_response.data = {
-            "id": "abc123-uuid-format", # profiles table uses uuid
-            "username": "testuser",      # text field
-            "location": "London, UK",    # text field
-            "rating_score": 4.5,         # numeric field
-            "rating_count": 10,          # int4 field
-            "avatar_url": "https://example.com/avatar.png",
-            "bio": "Hello, I am a tester."
-        }
+    def test_get_user_profile_success(client):
+        # Use a "mock" supabase specifically in the services file where it's now defined
+        with patch("services.supabase") as mock_supabase:
+            # Mocking the Supabase response for a single profile record
+            mock_response = MagicMock()
+            mock_response.data = {
+                "id": "abc123-uuid-format", # profiles table uses uuid
+                "username": "testuser",      # text field
+                "location": "London, UK",    # text field
+                "rating_score": 4.5,         # numeric field
+                "rating_count": 10,          # int4 field
+                "avatar_url": "https://example.com/avatar.png",
+                "bio": "Hello, I am a tester."
+            }
 
-        # Setup the mock chain for .table().select().eq().single().execute()
-        # Note: Added .single() to match the logic for fetching one profile
-        mock_supabase.table.return_value.select.return_value.eq.return_value.single.return_value.execute.return_value = mock_response
+            # Setup the mock chain for .table().select().eq().single().execute()
+            # Note: Added .single() to match the logic for fetching one profile
+            mock_supabase.table.return_value.select.return_value.eq.return_value.single.return_value.execute.return_value = mock_response
 
-        # Define the test UUID (matches the route parameter <uuid:user_id>)
-        test_uuid = "abc123-uuid-format"
-        
-        # Execute the GET request to the profile route
-        response = client.get(f"/api/profile/{test_uuid}")
-        data = response.get_json()
+            # Define the test UUID (matches the route parameter <uuid:user_id>)
+            test_uuid = "abc123-uuid-format"
+            
+            # Execute the GET request to the profile route
+            response = client.get(f"/api/profile/{test_uuid}")
+            data = response.get_json()
 
-        # Assertions to verify the API behavior
-        assert response.status_code == 200
-        assert data["status_code"] == 200
-        
-        # Data validation
-        profile = data.get("data", {})
-        assert profile["username"] == "testuser"
-        assert profile["rating_count"] == 10
-        
-        # Type validation based on database schema
-        assert isinstance(profile["rating_score"], (int, float))
-        assert isinstance(profile["username"], str)
-        assert isinstance(profile["id"], str)
-```
+            # Assertions to verify the API behavior
+            assert response.status_code == 200
+            assert data["status_code"] == 200
+            
+            # Data validation
+            profile = data.get("data", {})
+            assert profile["username"] == "testuser"
+            assert profile["rating_count"] == 10
+            
+            # Type validation based on database schema
+            assert isinstance(profile["rating_score"], (int, float))
+            assert isinstance(profile["username"], str)
+            assert isinstance(profile["id"], str)
+    ```
 
-#### Prompt (case 2)
+#### Prompt - Ewan
 "add tests in python for these helper functions that connect to supabase"
 *context: provided my ```services.py```, so i could get tests for both functions held within*
 
-#### Response [code snippet] (case 2)
+#### Response [code snippet] - Gemini
 ```python
 import pytest
 from unittest.mock import MagicMock
@@ -146,3 +146,41 @@ def test_fetch_item_not_found(mock_supabase):
     result = fetch_item_by_id(mock_supabase, "invalid_id")
     assert result is None
 ```
+
+
+## Prompt - Ewan
+"create a test in tests to test that the home.dart correctly renders"
+*GitHub copilot can read my whole repo to make contextual changes*
+
+## Response - GitHub Copilot
+
+> created ```home_page_test.dart``` in application/test
+
+"Added an injectable APIService hook on HomePage so the widget can be rendered deterministically in tests, then created a widget test that pumps the page with a fake service and a minimal SVG asset bundle. This validates the page renders its core UI and empty state without hitting the network. Changes are in home_page.dart and the new test at home_page_test.dart."
+
+## Prompt - Ewan
+"create a test for the api service with mock http responses"
+*Github copilot received ```api_service.dart``` and made contextual changes*
+
+## Response - GitHub Copilot
+
+> created ```api_service_test.dart``` in application/test
+> created ```api_service_test.mocks.dart``` in application/test
+
+"Created a comprehensive test suite for APIService with 10 test cases covering:
+
+checkConnection()
+
+Returns message when backend is reachable
+Returns default message when no message field
+Throws exception on non-200 status
+Throws exception on network error
+getItems()
+
+Returns list of items on success
+Returns empty list when table_data is empty
+Returns empty list when response is empty object
+Throws exception on non-200 status
+Throws exception on invalid JSON
+Filters out non-map items from malformed data
+Added mockito and build_runner dependencies, generated mocks, and all tests are passing."

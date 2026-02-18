@@ -35,7 +35,7 @@ class _ItemDetailState extends State<ItemDetailPage> {
       // Header (navigation bar)
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(80),
-        child: Header(showSearch: false), // search functionality disabled
+        child: Header(showSearch: false, showBackButton: true), // search functionality disabled
       ),
       body: SafeArea(
         // CREATE THE ITEM INFO HOORAY
@@ -61,7 +61,6 @@ class _ItemDetailState extends State<ItemDetailPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const _Header(),
                       const SizedBox(height: 24),
                       // Title row
                       Row(
