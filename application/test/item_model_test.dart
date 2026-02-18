@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:application/models/item_model.dart';
 
@@ -66,10 +68,11 @@ void main() {
         description: 'A beautiful vintage camera',
         rating: 4.5,
         price: 120.50,
+        location: 'Rome, Italy',
+        condition: 'good',
         imageUrls: ['https://example.com/image1.jpg', 'https://example.com/image2.jpg'],
         sellerInfo: {
           'username': 'testuser',
-          'location': 'Rome, Italy',
         },
       );
 
@@ -81,6 +84,8 @@ void main() {
       expect(json['description'], 'A beautiful vintage camera');
       expect(json['rating'], 4.5);
       expect(json['price'], 120.50);
+      expect(json['location'], 'Rome, Italy');
+      expect(json['condition'], 'good');
       expect(json['image_urls'], isA<List<String>>());
       expect(json['image_urls'].length, 2);
       expect(json['seller_info']['username'], 'testuser');
@@ -94,6 +99,8 @@ void main() {
         'description': 'Great condition',
         'rating': 4.5,
         'price': 120.50,
+        'location': 'Rome, Italy',
+        'condition': 'good',
         'image_urls': ['https://example.com/image1.jpg'],
         'seller_info': {'username': 'testuser'},
       };
@@ -107,6 +114,8 @@ void main() {
       expect(resultJson['description'], originalJson['description']);
       expect(resultJson['rating'], originalJson['rating']);
       expect(resultJson['price'], originalJson['price']);
+      expect(resultJson['location'], originalJson['location']);
+      expect(resultJson['condition'], originalJson['condition']);
       expect(resultJson['image_urls'], originalJson['image_urls']);
       expect(resultJson['seller_info'], originalJson['seller_info']);
     });

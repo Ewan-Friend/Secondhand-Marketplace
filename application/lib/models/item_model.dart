@@ -57,6 +57,8 @@ class Item {
     data['price'] = price;
     data['image_urls'] = imageUrls;
     data['seller_info'] = sellerInfo;
+    data['location'] = location;
+    data['condition'] = condition;
 
     return data;
   }
