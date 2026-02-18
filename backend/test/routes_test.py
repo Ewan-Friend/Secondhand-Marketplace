@@ -28,6 +28,7 @@ def test_get_item_data_success(client):
                     {"image_url": "path/to/img1.png"},
                     {"image_url": "path/to/img2.png"},
                 ],
+                "condition": "no condition", 
             }
         ]
 
@@ -68,6 +69,7 @@ def test_get_item_data_success(client):
         assert isinstance(item["title"], str)
         assert isinstance(item["created_at"], str)
         assert isinstance(item["description"], str)
+        assert isinstance(item["condition"], str)
 
         # Ensure floating point precision
         assert isinstance(item["rating"], float)
