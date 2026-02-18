@@ -96,7 +96,7 @@ class ItemCard extends StatelessWidget{
                           ],
                         ),
                         Row(
-                          // ~~~~~ CONDITION ~~~~~
+                          // ~~~~~ CONDITION ~~~~~~~
                           children: [
                             const Icon(Icons.sell,
                                 size: 16, color: Color(0xFFE36D6D)),
