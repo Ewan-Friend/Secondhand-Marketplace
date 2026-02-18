@@ -1,7 +1,8 @@
 /// Single source of truth for the API base URL.
-/// Use relative "/api" so the same origin (e.g. CloudFront) can route /api/* to the backend.
+/// For web development, use absolute URL to reach backend on different port.
+/// For production, use relative "/api" with a reverse proxy (e.g. CloudFront).
 /// Override at build time: --dart-define=API_BASE_URL=https://other.example/api
 const String apiBaseUrl = String.fromEnvironment(
   'API_BASE_URL',
-  defaultValue: '/api',
+  defaultValue: 'http://localhost:5000/api',
 );
