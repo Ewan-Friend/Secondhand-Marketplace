@@ -6,6 +6,7 @@ import '../pages/favourites_page.dart';
 import '../pages/messages_page.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:application/widgets/hover_scale.dart';
+import 'package:application/widgets/hover_fill_heart.dart';
 
 class Header extends StatelessWidget {
   Header({
@@ -116,17 +117,15 @@ class Header extends StatelessWidget {
           ),
 
           // Action icons
-          HoverScale(
-            child: IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const FavouritesPage()),
-                );
-              },
-              tooltip: 'Wishlist',
-              icon: const Icon(Icons.favorite_border, size: 30),
-            ),
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const FavouritesPage()),
+              );
+            },
+            tooltip: 'Wishlist',
+            icon: const HoverFillHeart(iconSize: 30),
           ),
           HoverScale(
             child: IconButton(
