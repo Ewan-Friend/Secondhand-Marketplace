@@ -57,6 +57,59 @@ void main() {
       expect(item.sellerInfo, isA<Map<String, dynamic>>());
       expect(item.sellerInfo, isEmpty);
     });
+
+    test('Item.toJson should correctly serialize all fields', () {
+      final item = Item(
+        id: '12345',
+        sellerId: 'user_99',
+        title: 'Vintage Camera',
+        description: 'A beautiful vintage camera',
+        rating: 4.5,
+        price: 120.50,
+        imageUrls: ['https://example.com/image1.jpg', 'https://example.com/image2.jpg'],
+        sellerInfo: {
+          'username': 'testuser',
+          'location': 'Rome, Italy',
+        },
+      );
+
+      final json = item.toJson();
+
+      expect(json['id'], '12345');
+      expect(json['seller_id'], 'user_99');
+      expect(json['title'], 'Vintage Camera');
+      expect(json['description'], 'A beautiful vintage camera');
+      expect(json['rating'], 4.5);
+      expect(json['price'], 120.50);
+      expect(json['image_urls'], isA<List<String>>());
+      expect(json['image_urls'].length, 2);
+      expect(json['seller_info']['username'], 'testuser');
+    });
+
+    test('Item fromJson -> toJson round-trip should preserve data', () {
+      final originalJson = {
+        'id': '12345',
+        'seller_id': 'user_99',
+        'title': 'Vintage Camera',
+        'description': 'Great condition',
+        'rating': 4.5,
+        'price': 120.50,
+        'image_urls': ['https://example.com/image1.jpg'],
+        'seller_info': {'username': 'testuser'},
+      };
+
+      final item = Item.fromJson(originalJson);
+      final resultJson = item.toJson();
+
+      expect(resultJson['id'], originalJson['id']);
+      expect(resultJson['seller_id'], originalJson['seller_id']);
+      expect(resultJson['title'], originalJson['title']);
+      expect(resultJson['description'], originalJson['description']);
+      expect(resultJson['rating'], originalJson['rating']);
+      expect(resultJson['price'], originalJson['price']);
+      expect(resultJson['image_urls'], originalJson['image_urls']);
+      expect(resultJson['seller_info'], originalJson['seller_info']);
+    });
   });
 }
 
