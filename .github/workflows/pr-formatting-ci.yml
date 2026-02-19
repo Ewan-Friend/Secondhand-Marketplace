@@ -7,19 +7,27 @@ on:
 jobs:
   check-pr-title:
     runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
     steps:
       - name: PR Title Convention
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_TITLE: ${{ github.event.pull_request.title }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
-
           REGEX="^\[[A-Z]+\]: .+"
           if [[ ! "$PR_TITLE" =~ $REGEX ]]; then
             echo "::error ::PR title must follow format: [ABC]: Your title"
             exit 1
           fi
+  check-closing-tag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Closing Tag Exists
+        env:
+          PR_CONTENT: ${{github.event.pull_request.body}}
+        run: |
+          REGEX="^.+Closes #[0-9]+"
+          if [[ ! "$PR_CONTENT" =~ $REGEX ]]; then
+            echo "::error ::PR body must include a closing tag"
+            exit 1
+          fi
+  
           
