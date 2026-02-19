@@ -31,7 +31,7 @@ jobs:
         # Define Regex as "Closes #123"
         run: |
           REGEX="^[Cc][Ll][Oo][Ss][Ee][Ss][[:space:]]*#[0-9]+
-          if [[! "$PR_CONTENT" =~ $REGEX ]]; then
+          if [[ ! "$PR_CONTENT" =~ $REGEX ]]; then
             echo "::error ::PR body must include a closing tag (e.g Closes #123)"
             exit 1
           fi
