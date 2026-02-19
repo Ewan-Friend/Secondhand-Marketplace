@@ -22,7 +22,7 @@ class MainApp extends StatelessWidget {
       title: 'Secondhand Marketplace',
 
       // start off at home page (can change to login at some point)
-      initialRoute: '/signup',
+      initialRoute: '/',
 
       // Static routing table
       routes: {
