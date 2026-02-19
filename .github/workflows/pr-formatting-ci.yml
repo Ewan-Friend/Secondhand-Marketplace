@@ -30,7 +30,7 @@ jobs:
           PR_CONTENT: ${{github.event.pull_request.body}}
         # Define Regex as "Closes #123"
         run: |
-          REGEX="[Cc][Ll][Oo][Ss][Ee][Ss][[:space:]]*#[0-9]+"
+          REGEX="([Cc]lose[sd]?|[Ff]ix(e[sd])?|[Rr]esolve[sd]?)[[:space:]]*#[0-9]+"
           if [[ ! "$PR_CONTENT" =~ $REGEX ]]; then
             echo "::error ::PR body must include a closing tag (e.g Closes #123)"
             exit 1
