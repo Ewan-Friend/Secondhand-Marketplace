@@ -20,14 +20,27 @@ jobs:
   check-closing-tag:
     runs-on: ubuntu-latest
     steps:
-      - name: Check Closing Tag Exists
+      - name: Check Closing Tag
         env:
           PR_CONTENT: ${{github.event.pull_request.body}}
         run: |
-          REGEX="^.+Closes #[0-9]+"
+          REGEX="^.*Closes #[0-9]+"
           if [[ ! "$PR_CONTENT" =~ $REGEX ]]; then
             echo "::error ::PR body must include a closing tag"
             exit 1
           fi
-  
+  check-type-of-change:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Type Of Change is selected
+        env:
+          PR_CONTENT: ${{github.event.pull_request.body}}
+        run: |
+          # Looks through lines after header, check if there is a [x] or [X]
+          if ! "$PR_CONTENT" | grep -A 7 "Type of Change" | grep -qi "\[[x]\]"; then
+            echo "::error ::You must select at least one type of change"
+            exit 1
+          fi
+
+
           
