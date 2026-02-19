@@ -1,18 +1,68 @@
+import 'package:application/pages/home_page.dart';
+import 'package:application/pages/post_items_page.dart';
 import 'package:flutter/material.dart';
 import '../pages/profile_page.dart';
-import '../pages/create_listing_page.dart';
+import '../pages/favourites_page.dart';
+import '../pages/messages_page.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:application/widgets/hover_scale.dart';
+import 'package:application/widgets/hover_fill_heart.dart';
 
 class Header extends StatelessWidget {
-  Header({super.key});
+  Header({
+    super.key,
+    this.showSearch = true,
+    this.showBackButton = false,
+    });
+
+  final bool showSearch;
+  final bool showBackButton;
 
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 80),
+      padding: const EdgeInsets.only(top: 16, bottom: 16, left: 15, right: 80),
       child: Row(
         children: [
+          // Logo
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const HomePage()),
+              );
+            },
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(
+              minWidth: 32,
+              minHeight: 32,
+            ),
+            tooltip: 'Home',
+            icon: SvgPicture.asset(
+              'assets/logo/logo-static.svg',
+              height: 80,
+            ),
+          ),
+
+          const SizedBox(width: 24),
+          
+          // Back button
+          SizedBox(
+            width: 48,
+            child: showBackButton
+                ? IconButton(
+                    icon: const Icon(Icons.arrow_back, size: 28),
+                    tooltip: 'Back',
+                    onPressed: () {
+                      Navigator.pop(context);
+                    }                    
+                  )
+                : const SizedBox(),
+          ),
+
+          // Location
           _LocationChip(
             icon: Icons.location_on,
             label: 'Bristol, UK',
@@ -20,76 +70,98 @@ class Header extends StatelessWidget {
             iconColor: cs.primary,
             textColor: cs.onSurface,
           ),
-          const SizedBox(width: 60),
 
           // Search bar
           Expanded(
-            child: Container(
-              height: 80,
-              decoration: BoxDecoration(
-                color: Colors.grey.shade200,
-                borderRadius: BorderRadius.circular(28),
-              ),
-              padding: const EdgeInsets.only(left: 30, right: 6),
-              child: Row(
-                children: [
-                  const Expanded(
-                    child: TextField(
-                      decoration: InputDecoration(
-                        hintText: 'Search for an item',
-                        border: InputBorder.none,
+            child: Align(
+              alignment: Alignment.center,
+              child: showSearch
+                  ? ConstrainedBox(
+                      constraints: const BoxConstraints(
+                        minWidth: 280,
+                        maxWidth: 620,
                       ),
-                    ),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: cs.primary,
-                      shape: BoxShape.circle,
-                    ),
-                    width: 40,
-                    height: 40,
-                    child: const Icon(Icons.search, color: Colors.white, size: 24),
-                  ),
-                ],
-              ),
+                      child: Container(
+                        height: 80,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade200,
+                          borderRadius: BorderRadius.circular(28),
+                        ),
+                        padding: const EdgeInsets.only(left: 30, right: 6),
+                        child: Row(
+                          children: [
+                            const Expanded(
+                              child: TextField(
+                                decoration: InputDecoration(
+                                  hintText: 'Search for an item',
+                                  border: InputBorder.none,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: cs.primary,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(Icons.search,
+                                  color: Colors.white, size: 24),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  : const SizedBox.shrink(),
             ),
           ),
-          const SizedBox(width: 60),
 
           // Action icons
           IconButton(
             onPressed: () {
-              // Navigate to wishlist page
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const FavouritesPage()),
+              );
             },
             tooltip: 'Wishlist',
-            icon: const Icon(Icons.favorite_border, size: 30),
+            icon: const HoverFillHeart(iconSize: 30),
           ),
-          IconButton(
-            onPressed: () {
-              // Navigate to messages page
-            },
-            tooltip: 'Messages',
-            icon: const Icon(Icons.chat_bubble_outline, size: 30),
+          HoverScale(
+            child: IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const MessagesPage()),
+                );
+              },
+              tooltip: 'Messages',
+              icon: const Icon(Icons.chat_bubble_outline, size: 30),
+            ),
           ),
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const CreateListingPage()),
-              );
-            },
-            tooltip: 'Post Item',
-            icon: const Icon(Icons.add_circle_outline, size: 30),
+          HoverScale(
+            child: IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const PostItemsPage()),
+                );
+              },
+              tooltip: 'Post Item',
+              icon: const Icon(Icons.add_circle_outline, size: 30),
+            ),
           ),
-          IconButton(
-            tooltip: 'Account',
-            icon: const Icon(Icons.person_outline, size: 30),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const ProfilePage()),
-              );
-            },
+          HoverScale(
+            child: IconButton(
+              tooltip: 'Account',
+              icon: const Icon(Icons.person_outline, size: 30),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ProfilePage()),
+                );
+              },
+            ),
           ),
         ],
       ),

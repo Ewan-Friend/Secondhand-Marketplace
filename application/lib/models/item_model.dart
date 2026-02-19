@@ -2,27 +2,64 @@ class Item {
   final String id;
   final String sellerId;
   final String title;
+  final String description;
+  final String location;
+  final String condition;
   final double rating;
   final double price;
+  final List<String> imageUrls;
+  final Map<String, dynamic> sellerInfo;
   // final String listingDate;
 
   Item({
     required this.id,
     required this.sellerId,
     required this.title,
+    required this.description,
     required this.rating, 
     required this.price,
+    required this.imageUrls,
+    required this.sellerInfo,
+    required this.location,
+    required this.condition,
     // required this.listingDate
   });
 
+
+
   factory Item.fromJson(Map<String, dynamic> json){
     return Item(
-      id:           json['id'] as String,
-      sellerId:     json['seller_id'] as String,
-      title:        json['title'] as String,
-      rating:       (json['rating'] as num).toDouble(),
-      price:        (json['price'] as num).toDouble(),
-      // listingDate:  json['listing_date'] as String,
+      id:           (json['id'] ?? '')  as String,
+      sellerId:     (json['seller_id'] ?? '')as String,
+      title:        (json['title'] ?? 'Untitled')as String,
+      description:  (json['description'] ?? 'No description') as String,
+      rating:       (json['rating'] as num? ?? 0.0).toDouble(),
+      location:     (json['seller_info'] != null && json['seller_info']['location'] != null 
+              ? json['seller_info']['location'] 
+              : (json['location'] ?? 'no location')) as String,
+      condition:    (json['condition'] ?? 'no condition') as String,
+      price:        (json['price'] as num? ?? 0.0).toDouble(),
+      // Choose between a converted list of strings or (if null) all empty list
+      imageUrls:    (json['image_urls'] != null ? List<String>.from(json['image_urls']) : []),
+      sellerInfo:   (json['seller_info'] != null ? Map<String, dynamic>.from(json['seller_info']) : {}),
+      // listingDate:  json['created_at'] as String,
     );
+  }
+
+  Map<String, dynamic> toJson(){
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    
+    data['id'] = id;
+    data['seller_id'] = sellerId;
+    data['title'] = title;
+    data['description'] = description;
+    data['rating'] = rating;
+    data['price'] = price;
+    data['image_urls'] = imageUrls;
+    data['seller_info'] = sellerInfo;
+    data['location'] = location;
+    data['condition'] = condition;
+
+    return data;
   }
 }

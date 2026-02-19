@@ -1,131 +1,169 @@
 import 'package:flutter/material.dart';
+import '../widgets/header.dart';
+import '../services/api_service.dart';
+import '../models/item_model.dart';
 
-
-class ItemDetailPage extends StatelessWidget {
-  const ItemDetailPage({super.key});
-
+class ItemDetailPage extends StatefulWidget {
+  // accepts the ID from the
+  final String? itemId;
+  const ItemDetailPage({super.key, this.itemId});
+  
   @override
-  Widget build(BuildContext context) {
-    // Extract the item ID passed as an argument
-
-    //TODO: in the return, implement an API service that can grab the itemId and get the corresponding item details
-    // final itemId = ModalRoute.of(context)?.settings.arguments as String?;
-
-    return const ProductDetailPage();
-  }
+  State<ItemDetailPage> createState() => _ItemDetailState();
 }
 
-class ProductDetailPage extends StatelessWidget { // overall layout (renamed from ProductDetailPage)
-  const ProductDetailPage({super.key});
+class _ItemDetailState extends State<ItemDetailPage> {
+  // Takes the id that was passed in from the navigator of the item widget
+  late Future<Item> _itemFuture;
+  final APIService _apiService = APIService();
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Extracting arguments is best done here or in build, 
+    final itemId = widget.itemId;
+    _itemFuture = _apiService.getItemFromID(itemId);
+  }
+
+  
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     return Scaffold(
+      backgroundColor: cs.surface,
+      // Header (navigation bar)
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(80),
+        child: Header(showSearch: false, showBackButton: true), // search functionality disabled
+      ),
       body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final isWide = constraints.maxWidth >= 980;
-            return SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const _Header(),
-                  const SizedBox(height: 24),
-                  // Title row
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+        // CREATE THE ITEM INFO HOORAY
+        child: FutureBuilder<Item>(
+          future: _itemFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (!snapshot.hasData) {
+              return const Center(child: Text('Item not found'));
+            }
+
+            final item = snapshot.data!;
+
+            // Data is fetched
+            return LayoutBuilder(
+              builder: (context, constraints) {
+                final isWide = constraints.maxWidth >= 980;
+                return SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        child: Text(
-                          'Product Title',
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineSmall
-                              ?.copyWith(fontWeight: FontWeight.w700),
+                      const SizedBox(height: 24),
+                      // Title row
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              item.title  ,
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                              )
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () {},
+                            icon: const Icon(Icons.favorite_border),
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      // Location line
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.location_on,
+                                size: 18, color: Colors.red.shade400),
+                            const SizedBox(width: 6),
+                                Text('Redland, Bristol, UK',
+                                style: TextStyle(fontSize: 13, color: Colors.black54)),
+                          ],
                         ),
                       ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.favorite_border),
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
+                      const SizedBox(height: 16),
+                      // Main content area
+                      isWide
+                          ? Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // Left: media + description
+                                Expanded(
+                                  flex: 7,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      _ImageCollage(item: item),
+                                      SizedBox(height: 20),
+                                      _ConditionTag(),
+                                      SizedBox(height: 10),
+                                      _SectionTitle('Description'),
+                                      SizedBox(height: 8),
+                                      Text(
+                                        item.description, 
+                                        style: TextStyle(fontSize: 14, height: 1.5)  
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(width: 28),
+                                // Right: price + seller card
+                                Expanded(
+                                  flex: 3,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                                    children: [
+                                      _Price(text: "${item.price.toString()} CHF"),
+                                      SizedBox(height: 12),
+                                      _ContactSellerButton(),
+                                      SizedBox(height: 12),
+                                      _SellerCard(sellerInfo: item.sellerInfo,),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            )
+                          : Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                 _ImageCollage(item: item),
+                                const SizedBox(height: 16),
+                                const _Price(text: 'CHF 120'),
+                                const SizedBox(height: 12),
+                                const _ContactSellerButton(),
+                                const SizedBox(height: 16),
+                                const _ConditionTag(),
+                                const SizedBox(height: 10),
+                                const _SectionTitle('Description'),
+                                const SizedBox(height: 8),
+                                Text(item.description, 
+                                style: const TextStyle(fontSize: 14, height: 1.5)  
+                                ),
+                                SizedBox(height: 16),
+                                _SellerCard(sellerInfo: item.sellerInfo,),
+                              ],
+                            ),
                     ],
                   ),
-                  const SizedBox(height: 8),
-                  // Location line
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.location_on,
-                            size: 18, color: Colors.red.shade400),
-                        const SizedBox(width: 6),
-                        const Text('Redland, Bristol, UK',
-                            style: TextStyle(fontSize: 13, color: Colors.black54)),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  // Main content area
-                  isWide
-                      ? Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Left: media + description
-                            Expanded(
-                              flex: 7,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: const [
-                                  _ImageCollage(),
-                                  SizedBox(height: 20),
-                                  _ConditionTag(),
-                                  SizedBox(height: 10),
-                                  _SectionTitle('Description'),
-                                  SizedBox(height: 8),
-                                  _LoremIpsum(),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(width: 28),
-                            // Right: price + seller card
-                            Expanded(
-                              flex: 3,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: const [
-                                  _Price(text: 'CHF 120'),
-                                  SizedBox(height: 12),
-                                  _ContactSellerButton(),
-                                  SizedBox(height: 12),
-                                  _SellerCard(),
-                                ],
-                              ),
-                            ),
-                          ],
-                        )
-                      : Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            _ImageCollage(),
-                            SizedBox(height: 16),
-                            _Price(text: 'CHF 120'),
-                            SizedBox(height: 12),
-                            _ContactSellerButton(),
-                            SizedBox(height: 16),
-                            _ConditionTag(),
-                            SizedBox(height: 10),
-                            _SectionTitle('Description'),
-                            SizedBox(height: 8),
-                            _LoremIpsum(),
-                            SizedBox(height: 16),
-                            _SellerCard(),
-                          ],
-                        ),
-                ],
-              ),
+                );
+              },
             );
           },
         ),
@@ -203,7 +241,8 @@ class _Header extends StatelessWidget { // build the top bar: back button, locat
 }
 
 class _ImageCollage extends StatelessWidget {
-  const _ImageCollage();
+  final Item item;  
+  const _ImageCollage({required this.item});
 
   @override
   Widget build(BuildContext context) {
@@ -211,25 +250,43 @@ class _ImageCollage extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
-          flex: 7,
+          flex: 3,
           child: AspectRatio(
             aspectRatio: 4 / 3,
-            child: const _ImagePlaceholder(),
+            child: _buildImage(0),
           ),
         ),
         const SizedBox(width: 16),
         Expanded(
-          flex: 5,
+          flex: 2,
           child: Column(
-            children: const [
-              AspectRatio(aspectRatio: 4 / 3, child: _ImagePlaceholder()),
+            children: [
+              AspectRatio(aspectRatio: 4 / 3, child: _buildImage(1)),
               SizedBox(height: 16),
-              AspectRatio(aspectRatio: 4 / 3, child: _ImagePlaceholder()),
+              AspectRatio(aspectRatio: 4 / 3, child: _buildImage(2)),
             ],
           ),
         ),
       ],
     );
+  }
+
+  // Builds the image, if no image then use placeholder
+  Widget _buildImage(int index) {
+    // Simply builds the image from the corresponding Supabase link
+    if (item.imageUrls.length > index) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: Image.network(
+          item.imageUrls[index],
+          fit: BoxFit.cover,
+          // Use the placeholder if the network request fails
+          errorBuilder: (context, error, stackTrace) => const _ImagePlaceholder(),
+        ),
+      );
+    } else {
+      return const _ImagePlaceholder();
+    }
   }
 }
 
@@ -259,7 +316,7 @@ class _ConditionTag extends StatelessWidget {
       children: [
         Icon(Icons.sell_outlined, size: 18, color: Colors.red.shade400),
         const SizedBox(width: 6),
-        Text('Condition', style: TextStyle(fontSize: 13, color: Colors.grey.shade700)),
+        Text('CONDITION NOT IMPLEMENTED', style: TextStyle(fontSize: 13, color: Colors.grey.shade700)),
       ],
     );
   }
@@ -321,7 +378,8 @@ class _ContactSellerButton extends StatelessWidget {
 }
 
 class _SellerCard extends StatelessWidget {
-  const _SellerCard();
+  final Map<String, dynamic>? sellerInfo; // Accepts the seller_info from Python
+  const _SellerCard({this.sellerInfo});
 
   @override
   Widget build(BuildContext context) {
@@ -338,24 +396,27 @@ class _SellerCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                const CircleAvatar(
+                // ------ PROFILE PICTURE ------
+                CircleAvatar(
                   radius: 26,
                   backgroundColor: Color(0xFFD9D9D9),
-                  child: Icon(Icons.person, color: Colors.white70, size: 30),
+                  backgroundImage:
+                    sellerInfo?["avatar_url"] != null ? NetworkImage(sellerInfo?["avatar_url"]) : null,
+                  child:  sellerInfo?["avatar_url"] == null ? Icon(Icons.person_2, size: 24, color: Colors.grey.shade500) : null,
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Seller Name',
+                       Text(
+                        sellerInfo?["username"],
                         style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
                       ),
                       const SizedBox(height: 2),
                       Row(
                         children: [
-                          const Text('4.12', style: TextStyle(fontSize: 13, color: Colors.black87)),
+                          Text(sellerInfo!["rating_score"].toString(), style: TextStyle(fontSize: 13, color: Colors.black87)),
                           const SizedBox(width: 6),
                           ...List.generate(5, (i) {
                             return Icon(
@@ -372,7 +433,7 @@ class _SellerCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 10),
-            const Text('posting for 7 months',
+            const Text('posting for [NOT IMPLEMENTED] months',
                 style: TextStyle(fontSize: 12, color: Colors.black54)),
             const SizedBox(height: 8),
             TextButton(
@@ -415,20 +476,6 @@ class _LocationChip extends StatelessWidget {
           Text(label, style: TextStyle(color: Colors.grey.shade800)),
         ],
       ),
-    );
-  }
-}
-
-class _LoremIpsum extends StatelessWidget {
-  const _LoremIpsum();
-
-  @override
-  Widget build(BuildContext context) {
-    const text =
-        'Lorem Ipsum is simply dummy text of the printing and typesetting industry.';
-    return Text(
-      text,
-      style: const TextStyle(fontSize: 14, color: Colors.black87, height: 1.5),
     );
   }
 }

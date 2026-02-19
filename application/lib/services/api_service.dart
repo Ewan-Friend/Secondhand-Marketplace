@@ -1,116 +1,205 @@
-// Imports
 import 'dart:convert';
-// import 'dart:nativewrappers/_internal/vm/lib/ffi_patch.dart';
-import 'package:http/http.dart' as http;
-import '../models/item_model.dart';
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+import '../config/app_config.dart';
+import '../models/item_model.dart';
 
 class APIService {
+  final http.Client _client;
 
-  static const String baseUrl = 'http://localhost:5000/api';
-  // Client for use in other methods/classes
-  static final http.Client httpClient = http.Client();
+  static bool _firstRequestLogged = false;
 
-  Future<Map<String, dynamic>> checkConnection() async {
-      // Construct URL
-      final url = Uri.parse('$baseUrl/status');
+  APIService({http.Client? client}) : _client = client ?? http.Client();
 
-      try {
-        // request http using GET
-        final response = await http.get(url);
+  /// Builds a safe URL: base (e.g. /api) + path (e.g. /items) → /api/items.
+  /// Avoids double slashes and duplicate /api.
+  Uri _uri(String path) {
+    final base = AppConfig.apiBaseUrl.trim();
+    final normalizedBase =
+        base.endsWith('/') ? base.substring(0, base.length - 1) : base;
+    final normalizedPath = path.startsWith('/') ? path : '/$path';
+    final url = '$normalizedBase$normalizedPath';
 
-        // Checks statusCode of message response sent from routes.py
-        if (response.statusCode == 200) {
-          // Return decoded data (connection message in this case)
-          return json.decode(response.body);
-        } else {
-          // If status code is not 200, return the actual status code
-          return {'message': 'Connection Failed: ${response.statusCode}'};
+    if (kDebugMode && !_firstRequestLogged) {
+      _firstRequestLogged = true;
+      debugPrint('Requesting: $url');
+    }
+
+    return Uri.parse(url);
+  }
+
+  /// Returns backend status message if reachable; throws otherwise.
+  Future<String> checkConnection() async {
+    final url = _uri('/status');
+
+    try {
+      final response = await _client.get(url);
+
+      if (response.statusCode == 200) {
+        final decoded = json.decode(response.body);
+        if (decoded is Map<String, dynamic>) {
+          final msg = decoded['message'];
+          return (msg is String && msg.isNotEmpty) ? msg : 'Backend reachable';
         }
+        return 'Backend reachable';
       }
-      catch (e) {
-        // Handle in case of errors
-        throw Exception('Network/Server error: Ensure Flask server is running. $e');
-      }
+
+      throw Exception('Backend unreachable (${response.statusCode})');
+    } catch (e) {
+      throw Exception('Network/Server error: $e');
+    }
   }
 
   Future<List<Item>> getItems() async {
-    //Construct URL
-    final url = Uri.parse('$baseUrl/items');
+    final url = _uri('/items');
 
     try {
-      final response = await http.get(url);
-        // Checks statusCode of items response sent from routes.py
-        if (response.statusCode == 200) {
+      final response = await _client.get(url);
 
-          // Return decoded data (A list of the class 'Item')
-          final Map<String, dynamic> responseData = json.decode(response.body);
-          final List<dynamic> data = responseData['table_data'];
+      if (response.statusCode == 200) {
+        final decoded = json.decode(response.body);
+        if (decoded is Map<String, dynamic>) {
+          final raw = decoded['table_data'];
+          final list = (raw is List) ? raw : <dynamic>[];
 
-          if (kDebugMode) {
-            debugPrint(response.body); 
-          }
-
-          return data.map((json) => Item.fromJson(json)).toList();
-        } else {
-          // If status code is not 200, return the actual status code
-          throw Exception('Failed to load items: Server returned status ${response.statusCode}');
+          return list
+              .whereType<Map<String, dynamic>>()
+              .map(Item.fromJson)
+              .toList();
         }
-    }
-    catch (e){
-        // Handle in case of errors
-        throw Exception('Network/Server error: Ensure Flask server is running. $e');
+        return <Item>[];
+      }
+
+      throw Exception('Failed to load items (${response.statusCode})');
+    } catch (e) {
+      throw Exception('Items fetch failed: $e');
     }
   }
 
+  Future<Map<String, dynamic>> postNewItem(Map<String, dynamic> data) async {
+  final url = _uri('/items');
+
+  try {
+    final response = await _client.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode(data),
+    );
+
+    if (response.statusCode == 201 || response.statusCode == 200) {
+      final decoded = json.decode(response.body);
+      if (kDebugMode) {
+        debugPrint('Item posted successfully: ${response.body}');
+      }
+      return decoded is Map<String, dynamic> ? decoded : {'status': 'success'};
+    }
+
+    throw Exception('Failed to post item (${response.statusCode})');
+  } catch (e) {
+    throw Exception('Post item failed: $e');
+  }
+}
+
+  // ---- TEMP STUBS (to keep app compiling) ----
   Future<Map<String, dynamic>> getCurrentUserProfile() async {
-    // Construct URL
-    final url = Uri.parse('$baseUrl/user/profile');
-
+    final url = _uri('/me');
+    
     try {
-      final response = await http.get(url);
-
+      final response = await _client.get(url);
+      
       if (response.statusCode == 200) {
-        return json.decode(response.body);
-      } else {
-        throw Exception('Failed to load user profile: Server returned status ${response.statusCode}');
+        final decoded = json.decode(response.body);
+        return decoded is Map<String, dynamic>
+            ? decoded
+            : {'data': null, 'status_code': 200};
       }
+      
+      throw Exception('Failed to load profile (${response.statusCode})');
     } catch (e) {
-      throw Exception('Network/Server error: Ensure Flask server is running. $e');
+      throw Exception('getCurrentUserProfile failed: $e');
     }
   }
 
-  Future<Map<String, dynamic>> getUserItems(int userId) async {
-    // Construct URL
-    final url = Uri.parse('$baseUrl/user/$userId/items');
+  /// Get a user's profile by their UUID from backend
+  Future<Map<String, dynamic>> getUserById(String userId) async {
+    final url = _uri('/profile/$userId');
 
     try {
-      final response = await http.get(url);
+      final response = await _client.get(url);
 
       if (response.statusCode == 200) {
-        return json.decode(response.body);
-      } else {
-        throw Exception('Failed to load user items: Server returned status ${response.statusCode}');
+        final decoded = json.decode(response.body);
+        return decoded is Map<String, dynamic>
+            ? decoded
+            : {'table_data': null, 'status_code': response.statusCode};
+      } else if (response.statusCode == 404) {
+        return {'table_data': null, 'status_code': 404};
       }
+
+      throw Exception('Failed to load profile (${response.statusCode})');
     } catch (e) {
-      throw Exception('Network/Server error: Ensure Flask server is running. $e');
+      throw Exception('getUserById failed: $e');
+    }
+  }
+  /// Get user profile by ID from backend
+  Future<Map<String, dynamic>> getUserByID(String userId) async {
+    final url = _uri('/user/$userId');
+    
+    try {
+      final response = await _client.get(url);
+      
+      if (response.statusCode == 200) {
+        final decoded = json.decode(response.body);
+        return decoded is Map<String, dynamic>
+            ? decoded
+            : {'data': null, 'status_code': 200};
+      }
+      
+      throw Exception('Failed to load profile (${response.statusCode})');
+    } catch (e) {
+      throw Exception('getUserByID failed: $e');
     }
   }
 
-  Future<Map<String, dynamic>> getUserReviews(int userId) async {
-    // Construct URL
-    final url = Uri.parse('$baseUrl/user/$userId/reviews');
-
+  /// Get user listings by ID from backend
+  Future<Map<String, dynamic>> getUserItems(dynamic userId) async {
+    final url = _uri('/items?user_id=$userId');
+    
     try {
-      final response = await http.get(url);
-
+      final response = await _client.get(url);
+      
       if (response.statusCode == 200) {
-        return json.decode(response.body);
-      } else {
-        throw Exception('Failed to load user reviews: Server returned status ${response.statusCode}');
+        final decoded = json.decode(response.body);
+        return decoded is Map<String, dynamic>
+            ? decoded
+            : {'table_data': [], 'status_code': 200};
       }
+      
+      throw Exception('Failed to load items (${response.statusCode})');
     } catch (e) {
-      throw Exception('Network/Server error: Ensure Flask server is running. $e');
+      throw Exception('getUserItems failed: $e');
+    }
+  }
+
+  /// Get reviews for a user by ID from backend
+  Future<Map<String, dynamic>> getUserReviews(dynamic userId) async {
+    final url = _uri('/reviews?user_id=$userId');
+    
+    try {
+      final response = await _client.get(url);
+      
+      if (response.statusCode == 200) {
+        final decoded = json.decode(response.body);
+        return decoded is Map<String, dynamic>
+            ? decoded
+            : {'data': [], 'status_code': 200};
+      }
+      
+      throw Exception('Failed to load reviews (${response.statusCode})');
+    } catch (e) {
+      throw Exception('getUserReviews failed: $e');
     }
   }
 
@@ -118,28 +207,50 @@ class APIService {
     String? displayName,
     String? location,
   }) async {
-    // Construct URL
-    final url = Uri.parse('$baseUrl/user/profile');
+    return {
+      'message': 'Profile update stubbed',
+      'status_code': 200,
+    };
+  }
 
-    // Build the profile data map
-    final Map<String, dynamic> profileData = {};
-    if (displayName != null) profileData['displayName'] = displayName;
-    if (location != null) profileData['location'] = location;
+  /// Optional: call this if you want to close the http client manually.
+  void dispose() {
+    _client.close();
+  }
+
+  /// Fetch a single item by its ID from the backend and convert to `Item`.
+  ///
+  /// Accepts a nullable `itemId` because callers may pass null; throws if
+  /// `itemId` is null or if the request/response is invalid.
+  Future<Item> getItemFromID(String? itemId) async {
+    if (itemId == null || itemId.isEmpty) {
+      throw ArgumentError('itemId must be provided');
+    }
+
+    final url = _uri('/item/$itemId');
 
     try {
-      final response = await http.put(
-        url,
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode(profileData),
-      );
+      final response = await _client.get(url);
 
       if (response.statusCode == 200) {
-        return json.decode(response.body);
-      } else {
-        throw Exception('Failed to update profile: Server returned status ${response.statusCode}');
+        final decoded = json.decode(response.body);
+
+        if (decoded is Map<String, dynamic>) {
+          final raw = decoded['table_data'];
+          if (raw is Map<String, dynamic>) {
+            return Item.fromJson(raw);
+          }
+          throw Exception('Unexpected item format in response');
+        }
+
+        throw Exception('Invalid response from server');
+      } else if (response.statusCode == 404) {
+        throw Exception('Item not found (404)');
       }
+
+      throw Exception('Failed to load item (${response.statusCode})');
     } catch (e) {
-      throw Exception('Network/Server error: Ensure Flask server is running. $e');
+      throw Exception('getItemFromID failed: $e');
     }
   }
 }

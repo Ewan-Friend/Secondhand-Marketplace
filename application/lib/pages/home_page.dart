@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
 import '../widgets/header.dart';
-import '../widgets/user_widget.dart';
 import '../widgets/item_widget.dart';
 import '../models/item_model.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
-  
+  const HomePage({super.key, this.apiService});
+
+  final APIService? apiService;
+
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -15,81 +16,41 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedCategoryIndex = 0;
   final TextEditingController _searchController = TextEditingController();
-  
-  // --- DYNAMIC STATE ---
-  final APIService _apiService = APIService(); 
+
+  late APIService _apiService;
   late Future<List<Item>> _futureItems;
   String _apiMessage = 'Checking API connection...';
 
-  // Placeholder categories
   final List<String> _categories = [
-    'Explore', 'Clothing', 'Electronics', 'Home', 'Kids', 'Sports', 'Books & Media', 'Vehicles', 'Hobbies', 'Beauty'
+    'Explore',
+    'Clothing',
+    'Electronics',
+    'Home',
+    'Kids',
+    'Sports',
+    'Books & Media',
+    'Vehicles',
+    'Hobbies',
+    'Beauty'
   ];
 
-  // Placeholder product data
-  final List<Map<String, dynamic>> _products = [
-    {
-      'name': 'iPhone 13 Pro',
-      'price': 'CHF 799',
-      'image': Icons.phone_iphone,
-      'condition': 'Like New',
-      'location' : 'Bristol, UK'
-    },
-    {
-      'name': 'Leather Sofa',
-      'price': 'CHF 250',
-      'image': Icons.weekend,
-      'condition': 'Good',
-      'location' : 'Bristol, UK'
-    },
-    {
-      'name': 'Winter Jacket',
-      'price': 'CHF 85',
-      'image': Icons.checkroom,
-      'condition': 'Excellent',
-      'location' : 'Cheltenham, UK'
-    },
-    {
-      'name': 'MacBook Air',
-      'price': 'CHF 650',
-      'image': Icons.laptop_mac,
-      'condition': 'Very Good',
-      'location' : 'Bath, UK'
-    },
-    {
-      'name': 'Gaming Chair',
-      'price': 'CHF 200',
-      'image': Icons.chair,
-      'condition': 'Good',
-      'location' : 'Bristol, UK'
-    },
-    {
-      'name': 'Bicycle',
-      'price': 'CHF 320',
-      'image': Icons.pedal_bike,
-      'condition': 'Excellent',
-      'location' : 'Bristol, UK'
-    },
-  ];
-
-  @override 
-  void initState(){
+  @override
+  void initState() {
     super.initState();
-    // Calls check on API
-    _checkApi();
+    _apiService = widget.apiService ?? APIService();
     _futureItems = _apiService.getItems();
+    _checkApi();
   }
 
-  
-  void _checkApi() async {
-    final apiService = APIService();
-
+  Future<void> _checkApi() async {
     try {
-      final result = await apiService.checkConnection();
+      final message = await _apiService.checkConnection(); // <-- String dönüyor
+      if (!mounted) return;
       setState(() {
-        _apiMessage = result['message'] ?? 'Unknown response';
+        _apiMessage = message;
       });
     } catch (e) {
+      if (!mounted) return;
       setState(() {
         _apiMessage = 'Error: $e';
       });
@@ -103,21 +64,19 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: cs.surface,
       appBar: PreferredSize(
-        // top navigation bar
-        preferredSize: Size.fromHeight(80),
-        child: Header(), 
+        preferredSize: const Size.fromHeight(80),
+        child: Header(),// not show search and back button on home page
       ),
       body: SingleChildScrollView(
-        
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-              // API connection check, displays message
-             Padding(
-               padding: const EdgeInsets.all(16.0),
-               child: Text(
-                  _apiMessage, // the message from APIService
-                  style: const TextStyle(
+            // API message (debug)
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                _apiMessage,
+                style: const TextStyle(
                   color: Colors.red,
                   fontSize: 10,
                   fontWeight: FontWeight.bold,
@@ -125,33 +84,31 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
 
-            // Horizontal Category List
+            // Categories
             SizedBox(
               height: 40,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 itemCount: _categories.length,
-                separatorBuilder: (_,_) => const SizedBox(width: 12),
+                separatorBuilder: (_, __) => const SizedBox(width: 12),
                 itemBuilder: (context, index) {
                   final isSelected = index == _selectedCategoryIndex;
-
                   return TextButton(
                     onPressed: () {
-                      setState(() {
-                        _selectedCategoryIndex = index;
-                      });
+                      setState(() => _selectedCategoryIndex = index);
                     },
                     style: TextButton.styleFrom(
-                      padding: EdgeInsets.only(right: 16, left: 16),
-                      minimumSize: const Size(0, 0), // avoid oversized buttons
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      minimumSize: const Size(0, 0),
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
                     child: Text(
                       _categories[index],
                       style: TextStyle(
                         fontSize: 18,
-                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                        fontWeight:
+                            isSelected ? FontWeight.bold : FontWeight.normal,
                         color: Colors.black,
                       ),
                     ),
@@ -161,121 +118,42 @@ class _HomePageState extends State<HomePage> {
             ),
             const SizedBox(height: 24),
 
-            // Product Grid
+            // Items grid from API
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: 
-                GridView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 500, // max width per card
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
-                    childAspectRatio: 0.76, // width / height ratio of each card
-                  ),
-                  itemCount: _products.length,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {Navigator.pushNamed(context, '/item');},
-                      child: ConstrainedBox(
-                        constraints: const BoxConstraints(
-                          minWidth: 400,
-                        ),
-                        child: Card(
-                          elevation: 0,
-                          color: Colors.white,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-                          clipBehavior: Clip.antiAlias,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Image
-                              AspectRatio(
-                                aspectRatio: 1.2, // slightly wider than tall
-                                child: Container(
-                                  color: Colors.grey.shade300,
-                                  child: Center(
-                                    child: Icon(
-                                      _products[index]['image'],
-                                      size: 60,
-                                      color: Colors.grey.shade400,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              // Description — fits inside fixed card height
-                              Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Expanded(
-                                          child: Text(
-                                            _products[index]['name'],
-                                            style: const TextStyle(
-                                                fontWeight: FontWeight.w500, fontSize: 22),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
-                                        Text(
-                                          _products[index]['price'],
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.w400, fontSize: 20),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            const Icon(Icons.location_on,
-                                                size: 16, color: Color(0xFFE36D6D)),
-                                            const SizedBox(width: 4),
-                                            Text(
-                                              _products[index]['location'] ?? 'Unknown',
-                                              style: TextStyle(
-                                                  fontSize: 14, color: Colors.grey.shade700),
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            const Icon(Icons.sell,
-                                                size: 16, color: Color(0xFFE36D6D)),
-                                            const SizedBox(width: 4),
-                                            Text(
-                                              _products[index]['condition'] ?? 'Unknown',
-                                              style: TextStyle(
-                                                  fontSize: 14, color: Colors.grey.shade700),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 16),
-                                    UserWidget(
-                                      userName: "Markus Aurelius",
-                                      rating: 4.84,
-                                      reviews: 23,
-                                      avatarUrl: null,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                )
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: FutureBuilder<List<Item>>(
+                future: _futureItems,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  }
+
+                  final items = snapshot.data ?? [];
+                  if (items.isEmpty) {
+                    return const Center(child: Text('No items found'));
+                  }
+
+                  return GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 400,
+                      crossAxisSpacing: 12,
+                      mainAxisSpacing: 12,
+                      childAspectRatio: 0.76,
+                    ),
+                    itemCount: items.length,
+                    itemBuilder: (context, index) {
+                      return ItemCard(item: items[index]);
+                    },
+                  );
+                },
+              ),
             ),
 
             const SizedBox(height: 20),
