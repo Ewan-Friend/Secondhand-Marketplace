@@ -1,0 +1,37 @@
+name: "Check PR Title"
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+
+jobs:
+  check-pr-title:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: PR Title Convention
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          if [[ ! "$PR_TITLE" =~ REGEX ]]; then
+            # Defines comment
+            COMMENT="### PR format is invalid
+            your current title is: _"${{ github.event.pull_request.title }}_
+
+            **Our typical naming format would be something like:**
+            - \`[TASK]: your description here\`
+            - \`[FEAT]: your description here\`
+            - \`[FIX]: your description here\`
+
+            _tag must be uppercase, followed by a colon, then a space_"
+
+            # Post using CLI
+            gh pr comment $PR_NUMBER --body "$COMMENT"
+
+            echo "::error ::PR title must follow format: [ABC]: Your title"
+            exit 1
+          fi
+          
