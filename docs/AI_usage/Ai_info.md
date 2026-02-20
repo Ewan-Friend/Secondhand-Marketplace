@@ -199,9 +199,8 @@ steps:
 
 
 #### Prompt - Yunbo  (case 5)
-Use VSCode auto write to code efficiently.
-
-Explain: when i write code through VSCode, it can automatically display the rest code. What i do is just let VSCode write the framework then i will amend it manually.
+*Use VSCode auto write to code efficiently.
+Explanation: When I write code through VSCode, GitHub Copilot provides inline suggestions. What I do is just let it write the framework after which I amend it manually.*
 
 #### Response [code snippet] (case 5)
 For example
@@ -219,4 +218,4 @@ SizedBox(
       : const SizedBox(),
 ),  
 ```
-code like ```child: showBackButton``` can be automatically written by VSCode.
+code like ```child: showBackButton``` can be automatically written in VSCode by Github Copilot.
