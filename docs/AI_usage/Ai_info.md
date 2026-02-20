@@ -22,6 +22,8 @@
 - Generating images or videos
 - Generating text for documentation
 - Generating code that handles secret keys
+- Generating README
+- Generating user stories
 
 ### Procedure
 #### Policies:
@@ -196,3 +198,220 @@ steps:
         --distribution-id ${{ }} \
         --paths "/*"
  ```
+
+#### Prompt - Filip (failing tests)
+"I have made changes on this branch and now home_page_test.dart is failing at CI in item_model_test.dart"
+*provided front-end test code and home_page.dart with latest changes*
+
+
+#### Response - Gemini
+To address your failing home_page_test.dart in CI, you should:
+
+Open the file:
+Review and debug the test to identify the failure reason.
+Make necessary fixes.
+No new files need to be created or edited for test setup—just update the existing test file.
+
+To re-run your Flutter tests locally and verify the fix, use:
+```
+flutter test
+```
+
+You can also search for an extension to make tests easy to run in VS Code:
+Search extensions
+
+
+#### Prompt - Filip 
+"we need a CD for our full stack project. We have a minimal one for backend, can I do one for our front end? would it be a different file/pipeline to the backend one?"
+*needed assistance with setting up continuous deployment for our frontend*
+
+#### Response - Chat GPT 5.1
+Yes, you absolutely can (and usually should) have a separate CD pipeline for the frontend. Backend and frontend deployments tend to have different build steps, artifacts, and hosting targets, so pretending one workflow fits all is the kind of optimism that makes on-call engineers cry.
+
+**Typical approach**
+
+In GitHub Actions you usually create another workflow file inside:
+```
+.github/workflows/
+```
+For example:
+```
+backend-cd.yml
+frontend-cd.yml
+```
+Each workflow triggers on changes relevant to that part of the repo.
+
+Example trigger for frontend:
+```
+on:
+  push:
+    branches: [main]
+    paths:
+      - "frontend/**"
+```
+This ensures the frontend deploy runs only when frontend files change, instead of redeploying everything every time someone fixes a typo in a README.
+
+**What differs from backend CD**
+
+Frontend CD usually includes:
+Install dependencies
+```
+npm ci
+```
+Build
+```
+npm run build
+```
+Deploy built static files
+- S3 / CloudFront
+- Vercel / Netlify
+- Static hosting in Kubernetes
+- Nginx container image
+
+Backend CD instead deploys containers, services, migrations, etc., so the workflow steps naturally diverge.
+
+**Minimal example: frontend-cd.yml**
+```
+name: Frontend CD
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "frontend/**"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Deploy
+        run: ./deploy.sh
+```
+**Rule of thumb engineers learn the hard way**
+
+- Separate workflows: backend and frontend
+- Path filters: prevent unnecessary deploys
+- Different secrets: frontend hosting vs backend infra
+- Independent rollbacks: saves your weekend
+
+If you want, describe your stack (React + S3? Next.js + Docker? something cursed and creative?), and I’ll sketch a production-grade frontend CD layout that won’t collapse the first time two commits land at once.
+
+#### Prompt - Filip 
+"I am adding a logo to our flutter frontend. What format should I use to to make it easier? SVG?"
+*making sure that my choice of format is fitting early on and that it is scalable*
+
+#### Response - Chat GPT 5.0
+Short answer: **SVG is already the easiest**. Long answer: only if you behave.
+
+Here’s the brutally honest ranking for Flutter headers, from “pleasant” to “why did you do this to yourself”.
+
+---
+
+## 🥇 SVG (best choice, if done right)
+
+**Use this if** the logo is simple shapes and flat colors.
+
+**Why it’s good**
+
+* Scales perfectly on every screen
+* Tiny file size
+* Looks sharp in headers
+* Works nicely with `flutter_svg`
+
+**Rules you must follow**
+
+* No embedded fonts
+* No filters, masks, blur, gradients if you value your sanity
+* Convert text to paths before export
+* Remove hardcoded colors if you want them themeable
+
+**Export settings (Illustrator / Figma)**
+
+* SVG 1.1
+* Convert text to outlines
+* Minify if possible
+
+If you do this, SVG is smooth sailing and you stop thinking about pixels entirely.
+
+---
+
+## 🥈 PNG (boring, reliable, emotionally stable)
+
+**Use this if** you want zero surprises.
+
+**Why it’s good**
+
+* Flutter loves PNG
+* No extra packages
+* Predictable behavior
+
+**Downsides**
+
+* Needs multiple resolutions
+* Can look soft if undersized
+* Bigger files
+
+**Best practice**
+
+```
+assets/images/logo.png
+assets/images/2.0x/logo.png
+assets/images/3.0x/logo.png
+```
+
+If you don’t care about scaling perfection and just want it to work every time, PNG is your friend.
+
+---
+
+## 🥉 WebP (fine, but unnecessary here)
+
+* Smaller than PNG
+* Same limitations
+* Slightly less common in design pipelines
+
+Unless your logo is photorealistic (it shouldn’t be), this is overkill.
+
+---
+
+## 🚫 JPEG (absolutely not)
+
+* No transparency
+* Compression artifacts
+* Looks cheap in UI
+
+Logos in JPEG are a cry for help.
+
+---
+
+## My actual recommendation
+
+* **App icon / branding / headers:** **SVG**
+* **Temporary or legacy logo:** **PNG**
+* **Anything else:** stop and reconsider life choices
+
+If you want the least friction:
+
+* SVG if you control the source file
+* PNG if the logo came from someone who disappeared after sending it once
+
+If you want, tell me what tool you’re exporting from and whether you need dynamic colors. I’ll tell you exactly how to export it so Flutter doesn’t fight back.
+
+
