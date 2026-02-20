@@ -22,6 +22,8 @@
 - Generating images or videos
 - Generating text for documentation
 - Generating code that handles secret keys
+- Generating README
+- Generating user stories
 
 ### Procedure
 #### Policies:
@@ -197,12 +199,101 @@ steps:
         --paths "/*"
  ```
 
+#### Prompt - Filip (case 5)
+"I have made changes on this branch and now home_page_test.dart is failing at CI in item_model_test.dart"
+*provided front-end test code and home_page.dart with latest changes*
 
-#### Prompt - Yunbo  (case 5)
+
+#### Response - Gemini (case 5)
+To address your failing home_page_test.dart in CI, you should:
+
+Open the file:
+Review and debug the test to identify the failure reason.
+Make necessary fixes.
+No new files need to be created or edited for test setup—just update the existing test file.
+
+To re-run your Flutter tests locally and verify the fix, use:
+```
+flutter test
+```
+
+You can also search for an extension to make tests easy to run in VS Code:
+Search extensions
+
+
+#### Prompt - Filip (case 6)
+"we need a CD for our full stack project. We have a minimal one for backend, can I do one for our front end? would it be a different file/pipeline to the backend one?"
+*needed assistance with setting up continuous deployment for our frontend*
+
+#### Response - Chat GPT 5.1 (case 6)
+Yes, you absolutely can (and usually should) have a separate CD pipeline for the frontend. Backend and frontend deployments tend to have different build steps, artifacts, and hosting targets, so pretending one workflow fits all is the kind of optimism that makes on-call engineers cry.
+
+**Typical approach**
+
+In GitHub Actions you usually create another workflow file inside:
+```
+.github/workflows/
+```
+For example:
+```
+backend-cd.yml
+frontend-cd.yml
+```
+Each workflow triggers on changes relevant to that part of the repo.
+
+Example trigger for frontend:
+```
+on:
+  push:
+    branches: [main]
+    paths:
+      - "frontend/**"
+```
+This ensures the frontend deploy runs only when frontend files change, instead of redeploying everything every time someone fixes a typo in a README.
+
+**What differs from backend CD**
+
+Frontend CD usually includes:
+
+...
+
+#### Prompt - Filip (case 7)
+"I am adding a logo to our flutter frontend. What format should I use to to make it easier? SVG?"
+*making sure that my choice of format is fitting early on and that it is scalable*
+
+#### Response - Chat GPT 5.0 (case 7)
+Short answer: **SVG is already the easiest**. Long answer: only if you behave.
+
+Here’s the brutally honest ranking for Flutter headers, from “pleasant” to “why did you do this to yourself”.
+
+---
+
+## 🥇 SVG (best choice, if done right)
+
+**Use this if** the logo is simple shapes and flat colors.
+
+**Why it’s good**
+
+* Scales perfectly on every screen
+* Tiny file size
+* Looks sharp in headers
+* Works nicely with `flutter_svg`
+
+**Rules you must follow**
+
+* No embedded fonts
+* No filters, masks, blur, gradients if you value your sanity
+* Convert text to paths before export
+* Remove hardcoded colors if you want them themeable
+
+...
+
+
+#### Prompt - Yunbo  (case 8)
 *Use VSCode auto write to code efficiently.
 Explanation: When I write code through VSCode, GitHub Copilot provides inline suggestions. What I do is just let it write the framework after which I amend it manually.*
 
-#### Response [code snippet] (case 5)
+#### Response [code snippet] (case 8)
 For example
 ```
 SizedBox(
