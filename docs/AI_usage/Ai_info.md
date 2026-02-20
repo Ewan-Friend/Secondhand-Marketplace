@@ -199,12 +199,12 @@ steps:
         --paths "/*"
  ```
 
-#### Prompt - Filip (failing tests)
+#### Prompt - Filip (case 5)
 "I have made changes on this branch and now home_page_test.dart is failing at CI in item_model_test.dart"
 *provided front-end test code and home_page.dart with latest changes*
 
 
-#### Response - Gemini
+#### Response - Gemini (case 5)
 To address your failing home_page_test.dart in CI, you should:
 
 Open the file:
@@ -221,11 +221,11 @@ You can also search for an extension to make tests easy to run in VS Code:
 Search extensions
 
 
-#### Prompt - Filip 
+#### Prompt - Filip (case 6)
 "we need a CD for our full stack project. We have a minimal one for backend, can I do one for our front end? would it be a different file/pipeline to the backend one?"
 *needed assistance with setting up continuous deployment for our frontend*
 
-#### Response - Chat GPT 5.1
+#### Response - Chat GPT 5.1 (case 6)
 Yes, you absolutely can (and usually should) have a separate CD pipeline for the frontend. Backend and frontend deployments tend to have different build steps, artifacts, and hosting targets, so pretending one workflow fits all is the kind of optimism that makes on-call engineers cry.
 
 **Typical approach**
@@ -254,27 +254,14 @@ This ensures the frontend deploy runs only when frontend files change, instead o
 **What differs from backend CD**
 
 Frontend CD usually includes:
-Install dependencies
-```
-npm ci
-```
-Build
-```
-npm run build
-```
-Deploy built static files
-- S3 / CloudFront
-- Vercel / Netlify
-- Static hosting in Kubernetes
-- Nginx container image
 
 ...
 
-#### Prompt - Filip 
+#### Prompt - Filip (case 7)
 "I am adding a logo to our flutter frontend. What format should I use to to make it easier? SVG?"
 *making sure that my choice of format is fitting early on and that it is scalable*
 
-#### Response - Chat GPT 5.0
+#### Response - Chat GPT 5.0 (case 7)
 Short answer: **SVG is already the easiest**. Long answer: only if you behave.
 
 Here’s the brutally honest ranking for Flutter headers, from “pleasant” to “why did you do this to yourself”.
@@ -301,3 +288,25 @@ Here’s the brutally honest ranking for Flutter headers, from “pleasant” to
 
 ...
 
+
+#### Prompt - Yunbo  (case 8)
+*Use VSCode auto write to code efficiently.
+Explanation: When I write code through VSCode, GitHub Copilot provides inline suggestions. What I do is just let it write the framework after which I amend it manually.*
+
+#### Response [code snippet] (case 8)
+For example
+```
+SizedBox(
+  width: 48,
+  child: showBackButton
+      ? IconButton(
+          icon: const Icon(Icons.arrow_back, size: 28),
+          tooltip: 'Back',
+          onPressed: () {
+            Navigator.pop(context);
+          }
+        )
+      : const SizedBox(),
+),  
+```
+code like ```child: showBackButton``` can be automatically written in VSCode by Github Copilot.
