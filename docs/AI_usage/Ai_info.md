@@ -196,3 +196,27 @@ steps:
         --distribution-id ${{ }} \
         --paths "/*"
  ```
+
+
+#### Prompt - Yunbo  (case 5)
+Use VSCode auto write to code efficiently.
+
+Explain: when i write code through VSCode, it can automatically display the rest code. What i do is just let VSCode write the framework then i will amend it manually.
+
+#### Response [code snippet] (case 5)
+For example
+```
+SizedBox(
+  width: 48,
+  child: showBackButton
+      ? IconButton(
+          icon: const Icon(Icons.arrow_back, size: 28),
+          tooltip: 'Back',
+          onPressed: () {
+            Navigator.pop(context);
+          }
+        )
+      : const SizedBox(),
+),  
+```
+code like ```child: showBackButton``` can be automatically written by VSCode.
