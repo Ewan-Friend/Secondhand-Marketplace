@@ -208,4 +208,3 @@ The following diagram illustrates the Secondhand Marketplace software architectu
 | Emir Gizer | [nh24391@bristol.ac.uk](mailto:nh24391@bristol.ac.uk) |
 | Ewan Friend | [pu24994@bristol.ac.uk](mailto:pu24994@bristol.ac.uk) |
 | Lingze Yuan | [wp22171@bristol.ac.uk](mailto:wp22171@bristol.ac.uk) |
-
