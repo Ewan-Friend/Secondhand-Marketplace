@@ -58,13 +58,20 @@ class APIService {
     return headers;
   }
 
+  Future<http.Response> _get(Uri url) {
+    if (accessToken != null && accessToken!.isNotEmpty) {
+      return _client.get(url, headers: _headers());
+    }
+    return _client.get(url);
+  }
+
   dynamic _decodeBody(String body) {
     if (body.trim().isEmpty) return <String, dynamic>{};
     return json.decode(body);
   }
 
   String _extractErrorMessage(dynamic decoded, int statusCode, String fallback) {
-    if (decoded is Map<String, dynamic>) {
+    if (decoded is Map) {
       final message = decoded['message'] ??
           decoded['error'] ??
           decoded['detail'] ??
@@ -78,7 +85,7 @@ class APIService {
   }
 
   DateTime? _parseExpiresAt(dynamic decoded) {
-    if (decoded is! Map<String, dynamic>) return null;
+    if (decoded is! Map) return null;
 
     final direct = decoded['expires_at'] ?? decoded['expiresAt'];
     if (direct is String && direct.isNotEmpty) {
@@ -97,48 +104,6 @@ class APIService {
     }
 
     return null;
-  }
-
-  List<Item> _parseItems(dynamic decoded) {
-    dynamic raw;
-
-    if (decoded is List) {
-      raw = decoded;
-    } else if (decoded is Map) {
-      raw = decoded['table_data'];
-
-      if (raw == null && decoded['data'] is List) {
-        raw = decoded['data'];
-      }
-
-      if (raw == null && decoded['items'] is List) {
-        raw = decoded['items'];
-      }
-
-      if (raw == null) {
-        return <Item>[];
-      }
-    } else {
-      return <Item>[];
-    }
-
-    if (raw is! List) {
-      return <Item>[];
-    }
-
-    final items = <Item>[];
-
-    for (final entry in raw) {
-      if (entry is Map) {
-        try {
-          items.add(Item.fromJson(Map<String, dynamic>.from(entry)));
-        } catch (_) {
-          // ignore malformed map entries
-        }
-      }
-    }
-
-    return items;
   }
 
   void setSession({
@@ -182,13 +147,13 @@ class APIService {
         );
       }
 
-      if (decoded is! Map<String, dynamic>) {
+      if (decoded is! Map) {
         throw const ApiException('Invalid login response');
       }
 
-      final payload = decoded['data'] is Map<String, dynamic>
-          ? decoded['data'] as Map<String, dynamic>
-          : decoded;
+      final payload = decoded['data'] is Map
+          ? Map<String, dynamic>.from(decoded['data'] as Map)
+          : Map<String, dynamic>.from(decoded);
 
       final token =
           payload['access_token'] ?? payload['accessToken'] ?? payload['token'];
@@ -222,7 +187,7 @@ class APIService {
 
       if (response.statusCode == 200) {
         final decoded = _decodeBody(response.body);
-        if (decoded is Map<String, dynamic>) {
+        if (decoded is Map) {
           final msg = decoded['message'];
           return (msg is String && msg.isNotEmpty) ? msg : 'Backend reachable';
         }
@@ -243,7 +208,7 @@ class APIService {
     final url = _uri('/items');
 
     try {
-      final response = await _client.get(url, headers: _headers());
+      final response = await _get(url);
 
       if (response.statusCode != 200) {
         throw ApiException(
@@ -253,7 +218,20 @@ class APIService {
       }
 
       final decoded = _decodeBody(response.body);
-      return _parseItems(decoded);
+
+      if (decoded is! Map) {
+        return <Item>[];
+      }
+
+      final raw = decoded['table_data'];
+      if (raw is! List) {
+        return <Item>[];
+      }
+
+      return raw
+          .where((e) => e is Map)
+          .map((e) => Item.fromJson(Map<String, dynamic>.from(e as Map)))
+          .toList();
     } catch (e) {
       if (e is ApiException) rethrow;
       throw ApiException('Items fetch failed: $e');
@@ -276,8 +254,8 @@ class APIService {
         if (kDebugMode) {
           debugPrint('Item posted successfully: ${response.body}');
         }
-        return decoded is Map<String, dynamic>
-            ? decoded
+        return decoded is Map
+            ? Map<String, dynamic>.from(decoded)
             : {'status': 'success'};
       }
 
@@ -295,12 +273,12 @@ class APIService {
     final url = _uri('/me');
 
     try {
-      final response = await _client.get(url, headers: _headers());
+      final response = await _get(url);
       final decoded = _decodeBody(response.body);
 
       if (response.statusCode == 200) {
-        return decoded is Map<String, dynamic>
-            ? decoded
+        return decoded is Map
+            ? Map<String, dynamic>.from(decoded)
             : {'data': null, 'status_code': 200};
       }
 
@@ -326,12 +304,12 @@ class APIService {
     final url = _uri('/profile/$userId');
 
     try {
-      final response = await _client.get(url, headers: _headers());
+      final response = await _get(url);
       final decoded = _decodeBody(response.body);
 
       if (response.statusCode == 200) {
-        return decoded is Map<String, dynamic>
-            ? decoded
+        return decoded is Map
+            ? Map<String, dynamic>.from(decoded)
             : {'table_data': null, 'status_code': 200};
       }
 
@@ -361,12 +339,12 @@ class APIService {
     final url = _uri('/items?user_id=$userId');
 
     try {
-      final response = await _client.get(url, headers: _headers());
+      final response = await _get(url);
       final decoded = _decodeBody(response.body);
 
       if (response.statusCode == 200) {
-        return decoded is Map<String, dynamic>
-            ? decoded
+        return decoded is Map
+            ? Map<String, dynamic>.from(decoded)
             : {'table_data': [], 'status_code': 200};
       }
 
@@ -384,12 +362,12 @@ class APIService {
     final url = _uri('/reviews?user_id=$userId');
 
     try {
-      final response = await _client.get(url, headers: _headers());
+      final response = await _get(url);
       final decoded = _decodeBody(response.body);
 
       if (response.statusCode == 200) {
-        return decoded is Map<String, dynamic>
-            ? decoded
+        return decoded is Map
+            ? Map<String, dynamic>.from(decoded)
             : {'data': [], 'status_code': 200};
       }
 
@@ -426,8 +404,8 @@ class APIService {
       final decoded = _decodeBody(response.body);
 
       if (response.statusCode == 200) {
-        return decoded is Map<String, dynamic>
-            ? decoded
+        return decoded is Map
+            ? Map<String, dynamic>.from(decoded)
             : {'message': 'Profile updated', 'status_code': 200};
       }
 
@@ -457,15 +435,15 @@ class APIService {
     final url = _uri('/item/$itemId');
 
     try {
-      final response = await _client.get(url, headers: _headers());
+      final response = await _get(url);
 
       if (response.statusCode == 200) {
         final decoded = _decodeBody(response.body);
 
-        if (decoded is Map<String, dynamic>) {
+        if (decoded is Map) {
           final raw = decoded['table_data'];
-          if (raw is Map<String, dynamic>) {
-            return Item.fromJson(raw);
+          if (raw is Map) {
+            return Item.fromJson(Map<String, dynamic>.from(raw));
           }
           throw const ApiException('Unexpected item format in response');
         }
