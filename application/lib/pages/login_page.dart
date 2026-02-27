@@ -443,3 +443,51 @@ class _GradientButton extends StatelessWidget {
     );
   }
 }
+
+class _SocialIconButton extends StatelessWidget {
+  final IconData icon;
+  final String tooltip;
+  final VoidCallback onTap;
+
+  const _SocialIconButton({
+    required this.icon,
+    required this.tooltip,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: tooltip,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(14),
+        child: Ink(
+          width: 56,
+          height: 48,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(14),
+            gradient: const LinearGradient(
+              colors: [Color(0x33736EFE), Color(0x3362E0E6)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+          child: Center(
+            child: ShaderMask(
+              blendMode: BlendMode.srcIn,
+              shaderCallback: (b) => const LinearGradient(
+                colors: [Color(0xFF736EFE), Color(0xFF62E0E6)],
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+              ).createShader(
+                Rect.fromLTWH(0, 0, b.width, b.height),
+              ),
+              child: Icon(icon, size: 28),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
