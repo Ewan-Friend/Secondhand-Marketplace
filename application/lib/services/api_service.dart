@@ -198,34 +198,38 @@ class APIService {
   }
 
   Future<List<Item>> getItems() async {
-    final url = _uri('/items');
+  final url = _uri('/items');
 
-    try {
-      final response = await _client.get(url, headers: _headers());
+  try {
+    final response = await _client.get(url, headers: _headers());
 
-      if (response.statusCode == 200) {
-        final decoded = _decodeBody(response.body);
-        if (decoded is Map<String, dynamic>) {
-          final raw = decoded['table_data'];
-          final list = raw is List ? raw : <dynamic>[];
-
-          return list
-              .whereType<Map<String, dynamic>>()
-              .map((e) => Item.fromJson(e))
-              .toList();
-        }
-        return <Item>[];
-      }
-
+    if (response.statusCode != 200) {
       throw ApiException(
         'Failed to load items (${response.statusCode})',
         statusCode: response.statusCode,
       );
-    } catch (e) {
-      if (e is ApiException) rethrow;
-      throw ApiException('Items fetch failed: $e');
     }
+
+    final decoded = _decodeBody(response.body);
+
+    if (decoded is! Map) {
+      return <Item>[];
+    }
+
+    final raw = decoded['table_data'];
+    if (raw is! List) {
+      return <Item>[];
+    }
+
+    return raw
+        .where((e) => e is Map)
+        .map((e) => Item.fromJson(Map<String, dynamic>.from(e as Map)))
+        .toList();
+  } catch (e) {
+    if (e is ApiException) rethrow;
+    throw ApiException('Items fetch failed: $e');
   }
+}
 
   Future<Map<String, dynamic>> postNewItem(Map<String, dynamic> data) async {
     final url = _uri('/items');
