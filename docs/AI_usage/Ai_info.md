@@ -314,11 +314,13 @@ code like ```child: showBackButton``` can be automatically written in VSCode by 
 ...
 
 #### Prompt - Lingze (case 9)
-*Using VSCode + GitHub Copilot to assist in writing Flutter login logic (including form validation, calling backend APIs, 'Remember Me', and error messages).*
+*In Flutter, help me write the login flow for a sign-in screen, including form validation, calling the backend login API, handling a "Remember Me" checkbox, showing success/error messages, and navigating after a successful login.*
 
 #### Response [code snippet] (case 9)
-For example
-```
+
+For example:
+
+```dart
 Future<void> login() async {
   FocusScope.of(context).unfocus();
   if (!_formKey.currentState!.validate()) return;
@@ -327,13 +329,11 @@ Future<void> login() async {
   final password = _passwordController.text;
 
   setState(() => _isLoading = true);
+
   try {
     await _api.login(email: email, password: password);
 
-    if (_rememberMe &&
-        _api.accessToken != null &&
-        _api.accessToken!.isNotEmpty &&
-        (_api.refreshToken ?? '').isNotEmpty) {
+    if (_rememberMe && _api.accessToken != null) {
       await _storage.saveSession(
         AuthSession(
           accessToken: _api.accessToken!,
@@ -343,19 +343,11 @@ Future<void> login() async {
       );
     }
 
-    if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Logged in successfully')),
-    );
+    ...
     Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
   } on ApiException catch (e) {
-    if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(e.message)),
-    );
+    ...
   } finally {
     if (mounted) setState(() => _isLoading = false);
   }
 }
-```
-code like ``` APIService``` can be automatically written in VSCode by Github Copilot.
