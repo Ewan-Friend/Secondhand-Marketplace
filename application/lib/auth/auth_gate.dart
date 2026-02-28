@@ -1,3 +1,11 @@
+/*
+
+AUTH GATE
+------------------------------------------------------------------------
+
+
+*/
+
 import 'package:flutter/material.dart';
 
 import '../pages/login_page.dart';
@@ -34,6 +42,7 @@ class _AuthGateState extends State<AuthGate> {
       return false;
     }
 
+
     _api.setSession(
       accessToken: session.accessToken,
       refreshToken: session.refreshToken,
@@ -48,9 +57,6 @@ class _AuthGateState extends State<AuthGate> {
         return false;
       }
     } catch (_) {
-      await _storage.clear();
-      _api.clearSession();
-      return false;
     }
 
     return true;
@@ -58,4 +64,18 @@ class _AuthGateState extends State<AuthGate> {
 
   @override
   Widget build(BuildContext context) {
-   
+    return FutureBuilder<bool>(
+      future: _boot,
+      builder: (context, snap) {
+        if (snap.connectionState != ConnectionState.done) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        final authed = snap.data ?? false;
+        return authed ? const ProfilePage() : const LoginPage();
+      },
+    );
+  }
+}
