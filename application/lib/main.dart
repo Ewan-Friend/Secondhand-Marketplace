@@ -1,76 +1,69 @@
 import 'package:flutter/material.dart';
+import 'pages/home_page.dart';
+import 'pages/item_detail_page.dart';
+import 'pages/profile_page.dart';
+import 'pages/login_page.dart';
+import 'pages/post_items_page.dart';
+import 'pages/sign_up_page.dart';
 
-import 'auth/auth_gate.dart';
-
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp());
+  runApp(const MainApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MainApp extends StatelessWidget {
+  const MainApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Application',
       debugShowCheckedModeBanner: false,
+      title: 'Secondhand Marketplace',
+
+      // start off at home page (can change to login at some point)
+      initialRoute: '/',
+
+      // Static routing table
+      routes: {
+        '/': (_) => const HomePage(),
+        '/login': (_) => const LoginPage(),
+        '/signup': (_) => const SignUpPage(),
+        '/profile': (_) => const ProfilePage(),
+        '/post': (_) => const PostItemsPage(),
+      },
+
+      // Dynamic route
+      onGenerateRoute: (proposedRoute) {
+        if (proposedRoute != null && proposedRoute.name!.startsWith("/item")) {
+          final String itemId = proposedRoute.name!.split('/').last;
+
+          return MaterialPageRoute(
+            builder: (context) => ItemDetailPage(itemId: itemId),
+          );
+        }
+        return null;
+      },
+
+      // Unknown route protection: redirect to login page
+      onUnknownRoute: (_) =>
+          MaterialPageRoute(builder: (_) => const LoginPage()),
+
+      // Unified theme
       theme: ThemeData(
         useMaterial3: true,
-        colorSchemeSeed: const Color(0xFF736EFE),
-        brightness: Brightness.light,
-        scaffoldBackgroundColor: const Color(0xFFF7F9FC),
-      ),
-      darkTheme: ThemeData(
-        useMaterial3: true,
-        colorSchemeSeed: const Color(0xFF736EFE),
-        brightness: Brightness.dark,
-      ),
-      themeMode: ThemeMode.system,
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const AuthGate(),
-        '/signup': (context) => const SignUpPage(),
-      },
-    );
-  }
-}
-
-class SignUpPage extends StatelessWidget {
-  const SignUpPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Sign Up')),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(Icons.person_add_alt_1, size: 64),
-              const SizedBox(height: 16),
-              const Text(
-                'Sign up page not implemented yet',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 12),
-              const Text(
-                'You can replace this page with your real registration page later.',
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 20),
-              FilledButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Back'),
-              ),
-            ],
+        textButtonTheme: TextButtonThemeData(
+          style: ButtonStyle(
+            overlayColor: WidgetStateProperty.all(
+              Colors.grey.shade100,
+            ),
           ),
+        ),
+        fontFamily: 'Poppins',
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFFE36D6D),
+        ).copyWith(
+          primary: const Color(0xFFE36D6D),
+          surface: const Color.fromARGB(255, 255, 255, 255),
         ),
       ),
     );
