@@ -1,20 +1,32 @@
 import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../config/app_config.dart';
 import '../models/item_model.dart';
+
+class ApiException implements Exception {
+  final String message;
+  final int? statusCode;
+
+  const ApiException(this.message, {this.statusCode});
+
+  @override
+  String toString() => message;
+}
 
 class APIService {
   final http.Client _client;
 
   static bool _firstRequestLogged = false;
 
+  String? accessToken;
+  String? refreshToken;
+  DateTime? expiresAt;
+
   APIService({http.Client? client}) : _client = client ?? http.Client();
 
-  /// Builds a safe URL: base (e.g. /api) + path (e.g. /items) → /api/items.
-  /// Avoids double slashes and duplicate /api.
   Uri _uri(String path) {
     final base = AppConfig.apiBaseUrl.trim();
     final normalizedBase =
@@ -30,7 +42,143 @@ class APIService {
     return Uri.parse(url);
   }
 
-  /// Returns backend status message if reachable; throws otherwise.
+  Map<String, String> _headers({bool jsonBody = false}) {
+    final headers = <String, String>{
+      'Accept': 'application/json',
+    };
+
+    if (jsonBody) {
+      headers['Content-Type'] = 'application/json';
+    }
+
+    if (accessToken != null && accessToken!.isNotEmpty) {
+      headers['Authorization'] = 'Bearer $accessToken';
+    }
+
+    return headers;
+  }
+
+  Future<http.Response> _get(Uri url) {
+    if (accessToken != null && accessToken!.isNotEmpty) {
+      return _client.get(url, headers: _headers());
+    }
+    return _client.get(url);
+  }
+
+  dynamic _decodeBody(String body) {
+    if (body.trim().isEmpty) return <String, dynamic>{};
+    return json.decode(body);
+  }
+
+  String _extractErrorMessage(dynamic decoded, int statusCode, String fallback) {
+    if (decoded is Map) {
+      final message = decoded['message'] ??
+          decoded['error'] ??
+          decoded['detail'] ??
+          decoded['msg'];
+
+      if (message is String && message.trim().isNotEmpty) {
+        return message;
+      }
+    }
+    return '$fallback ($statusCode)';
+  }
+
+  DateTime? _parseExpiresAt(dynamic decoded) {
+    if (decoded is! Map) return null;
+
+    final direct = decoded['expires_at'] ?? decoded['expiresAt'];
+    if (direct is String && direct.isNotEmpty) {
+      return DateTime.tryParse(direct);
+    }
+
+    final expiresIn = decoded['expires_in'] ?? decoded['expiresIn'];
+    if (expiresIn is int) {
+      return DateTime.now().add(Duration(seconds: expiresIn));
+    }
+    if (expiresIn is String) {
+      final seconds = int.tryParse(expiresIn);
+      if (seconds != null) {
+        return DateTime.now().add(Duration(seconds: seconds));
+      }
+    }
+
+    return null;
+  }
+
+  void setSession({
+    required String accessToken,
+    String? refreshToken,
+    DateTime? expiresAt,
+  }) {
+    this.accessToken = accessToken;
+    this.refreshToken = refreshToken;
+    this.expiresAt = expiresAt;
+  }
+
+  void clearSession() {
+    accessToken = null;
+    refreshToken = null;
+    expiresAt = null;
+  }
+
+  Future<Map<String, dynamic>> login({
+    required String email,
+    required String password,
+  }) async {
+    final url = _uri('/auth/login');
+
+    try {
+      final response = await _client.post(
+        url,
+        headers: _headers(jsonBody: true),
+        body: json.encode({
+          'email': email,
+          'password': password,
+        }),
+      );
+
+      final decoded = _decodeBody(response.body);
+
+      if (response.statusCode != 200) {
+        throw ApiException(
+          _extractErrorMessage(decoded, response.statusCode, 'Login failed'),
+          statusCode: response.statusCode,
+        );
+      }
+
+      if (decoded is! Map) {
+        throw const ApiException('Invalid login response');
+      }
+
+      final payload = decoded['data'] is Map
+          ? Map<String, dynamic>.from(decoded['data'] as Map)
+          : Map<String, dynamic>.from(decoded);
+
+      final token =
+          payload['access_token'] ?? payload['accessToken'] ?? payload['token'];
+      final refresh =
+          payload['refresh_token'] ?? payload['refreshToken'] ?? '';
+      final parsedExpiresAt = _parseExpiresAt(payload);
+
+      if (token is! String || token.isEmpty) {
+        throw const ApiException('Missing access token in login response');
+      }
+
+      setSession(
+        accessToken: token,
+        refreshToken: refresh is String ? refresh : null,
+        expiresAt: parsedExpiresAt,
+      );
+
+      return payload;
+    } on ApiException {
+      rethrow;
+    } catch (e) {
+      throw ApiException('Login failed: $e');
+    }
+  }
+
   Future<String> checkConnection() async {
     final url = _uri('/status');
 
@@ -38,17 +186,21 @@ class APIService {
       final response = await _client.get(url);
 
       if (response.statusCode == 200) {
-        final decoded = json.decode(response.body);
-        if (decoded is Map<String, dynamic>) {
+        final decoded = _decodeBody(response.body);
+        if (decoded is Map) {
           final msg = decoded['message'];
           return (msg is String && msg.isNotEmpty) ? msg : 'Backend reachable';
         }
         return 'Backend reachable';
       }
 
-      throw Exception('Backend unreachable (${response.statusCode})');
+      throw ApiException(
+        'Backend unreachable (${response.statusCode})',
+        statusCode: response.statusCode,
+      );
     } catch (e) {
-      throw Exception('Network/Server error: $e');
+      if (e is ApiException) rethrow;
+      throw ApiException('Network/Server error: $e');
     }
   }
 
@@ -56,150 +208,180 @@ class APIService {
     final url = _uri('/items');
 
     try {
-      final response = await _client.get(url);
+      final response = await _get(url);
 
-      if (response.statusCode == 200) {
-        final decoded = json.decode(response.body);
-        if (decoded is Map<String, dynamic>) {
-          final raw = decoded['table_data'];
-          final list = (raw is List) ? raw : <dynamic>[];
+      if (response.statusCode != 200) {
+        throw ApiException(
+          'Failed to load items (${response.statusCode})',
+          statusCode: response.statusCode,
+        );
+      }
 
-          return list
-              .whereType<Map<String, dynamic>>()
-              .map(Item.fromJson)
-              .toList();
-        }
+      final decoded = _decodeBody(response.body);
+
+      if (decoded is! Map) {
         return <Item>[];
       }
 
-      throw Exception('Failed to load items (${response.statusCode})');
+      final raw = decoded['table_data'];
+      if (raw is! List) {
+        return <Item>[];
+      }
+
+      return raw
+          .where((e) => e is Map)
+          .map((e) => Item.fromJson(Map<String, dynamic>.from(e as Map)))
+          .toList();
     } catch (e) {
-      throw Exception('Items fetch failed: $e');
+      if (e is ApiException) rethrow;
+      throw ApiException('Items fetch failed: $e');
     }
   }
 
   Future<Map<String, dynamic>> postNewItem(Map<String, dynamic> data) async {
-  final url = _uri('/items');
+    final url = _uri('/items');
 
-  try {
-    final response = await _client.post(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode(data),
-    );
+    try {
+      final response = await _client.post(
+        url,
+        headers: _headers(jsonBody: true),
+        body: json.encode(data),
+      );
 
-    if (response.statusCode == 201 || response.statusCode == 200) {
-      final decoded = json.decode(response.body);
-      if (kDebugMode) {
-        debugPrint('Item posted successfully: ${response.body}');
+      final decoded = _decodeBody(response.body);
+
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        if (kDebugMode) {
+          debugPrint('Item posted successfully: ${response.body}');
+        }
+        return decoded is Map
+            ? Map<String, dynamic>.from(decoded)
+            : {'status': 'success'};
       }
-      return decoded is Map<String, dynamic> ? decoded : {'status': 'success'};
+
+      throw ApiException(
+        _extractErrorMessage(decoded, response.statusCode, 'Failed to post item'),
+        statusCode: response.statusCode,
+      );
+    } catch (e) {
+      if (e is ApiException) rethrow;
+      throw ApiException('Post item failed: $e');
     }
-
-    throw Exception('Failed to post item (${response.statusCode})');
-  } catch (e) {
-    throw Exception('Post item failed: $e');
   }
-}
 
-  // ---- TEMP STUBS (to keep app compiling) ----
   Future<Map<String, dynamic>> getCurrentUserProfile() async {
     final url = _uri('/me');
-    
+
     try {
-      final response = await _client.get(url);
-      
+      final response = await _get(url);
+      final decoded = _decodeBody(response.body);
+
       if (response.statusCode == 200) {
-        final decoded = json.decode(response.body);
-        return decoded is Map<String, dynamic>
-            ? decoded
+        return decoded is Map
+            ? Map<String, dynamic>.from(decoded)
             : {'data': null, 'status_code': 200};
       }
-      
-      throw Exception('Failed to load profile (${response.statusCode})');
+
+      if (response.statusCode == 401) {
+        return {'data': null, 'status_code': 401};
+      }
+
+      throw ApiException(
+        _extractErrorMessage(
+          decoded,
+          response.statusCode,
+          'Failed to load profile',
+        ),
+        statusCode: response.statusCode,
+      );
     } catch (e) {
-      throw Exception('getCurrentUserProfile failed: $e');
+      if (e is ApiException) rethrow;
+      throw ApiException('getCurrentUserProfile failed: $e');
     }
   }
 
-  /// Get a user's profile by their UUID from backend
   Future<Map<String, dynamic>> getUserById(String userId) async {
     final url = _uri('/profile/$userId');
 
     try {
-      final response = await _client.get(url);
+      final response = await _get(url);
+      final decoded = _decodeBody(response.body);
 
       if (response.statusCode == 200) {
-        final decoded = json.decode(response.body);
-        return decoded is Map<String, dynamic>
-            ? decoded
-            : {'table_data': null, 'status_code': response.statusCode};
-      } else if (response.statusCode == 404) {
+        return decoded is Map
+            ? Map<String, dynamic>.from(decoded)
+            : {'table_data': null, 'status_code': 200};
+      }
+
+      if (response.statusCode == 404) {
         return {'table_data': null, 'status_code': 404};
       }
 
-      throw Exception('Failed to load profile (${response.statusCode})');
+      throw ApiException(
+        _extractErrorMessage(
+          decoded,
+          response.statusCode,
+          'Failed to load profile',
+        ),
+        statusCode: response.statusCode,
+      );
     } catch (e) {
-      throw Exception('getUserById failed: $e');
-    }
-  }
-  /// Get user profile by ID from backend
-  Future<Map<String, dynamic>> getUserByID(String userId) async {
-    final url = _uri('/user/$userId');
-    
-    try {
-      final response = await _client.get(url);
-      
-      if (response.statusCode == 200) {
-        final decoded = json.decode(response.body);
-        return decoded is Map<String, dynamic>
-            ? decoded
-            : {'data': null, 'status_code': 200};
-      }
-      
-      throw Exception('Failed to load profile (${response.statusCode})');
-    } catch (e) {
-      throw Exception('getUserByID failed: $e');
+      if (e is ApiException) rethrow;
+      throw ApiException('getUserById failed: $e');
     }
   }
 
-  /// Get user listings by ID from backend
+  Future<Map<String, dynamic>> getUserByID(String userId) async {
+    return getUserById(userId);
+  }
+
   Future<Map<String, dynamic>> getUserItems(dynamic userId) async {
     final url = _uri('/items?user_id=$userId');
-    
+
     try {
-      final response = await _client.get(url);
-      
+      final response = await _get(url);
+      final decoded = _decodeBody(response.body);
+
       if (response.statusCode == 200) {
-        final decoded = json.decode(response.body);
-        return decoded is Map<String, dynamic>
-            ? decoded
+        return decoded is Map
+            ? Map<String, dynamic>.from(decoded)
             : {'table_data': [], 'status_code': 200};
       }
-      
-      throw Exception('Failed to load items (${response.statusCode})');
+
+      throw ApiException(
+        _extractErrorMessage(decoded, response.statusCode, 'Failed to load items'),
+        statusCode: response.statusCode,
+      );
     } catch (e) {
-      throw Exception('getUserItems failed: $e');
+      if (e is ApiException) rethrow;
+      throw ApiException('getUserItems failed: $e');
     }
   }
 
-  /// Get reviews for a user by ID from backend
   Future<Map<String, dynamic>> getUserReviews(dynamic userId) async {
     final url = _uri('/reviews?user_id=$userId');
-    
+
     try {
-      final response = await _client.get(url);
-      
+      final response = await _get(url);
+      final decoded = _decodeBody(response.body);
+
       if (response.statusCode == 200) {
-        final decoded = json.decode(response.body);
-        return decoded is Map<String, dynamic>
-            ? decoded
+        return decoded is Map
+            ? Map<String, dynamic>.from(decoded)
             : {'data': [], 'status_code': 200};
       }
-      
-      throw Exception('Failed to load reviews (${response.statusCode})');
+
+      throw ApiException(
+        _extractErrorMessage(
+          decoded,
+          response.statusCode,
+          'Failed to load reviews',
+        ),
+        statusCode: response.statusCode,
+      );
     } catch (e) {
-      throw Exception('getUserReviews failed: $e');
+      if (e is ApiException) rethrow;
+      throw ApiException('getUserReviews failed: $e');
     }
   }
 
@@ -207,21 +389,44 @@ class APIService {
     String? displayName,
     String? location,
   }) async {
-    return {
-      'message': 'Profile update stubbed',
-      'status_code': 200,
-    };
+    final url = _uri('/profile');
+
+    try {
+      final response = await _client.put(
+        url,
+        headers: _headers(jsonBody: true),
+        body: json.encode({
+          if (displayName != null) 'display_name': displayName,
+          if (location != null) 'location': location,
+        }),
+      );
+
+      final decoded = _decodeBody(response.body);
+
+      if (response.statusCode == 200) {
+        return decoded is Map
+            ? Map<String, dynamic>.from(decoded)
+            : {'message': 'Profile updated', 'status_code': 200};
+      }
+
+      throw ApiException(
+        _extractErrorMessage(
+          decoded,
+          response.statusCode,
+          'Profile update failed',
+        ),
+        statusCode: response.statusCode,
+      );
+    } catch (e) {
+      if (e is ApiException) rethrow;
+      throw ApiException('updateUserProfile failed: $e');
+    }
   }
 
-  /// Optional: call this if you want to close the http client manually.
   void dispose() {
     _client.close();
   }
 
-  /// Fetch a single item by its ID from the backend and convert to `Item`.
-  ///
-  /// Accepts a nullable `itemId` because callers may pass null; throws if
-  /// `itemId` is null or if the request/response is invalid.
   Future<Item> getItemFromID(String? itemId) async {
     if (itemId == null || itemId.isEmpty) {
       throw ArgumentError('itemId must be provided');
@@ -230,27 +435,33 @@ class APIService {
     final url = _uri('/item/$itemId');
 
     try {
-      final response = await _client.get(url);
+      final response = await _get(url);
 
       if (response.statusCode == 200) {
-        final decoded = json.decode(response.body);
+        final decoded = _decodeBody(response.body);
 
-        if (decoded is Map<String, dynamic>) {
+        if (decoded is Map) {
           final raw = decoded['table_data'];
-          if (raw is Map<String, dynamic>) {
-            return Item.fromJson(raw);
+          if (raw is Map) {
+            return Item.fromJson(Map<String, dynamic>.from(raw));
           }
-          throw Exception('Unexpected item format in response');
+          throw const ApiException('Unexpected item format in response');
         }
 
-        throw Exception('Invalid response from server');
-      } else if (response.statusCode == 404) {
-        throw Exception('Item not found (404)');
+        throw const ApiException('Invalid response from server');
       }
 
-      throw Exception('Failed to load item (${response.statusCode})');
+      if (response.statusCode == 404) {
+        throw const ApiException('Item not found (404)', statusCode: 404);
+      }
+
+      throw ApiException(
+        'Failed to load item (${response.statusCode})',
+        statusCode: response.statusCode,
+      );
     } catch (e) {
-      throw Exception('getItemFromID failed: $e');
+      if (e is ApiException) rethrow;
+      throw ApiException('getItemFromID failed: $e');
     }
   }
 }

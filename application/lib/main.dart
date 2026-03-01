@@ -1,4 +1,3 @@
-import 'package:application/auth/auth_gate.dart';
 import 'package:flutter/material.dart';
 import 'pages/home_page.dart';
 import 'pages/item_detail_page.dart';
@@ -26,31 +25,30 @@ class MainApp extends StatelessWidget {
 
       // Static routing table
       routes: {
-        '/':   (_) => const HomePage(),
-        '/login':  (_) => const LoginPage(),
+        '/': (_) => const HomePage(),
+        '/login': (_) => const LoginPage(),
         '/signup': (_) => const SignUpPage(),
-        '/profile':(_) => const ProfilePage(),
-        '/post':   (_) => const PostItemsPage(),
+        '/profile': (_) => const ProfilePage(),
+        '/post': (_) => const PostItemsPage(),
       },
 
       // Dynamic route
-      onGenerateRoute: (proposedRoute){
-        // open unique item page
-        if (proposedRoute != null && proposedRoute.name!.startsWith("/item")){
-          // Take the ID by removing everything before the last '/'
+      onGenerateRoute: (proposedRoute) {
+        if (proposedRoute != null && proposedRoute.name!.startsWith("/item")) {
           final String itemId = proposedRoute.name!.split('/').last;
 
           return MaterialPageRoute(
-            builder: (context) => ItemDetailPage(itemId: itemId)
+            builder: (context) => ItemDetailPage(itemId: itemId),
           );
         }
-      } ,
+        return null;
+      },
 
       // Unknown route protection: redirect to login page
       onUnknownRoute: (_) =>
           MaterialPageRoute(builder: (_) => const LoginPage()),
 
-      //Unified theme
+      // Unified theme
       theme: ThemeData(
         useMaterial3: true,
         textButtonTheme: TextButtonThemeData(
@@ -64,8 +62,8 @@ class MainApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xFFE36D6D),
         ).copyWith(
-          primary: const Color(0xFFE36D6D), // force your exact color
-          surface: const Color.fromARGB(255, 255, 255, 255), // force your exact color
+          primary: const Color(0xFFE36D6D),
+          surface: const Color.fromARGB(255, 255, 255, 255),
         ),
       ),
     );
