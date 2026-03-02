@@ -15,6 +15,7 @@
 - [Project goals](#project-goals)
 - [Project structure](#project-structure)
 - [Project setup](#project-setup)
+- [Deployment](#deployment)
 - [Software architecture](#software-architecture)
 - [User instructions](#user-instructions)
 - [Stakeholders](#stakeholders)
@@ -135,6 +136,24 @@ The following diagram illustrates the Secondhand Marketplace software architectu
 <p align="left">
   <img width="918" alt="architecture image" src="./docs/architecture/architecture2.png";>
 </p>
+
+## Deployment
+
+### Infrastructure
+Cloud provider: AWS
+Frontend Hosting: S3
+CDN: CloudFront
+
+### Continuous Deployment
+Continuous deployment via GitHub Actions
+On every push to the dev branch:
+- the app is built
+- build artifacts are uploaded to an S3 bucket
+The latest version is automatically deployed to production
+
+available at: 
+https://d3q8niu6xns970.cloudfront.net/
+
 
 ## User instructions
 
