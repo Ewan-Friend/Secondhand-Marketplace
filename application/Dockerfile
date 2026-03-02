@@ -18,12 +18,14 @@ COPY . .
 
 # Build the web project
 RUN flutter pub get
-RUN flutter build web --release
+RUN flutter build web --release --dart-define=API_BASE_URL=/api
 
 # Stage 2: Serve the files with Nginx
 FROM nginx:alpine
 # Copy the compiled files from the build stage to Nginx
 COPY --from=build-env /app/build/web /usr/share/nginx/html
+# Copy custom nginx configuration
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
