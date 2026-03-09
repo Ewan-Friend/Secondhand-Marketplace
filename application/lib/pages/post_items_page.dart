@@ -30,7 +30,7 @@ class _PostItemsPage extends State<PostItemsPage> {
       rating: 0,
       price: double.tryParse(priceController.text) ?? 0.0,
       location: locationController.text,
-      condition: condition ?? 'no condition',
+      condition: condition ?? 'good',
       //TODO: implement image processing from upload_image.dart
       imageUrls: [],
       // Publishes under a created test user
@@ -104,6 +104,7 @@ class _PostItemsPage extends State<PostItemsPage> {
                                   descriptionController,
                                   priceController,
                                   locationController,
+                                  condition,
                                   onPublish,
                                 ),
                               ],
@@ -118,6 +119,7 @@ class _PostItemsPage extends State<PostItemsPage> {
                                   descriptionController,
                                   priceController,
                                   locationController,
+                                  condition,
                                   onPublish,
                                 ),
                               ],
@@ -406,8 +408,7 @@ class _ConditionField extends StatelessWidget {
           initialValue: value,
           items: const [
             DropdownMenuItem(value: 'new', child: Text('New')),
-            DropdownMenuItem(
-                value: 'like_new', child: Text('Like New')),
+            DropdownMenuItem(value: 'like_new', child: Text('Like New')),
             DropdownMenuItem(value: 'good', child: Text('Good')),
             DropdownMenuItem(value: 'used', child: Text('Used')),
           ],
@@ -443,13 +444,15 @@ class _SideButtons extends StatelessWidget {
   final TextEditingController descriptionController;
   final TextEditingController priceController;
   final TextEditingController locationController;
+  String? condition;
   final VoidCallback onPublish;
 
-  const _SideButtons(
+  _SideButtons(
     this.titleController,
     this.descriptionController,
     this.priceController,
     this.locationController,
+    this.condition,
     this.onPublish,
   );
 

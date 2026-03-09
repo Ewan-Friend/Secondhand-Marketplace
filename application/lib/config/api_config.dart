@@ -1,5 +1,5 @@
-/// Source for API base url, adds fallback as just /api
+// THIS FUNCTION SUCKS
 const String apiBaseUrl = String.fromEnvironment(
   'API_BASE_URL',
-  defaultValue: '/api',
+  defaultValue: '',
 );
