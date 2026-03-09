@@ -32,6 +32,7 @@ class ItemCard extends StatelessWidget{
     }
   }
 
+  // Format pricing (currency, decimals, etc.)
   String _priceFormat() {
     if (item.price == 0) return 'Free';
     return '£${item.price.toStringAsFixed(2)}';
