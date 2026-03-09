@@ -32,6 +32,11 @@ class ItemCard extends StatelessWidget{
     }
   }
 
+  String _priceFormat() {
+    if (item.price == 0) return 'Free';
+    return '£${item.price.toStringAsFixed(2)}';
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -124,7 +129,7 @@ class ItemCard extends StatelessWidget{
                         ),
                         // Price on the same row as seller info
                         Text(
-                          'CHF ${item.price.toString()}',
+                          _priceFormat(),
                             style: TextStyle(
                               fontWeight: FontWeight.w500, fontSize: 18),
                         ),
