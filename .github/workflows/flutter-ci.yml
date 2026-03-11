@@ -1,0 +1,49 @@
+flutter-ci.yml nin içeriği: 
+
+```yaml
+name: Flutter CI
+
+on:
+  push:
+    branches: [ "dev" ]
+    paths:
+      - 'application/**'
+  pull_request:
+    branches: [ "main", "dev" ]
+    paths:
+      - 'application/**'
+  workflow_dispatch: 
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      # Pull code from the repo
+      - name: Checkout Code
+        uses: actions/checkout@v4 
+
+      # Sets up Flutter
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.7'
+          channel: 'stable'
+          cache: true # This caches the SDK to speed up future runs
+
+      # Download all required dependencies
+      - name: Get dependencies
+        working-directory: ./application
+        run: flutter pub get
+
+      # Simply Analyzes the project
+      - name: Analyze project
+        working-directory: ./application
+        continue-on-error: true
+        run: flutter analyze --no-fatal-warnings --no-fatal-infos
+
+      # Run all tests
+      - name: Run tests
+        working-directory: ./application
+        run: flutter test
+
+```
