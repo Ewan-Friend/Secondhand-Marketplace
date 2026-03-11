@@ -147,17 +147,8 @@ class _PostItemsPage extends State<PostItemsPage> {
         UploadImage(),
         const SizedBox(height: 20),
 
-        /// Title + AI
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: _TitleField(titleController),
-            ),
-            const SizedBox(width: 12),
-            const _AIGenerateButton(),
-          ],
-        ),
+        /// Title
+        _TitleField(titleController),
         const SizedBox(height: 18),
 
         /// Description
