@@ -6,8 +6,7 @@ name: Backend CD
 on:
   push:
     branches:
-      - dev
-      - feature/247-connecting-flutter-deployment-with-githubactions
+      - dev     
 
 jobs:
   deploy:
