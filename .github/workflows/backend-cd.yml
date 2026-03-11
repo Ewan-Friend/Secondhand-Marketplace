@@ -12,6 +12,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
+    permissions:
+      id-token: write
+      contents: read
+
     steps:
       # Step 1: Checkout the repository code
       - name: Checkout repository
@@ -36,8 +40,16 @@ jobs:
         run: |
           cd backend
           zip -r ../deploy.zip . -x "*.git*" -x "*__pycache__*" -x "*.pytest_cache*" -x "test/*"
+      
+      # Step 5: Configure AWS credentials 
 
-      # Step 5: Deploy to AWS Elastic Beanstalk
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      # Step 6: Deploy to AWS Elastic Beanstalk
       
       - name: Deploy to Elastic Beanstalk
         uses: einaregilsson/beanstalk-deploy@v22
