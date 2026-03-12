@@ -364,7 +364,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
                     ElevatedButton(
                       onPressed: () async {
-                        await _apiService.addXP(20);
+                        await _apiService.addXP(_userXP + 20);
                         await _loadProfileData(); // Refresh profile data after XP update
                       },
                       style: ElevatedButton.styleFrom(
