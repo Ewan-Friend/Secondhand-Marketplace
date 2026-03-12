@@ -218,17 +218,73 @@ class _ProfilePageState extends State<ProfilePage> {
                 fontWeight: FontWeight.w400,
               ),
             ),
-                const SizedBox(height: 4),
-                Text(
-                  '@${_userData?['username'] ?? 'user_name_291'}',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey.shade600,
-              ),
-            ),
+                const SizedBox(height: 12),
+                // progress bar for xp
+                Row(
+                  children: [
+                    Expanded(
+                      child: LayoutBuilder(
+                        builder: (context, constraints) {
+                          double progress = 0.6; // 60%
+                          double width = constraints.maxWidth;  // full width of the progress bar
+                          double knobPosition = width * progress;
+
+                          return SizedBox(
+                            height: 24,
+                            child: Stack(
+                              alignment: Alignment.centerLeft,
+                              children: [
+
+                                // background bar
+                                Container(
+                                  height: 8,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[300],
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                ),
+
+                                // progress bar
+                                Container(
+                                  width: knobPosition,
+                                  height: 8,
+                                  decoration: BoxDecoration(
+                                    color: Color(0xFFFF7B7B),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                ),
+
+                                // circle indicator
+                                Positioned(
+                                  left: knobPosition - 10,
+                                  child: Container(
+                                    width: 20,
+                                    height: 20,
+                                    decoration: const BoxDecoration(
+                                      color: Color(0xFFFF7B7B),
+                                      shape: BoxShape.circle,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                    // XP text
+                    const Text(
+                      "500 XP",
+                      style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xAD000000)),
+                    ),
+                  ],
+                ),
               ],
-            ),
+            )
+            
           ),
+          const SizedBox(width: 100),
 
           
 
