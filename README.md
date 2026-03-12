@@ -153,8 +153,10 @@ On every push to the dev branch:
 - build artifacts are uploaded to an S3 bucket
 The latest version is automatically deployed to production
 
-available at: 
-https://d3q8niu6xns970.cloudfront.net/
+available at both: 
+www.sepsecondhand.co.uk
+sepsecondhand.co.uk
+
 
 
 ## User instructions
