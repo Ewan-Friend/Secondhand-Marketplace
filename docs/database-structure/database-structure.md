@@ -17,7 +17,8 @@
 - ```rating <float>``` - stars out of 5
 - ```category_id <uuid>``` - foreign key for categories table
 - ```created_at <string>``` - exact date and time that item was listed
-- ```price <float>``` - price of the item (CHF default)
+- ```price <float>``` - price of the item (£ default)
+- ```condition <string>``` - selling condition of the item
 
 ## Item Images
 <img width="388" height="272" alt="image" src="https://github.com/user-attachments/assets/0195aac3-82c1-41c0-b017-5df54432ba77" />
@@ -39,3 +40,4 @@
 - ```rating_count <int>``` - number of people who have reviewed the profile
 - ```avatar_url <string>``` - url to image held in Supabase avatar bucket
 - ```bio <string>``` - profile bio
+- ```postal_code <string>``` - postal code of the profile
