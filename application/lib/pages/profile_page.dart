@@ -28,6 +28,7 @@ class _ProfilePageState extends State<ProfilePage> {
   List<dynamic> _userListings = [];
   List<dynamic> _userFavorites = [];
   List<dynamic> _userReviews = [];
+  List<Map<String, dynamic>> _levelConfigurations = [];
 
   @override
   void initState() {
@@ -70,8 +71,9 @@ class _ProfilePageState extends State<ProfilePage> {
       if (reviewsResponse['data'] != null) {
         _userReviews = reviewsResponse['data'];
       }
-      
-
+      // Load level configurations
+      final levelsResponse = await _apiService.getLevelConfiguration();
+      _levelConfigurations = List<Map<String, dynamic>>.from(levelsResponse);
 
 
     } catch (e) {
