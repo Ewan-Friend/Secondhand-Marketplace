@@ -123,6 +123,7 @@ def post_item():
     description = data.get("description", "").strip()
     price = data.get("price")
     seller_id = data.get("seller_id")
+    condition = data.get("condition")
     # image_urls = data.get("image_urls", [])
 
     # Validate required fields
@@ -138,6 +139,11 @@ def post_item():
     if not description:
         description = "no description has been provided for this item"
 
+    if not condition:
+        condition = "no condition"
+
+    print("c: ", condition)
+
     try:
         print(
             f"Attempting to insert item: title={title}, price={price}, seller_id={seller_id}"
@@ -152,6 +158,7 @@ def post_item():
                     "rating": 0.0,
                     "price": float(price),
                     "seller_id": seller_id,
+                    "condition": condition,
                     "category_id": MISCELLANEOUS_PLACEHOLDER,
                 }
             )

@@ -66,8 +66,26 @@ class APIService {
   }
 
   dynamic _decodeBody(String body) {
-    if (body.trim().isEmpty) return <String, dynamic>{};
-    return json.decode(body);
+    final trimmed = body.trim();
+    if (trimmed.isEmpty) return <String, dynamic>{};
+
+    try {
+      return json.decode(trimmed);
+    } on FormatException {
+      final preview = trimmed.length > 120
+          ? '${trimmed.substring(0, 120)}...'
+          : trimmed;
+      final looksLikeHtml =
+          trimmed.startsWith('<!DOCTYPE') || trimmed.startsWith('<html');
+
+      if (looksLikeHtml) {
+        throw const ApiException(
+          'Server returned HTML instead of JSON. Check API_BASE_URL or local proxy configuration.',
+        );
+      }
+
+      throw ApiException('Invalid JSON response: $preview');
+    }
   }
 
   String _extractErrorMessage(dynamic decoded, int statusCode, String fallback) {

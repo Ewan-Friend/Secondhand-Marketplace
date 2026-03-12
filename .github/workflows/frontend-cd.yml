@@ -30,6 +30,7 @@ jobs:
         run: |
           flutter pub get
           flutter build web --release --dart-define=API_BASE_URL=${{ secrets.API_BASE_URL }}
+          # do not change API_BASE_URL in secrets, otherwise it will break the web app deployment
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
