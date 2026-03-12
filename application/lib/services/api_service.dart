@@ -497,17 +497,15 @@ class APIService {
       );
     }
 
-    final decoded = _decodeBody(response.body);
-
-    final levels = decoded['levels'];
-    if (levels is! List) {
-      return <Map<String, dynamic>>[];
-    }
-
-    return levels
-        .where((e) => e is Map)
-        .map((e) => Map<String, dynamic>.from(e as Map))
-        .toList();
+      final decoded = _decodeBody(response.body);
+      final levels = decoded['data'];
+      if (levels is! List) {
+        return <Map<String, dynamic>>[];
+      }
+      return levels
+          .where((e) => e is Map)
+          .map((e) => Map<String, dynamic>.from(e as Map))
+          .toList();
     } catch (e) {
       if (e is ApiException) rethrow;
       throw ApiException('Level config fetch failed: $e');
