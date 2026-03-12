@@ -206,7 +206,32 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
 
+          // User info
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  'Level 2 - Trusted Seller',
+                  style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+                const SizedBox(height: 4),
+                Text(
+                  '@${_userData?['username'] ?? 'user_name_291'}',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey.shade600,
+              ),
+            ),
+              ],
+            ),
+          ),
+
           
+
           // Edit Profile / Message button
           widget.isOwnProfile
               ? ElevatedButton(
@@ -243,6 +268,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     style: TextStyle(fontWeight: FontWeight.w600),
                   ),
                 ),
+                SizedBox(width:300),
         ],
       ),
     );
