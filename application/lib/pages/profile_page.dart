@@ -29,6 +29,9 @@ class _ProfilePageState extends State<ProfilePage> {
   List<dynamic> _userFavorites = [];
   List<dynamic> _userReviews = [];
   List<Map<String, dynamic>> _levelConfigurations = [];
+  double _progress = 0.0;
+  int _currentLevel = 1;
+  int _userXP = 0;
 
   @override
   void initState() {
@@ -75,6 +78,18 @@ class _ProfilePageState extends State<ProfilePage> {
       final levelsResponse = await _apiService.getLevelConfiguration();
       _levelConfigurations = List<Map<String, dynamic>>.from(levelsResponse);
 
+    final maxLevel = _levelConfigurations.last['level'];
+    _userXP = _userData?['xp'] ?? 0;
+    _currentLevel = _userData?['level'] ?? 1;
+    final currentLevelXP = _levelConfigurations.firstWhere(
+      (level) => level['level'] == _currentLevel,
+      orElse: () => <String, dynamic>{'xp': 0},
+    )['xp'] as int;
+    final nextLevelXP = _levelConfigurations.firstWhere(
+      (level) => level['level'] == _currentLevel + 1,
+      orElse: () => <String, dynamic>{'xp': 0},
+    )['xp'] as int;
+    _progress = (_currentLevel == maxLevel) ? _userXP - currentLevelXP / (nextLevelXP - currentLevelXP) : 1.0;
 
     } catch (e) {
       print('Error loading profile: $e');
@@ -215,7 +230,7 @@ class _ProfilePageState extends State<ProfilePage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  'Level ${_userData?['level'] ?? '1'} - Trusted Seller',
+                  'Level ' + currentLevel.toString() + ' - Trusted Seller',
                   style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
