@@ -482,4 +482,35 @@ class APIService {
       throw ApiException('getItemFromID failed: $e');
     }
   }
+
+  // API for fetching level configurations
+  Future<List<Map<String, dynamic>>> getLevelConfiguration() async {
+    final url = _uri('/levels');
+
+  try {
+    final response = await _get(url);
+
+    if (response.statusCode != 200) {
+      throw ApiException(
+        'Failed to load level config (${response.statusCode})',
+        statusCode: response.statusCode,
+      );
+    }
+
+    final decoded = _decodeBody(response.body);
+
+    final levels = decoded['levels'];
+    if (levels is! List) {
+      return <Map<String, dynamic>>[];
+    }
+
+    return levels
+        .where((e) => e is Map)
+        .map((e) => Map<String, dynamic>.from(e as Map))
+        .toList();
+    } catch (e) {
+      if (e is ApiException) rethrow;
+      throw ApiException('Level config fetch failed: $e');
+    }
+  }
 }
