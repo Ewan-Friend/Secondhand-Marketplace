@@ -39,12 +39,13 @@ class _ProfilePageState extends State<ProfilePage> {
     setState(() => _isLoading = true);
 
     // hardcode userID for testing
-    final userID = widget.userId ?? '55d89a2e-d30c-4b20-a51d-6a979ba6b7da';
+    // final userID = widget.userId ?? '55d89a2e-d30c-4b20-a51d-6a979ba6b7da';
+    final userID = '55d89a2e-d30c-4b20-a51d-6a979ba6b7da';
 
     try {
       // Fetch full profile for the chosen id so `_userData` has avatar/name/location
       try {
-        final profileResponse = await _apiService.getUserById(userID);
+        final profileResponse = await _apiService.getUserById('55d89a2e-d30c-4b20-a51d-6a979ba6b7da');
         if (profileResponse != null) {
           if (profileResponse['table_data'] != null) {
             _userData = Map<String, dynamic>.from(profileResponse['table_data']);
@@ -212,7 +213,7 @@ class _ProfilePageState extends State<ProfilePage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  'Level 2 - Trusted Seller',
+                  'Level ${_userData?['level'] ?? '1'} - Trusted Seller',
                   style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
