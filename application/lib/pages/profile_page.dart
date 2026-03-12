@@ -32,6 +32,7 @@ class _ProfilePageState extends State<ProfilePage> {
   double _progress = 0.0;
   int _currentLevel = 1;
   int _userXP = 0;
+  String _levelName = 'Newbie';
 
   @override
   void initState() {
@@ -89,6 +90,7 @@ class _ProfilePageState extends State<ProfilePage> {
       (level) => level['level'] == _currentLevel + 1,
       orElse: () => <String, dynamic>{'xp': 0},
     )['xp'] as int;
+    _levelName = _levelConfigurations[_currentLevel - 1]['name'] ?? 'Newbie';
     _progress = (_currentLevel == maxLevel) ? _userXP - currentLevelXP / (nextLevelXP - currentLevelXP) : 1.0;
 
     } catch (e) {
@@ -230,7 +232,7 @@ class _ProfilePageState extends State<ProfilePage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  'Level ' + currentLevel.toString() + ' - Trusted Seller',
+                  'Level $_currentLevel - $_levelName',
                   style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
@@ -243,7 +245,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     Expanded(
                       child: LayoutBuilder(
                         builder: (context, constraints) {
-                          double progress = 0.6; // 60%
+                          double progress = _progress;
                           double width = constraints.maxWidth;  // full width of the progress bar
                           double knobPosition = width * progress;
 
@@ -292,8 +294,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     const SizedBox(width: 20),
                     // XP text
-                    const Text(
-                      "500 XP",
+                    Text(
+                      '$_userXP XP',
                       style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xAD000000)),
                     ),
                   ],
