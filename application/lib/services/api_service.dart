@@ -511,4 +511,33 @@ class APIService {
       throw ApiException('Level config fetch failed: $e');
     }
   }
+  
+  /// Adds XP to the current user
+  Future<Map<String, dynamic>> addXP(int xp) async {
+    final url = _uri('/me'); // PATCH endpoint for current user
+    try {
+      final response = await _client.patch(
+        url,
+        headers: _headers(jsonBody: true),
+        body: json.encode({'xp': xp}),
+      );
+      final decoded = _decodeBody(response.body);
+      if (response.statusCode == 200) {
+        return decoded is Map
+            ? Map<String, dynamic>.from(decoded)
+            : {'message': 'XP updated', 'status_code': 200};
+      }
+      throw ApiException(
+        _extractErrorMessage(
+          decoded,
+          response.statusCode,
+          'XP update failed',
+        ),
+        statusCode: response.statusCode,
+      );
+    } catch (e) {
+      if (e is ApiException) rethrow;
+      throw ApiException('addXP failed: $e');
+    }
+  }
 }

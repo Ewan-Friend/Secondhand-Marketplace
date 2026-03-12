@@ -251,70 +251,71 @@ class _ProfilePageState extends State<ProfilePage> {
                 fontWeight: FontWeight.w400,
               ),
             ),
-                const SizedBox(height: 12),
-                // progress bar for xp
-                Row(
-                  children: [
-                    Expanded(
-                      child: LayoutBuilder(
-                        builder: (context, constraints) {
-                          double progress = _progress;
-                          double width = constraints.maxWidth;  // full width of the progress bar
-                          double knobPosition = width * progress;
+            const SizedBox(height: 12),
+            // progress bar for xp
+            Row(
+              children: [
+                Expanded(
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      double progress = _progress;
+                      double width = constraints.maxWidth;  // full width of the progress bar
+                      double knobPosition = width * progress;
 
-                          return SizedBox(
-                            height: 24,
-                            child: Stack(
-                              alignment: Alignment.centerLeft,
-                              children: [
+                      return SizedBox(
+                        height: 24,
+                        child: Stack(
+                          alignment: Alignment.centerLeft,
+                          children: [
 
-                                // background bar
-                                Container(
-                                  height: 8,
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey[300],
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                ),
-
-                                // progress bar
-                                Container(
-                                  width: knobPosition,
-                                  height: 8,
-                                  decoration: BoxDecoration(
-                                    color: Color(0xFFFF7B7B),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                ),
-
-                                // circle indicator
-                                Positioned(
-                                  left: knobPosition - 10,
-                                  child: Container(
-                                    width: 20,
-                                    height: 20,
-                                    decoration: const BoxDecoration(
-                                      color: Color(0xFFFF7B7B),
-                                      shape: BoxShape.circle,
-                                    ),
-                                  ),
-                                ),
-                              ],
+                            // background bar
+                            Container(
+                              height: 8,
+                              decoration: BoxDecoration(
+                                color: Colors.grey[300],
+                                borderRadius: BorderRadius.circular(20),
+                              ),
                             ),
-                          );
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-                    // XP text
-                    Text(
-                      '$_userXP XP',
-                      style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xAD000000)),
-                    ),
-                  ],
+
+                            // progress bar
+                            Container(
+                              width: knobPosition,
+                              height: 8,
+                              decoration: BoxDecoration(
+                                color: Color(0xFFFF7B7B),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+
+                            // circle indicator
+                            Positioned(
+                              left: knobPosition - 10,
+                              child: Container(
+                                width: 20,
+                                height: 20,
+                                decoration: const BoxDecoration(
+                                  color: Color(0xFFFF7B7B),
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(width: 20),
+                // XP text
+                Text(
+                  '$_userXP XP',
+                  style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xAD000000)),
                 ),
               ],
-            )
+            ),
+          
+          ],
+          )
             
           ),
           const SizedBox(width: 100),
@@ -322,41 +323,66 @@ class _ProfilePageState extends State<ProfilePage> {
           
 
           // Edit Profile / Message button
-          widget.isOwnProfile
-              ? ElevatedButton(
-                  onPressed: _showEditProfileDialog,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.grey.shade200,
-                    foregroundColor: Colors.black,
-                    elevation: 0,
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24),
+          Column(
+            children: [
+              widget.isOwnProfile
+                  ? ElevatedButton(
+                      onPressed: _showEditProfileDialog,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey.shade200,
+                        foregroundColor: Colors.black,
+                        elevation: 0,
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(24),
+                        ),
+                      ),
+                      child: const Text(
+                        'Edit Profile',
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                    )
+                  : ElevatedButton(
+                      onPressed: () {
+                        // Handle message action
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFFF7B7B),
+                        foregroundColor: Colors.white,
+                        elevation: 0,
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(24),
+                        ),
+                      ),
+                      child: const Text(
+                        'Message',
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
                     ),
-                  ),
-                  child: const Text(
-                    'Edit Profile',
-                    style: TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                )
-              : ElevatedButton(
-                  onPressed: () {
-                    // Handle message action
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFFF7B7B),
-                    foregroundColor: Colors.white,
-                    elevation: 0,
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24),
-                    ),
-                  ),
-                  child: const Text(
-                    'Message',
-                    style: TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                ),
+                    const SizedBox(height: 10),
+
+                    ElevatedButton(
+                      onPressed: () async {
+                        await _apiService.addXP(20);
+                        await _loadProfileData(); // Refresh profile data after XP update
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey.shade200,
+                        foregroundColor: Colors.black,
+                        elevation: 0,
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(24),
+                        ),
+                      ),
+                      child: const Text(
+                        'Add XP',
+                        style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                      ),
+                    )
+            ],
+          ),
                 SizedBox(width:300),
         ],
       ),
