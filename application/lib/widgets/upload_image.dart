@@ -32,12 +32,12 @@ class _UploadImageState extends State<UploadImage> {
       const maxSlots = 3;
       
       // Combine lists
-      final combinedList = List.from(_images);
+      final combinedList = List<PlatformFile>.from(_images);
       combinedList.addAll(result.files);
 
       // Remove all the (older) images that dont fit within the max slots
       final startNo = (combinedList.length - maxSlots).clamp(0, combinedList.length);
-      final latestImages = _images.sublist(startNo);
+      final latestImages = combinedList.sublist(startNo);
 
       // Clear and add to _images
       _images.clear();
