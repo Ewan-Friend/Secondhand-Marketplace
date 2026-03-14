@@ -1,22 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
-import 'dart:io';
 
 class UploadImage extends StatefulWidget{
-  const UploadImage({super.key});
+  const UploadImage({
+    super.key,
+    required this.onImagesChanged,
+    });
+
+  // Reports that the images value has changed (added / remove choses image)
+  final ValueChanged<List<PlatformFile>> onImagesChanged;
 
   @override
   State<UploadImage> createState() => _UploadImageState();
 }
 
 class _UploadImageState extends State<UploadImage> { 
-  final List<File> _images = [];
+  final List<PlatformFile> _images = [];
 
   // Picks images from desktop file system
   Future<void> _pick() async {
     final result = await FilePicker.platform.pickFiles(
       type: FileType.image,
       allowMultiple: true,
+      withData: true,
     );
 
     if (result == null) return;
@@ -24,14 +30,20 @@ class _UploadImageState extends State<UploadImage> {
     setState(() {
       final availableSlots = 3 - _images.length;
       if (availableSlots > 0) {
-        final newFiles = result.paths
-            .where((path) => path != null)
+        final newFiles = result.files
             .take(availableSlots)
-            .map((path) => File(path!))
             .toList();
         _images.addAll(newFiles);
       }
     });
+
+    debugPrint('Selected image count: ${_images.length}');
+    for (final image in _images) {
+      debugPrint('Selected image: ${image.path ?? image.name}');
+    }
+
+    // Sends out the images on a call
+    widget.onImagesChanged(List.unmodifiable(_images));
   }
 
 

@@ -1,7 +1,8 @@
+import 'package:application/widgets/header.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
-import 'package:application/widgets/header.dart';
 import '../widgets/upload_image.dart';
 import '../models/item_model.dart';
 
@@ -19,6 +20,9 @@ class _PostItemsPage extends State<PostItemsPage> {
   final descriptionController = TextEditingController();
   final priceController = TextEditingController();
   final locationController = TextEditingController();
+
+  // Retrieves currently selected images
+  List<PlatformFile> selectedImages = [];
 
   Item createItem() {
     return Item(
@@ -146,7 +150,16 @@ class _PostItemsPage extends State<PostItemsPage> {
           ),
         ),
         const SizedBox(height: 8),
-        UploadImage(),
+
+        // Upload Image widget that can take image files from users filesystem
+        UploadImage(
+          onImagesChanged: (images) {
+            setState(() {
+              selectedImages = images;
+            });
+          }
+        ),
+        
         const SizedBox(height: 20),
 
         /// Title
