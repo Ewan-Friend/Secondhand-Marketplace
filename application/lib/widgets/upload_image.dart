@@ -28,13 +28,20 @@ class _UploadImageState extends State<UploadImage> {
     if (result == null) return;
 
     setState(() {
-      final availableSlots = 3 - _images.length;
-      if (availableSlots > 0) {
-        final newFiles = result.files
-            .take(availableSlots)
-            .toList();
-        _images.addAll(newFiles);
-      }
+      // Max slots is 3, can grow no larger
+      const maxSlots = 3;
+      
+      // Combine lists
+      final combinedList = List.from(_images);
+      combinedList.addAll(result.files);
+
+      // Remove all the (older) images that dont fit within the max slots
+      final startNo = (combinedList.length - maxSlots).clamp(0, combinedList.length);
+      final latestImages = _images.sublist(startNo);
+
+      // Clear and add to _images
+      _images.clear();
+      _images.addAll(latestImages); 
     });
 
     debugPrint('Selected image count: ${_images.length}');
