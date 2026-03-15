@@ -57,6 +57,7 @@ class _PostItemsPage extends State<PostItemsPage> {
         priceController.clear();
         locationController.clear();
         setState(() => condition = null);
+        setState(() => selectedImages.clear());
 
       await apiService.postNewItem(item.toJson());
       if (mounted) {
@@ -239,46 +240,6 @@ class _TitleField extends StatelessWidget {
           controller: titleController
         ),
       ],
-    );
-  }
-}
-
-class _AIGenerateButton extends StatelessWidget {
-  const _AIGenerateButton();
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: 150,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          const Text(
-            'AI Title & Description',
-            style: TextStyle(
-              fontSize: 11,
-              color: Colors.grey,
-            ),
-          ),
-          const SizedBox(height: 4),
-          OutlinedButton(
-            style: OutlinedButton.styleFrom(
-              shape: StadiumBorder(
-                side: BorderSide(
-                  color: Colors.grey.shade300,
-                ),
-              ),
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              backgroundColor: const Color(0xFFF8F8F8),
-            ),
-            onPressed: () {},
-            child: const Text(
-              'Generate',
-              style: TextStyle(fontSize: 13),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
