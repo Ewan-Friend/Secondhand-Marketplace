@@ -6,8 +6,8 @@ from app import create_app
 def test_get_item_data_success(client):
     # Use a "mock" supabase for testing purposes
     with (
-        patch("app.routes.supabase") as mock_supabase,
-        patch("app.routes.fetch_user_by_id") as mock_fetch,
+        patch("app.routes.items.supabase") as mock_supabase,
+        patch("app.routes.items.fetch_user_by_id") as mock_fetch,
     ):
         mock_response = MagicMock()
         mock_response.data = [
@@ -85,8 +85,8 @@ def test_get_item_data_success(client):
 def test_get_items_with_user_filter(client):
     # Test /items endpoint with user_id filter
     with (
-        patch("app.routes.supabase") as mock_supabase,
-        patch("app.routes.fetch_user_by_id") as mock_fetch,
+        patch("app.routes.items.supabase") as mock_supabase,
+        patch("app.routes.items.fetch_user_by_id") as mock_fetch,
     ):
         mock_response = MagicMock()
         mock_response.data = [
@@ -116,7 +116,7 @@ def test_get_items_with_user_filter(client):
 
 def test_get_item_success(client):
     # Test /item/<id> endpoint successful retrieval
-    with patch("app.routes.fetch_item_by_id") as mock_fetch:
+    with patch("app.routes.items.fetch_item_by_id") as mock_fetch:
         mock_fetch.return_value = {
             "id": 1,
             "title": "Test Item",
@@ -134,7 +134,7 @@ def test_get_item_success(client):
 
 
 def test_post_item_success(client):
-    with patch("app.routes.supabase") as mock_supabase:
+    with patch("app.routes.items.supabase") as mock_supabase:
         mock_response = MagicMock()
         mock_response.data = [
             {
