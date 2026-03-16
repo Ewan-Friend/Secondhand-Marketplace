@@ -108,16 +108,13 @@ def get_item(item_id):
 
 @bp.route("/items", methods=["POST"])
 def post_item():
-
-    # TODO: add categories   
+    # TODO: add categories
     MISCELLANEOUS_PLACEHOLDER = "37d39021-f90e-4c62-9be4-2723864e3ceb"
     # Get the JSON data from the request
     data = request.get_json()
-
     # Validate that data exists
     if not data:
         return jsonify({"message": "No data provided", "status_code": 400}), 400
-
     # Extract required fields from frontend
     title = data.get("title", "").strip()
     description = data.get("description", "").strip()
@@ -135,15 +132,11 @@ def post_item():
                 "status_code": 400,
             }
         ), 400
-
     if not description:
         description = "no description has been provided for this item"
-
     if not condition:
         condition = "no condition"
-
     print("c: ", condition)
-
     try:
         print(
             f"Attempting to insert item: title={title}, price={price}, seller_id={seller_id}"
@@ -164,9 +157,7 @@ def post_item():
             )
             .execute()
         )
-
         print("created response")
-
         return jsonify(
             {
                 "message": "Item posted successfully",
@@ -183,6 +174,68 @@ def post_item():
         return jsonify(
             {"message": f"Failed to post item: {str(e)}", "status_code": 400}
         ), 400
+
+
+@bp.route("/items/upload-images", methods=["POST"])
+def upload_item_images():
+    # Gets all files under the "image" category (that flask recognises)
+    files = request.files.getlist("images")
+    item_id = request.form.get("item_id")
+
+    import uuid
+
+    if not files:
+        return jsonify({"message": "No Item Images provided", "status_code": 400}), 400
+    if not item_id:
+        return jsonify(
+            {"message": "No Item ID attatched to images", "status_code": 400}
+        ), 400
+
+    item_urls = []
+    bucket = "item_images"
+    error_messages = []
+
+    for file in files:
+        # In case fault file, skip collecting images
+        if not file or file.filename == "":
+            continue
+
+        # Determine extension from the filename (default is jpg)
+        ext = os.path.splitext(file.filename)[1] or ".jpg"
+        unique_filename = f"{item_id}/{uuid.uuid4()}{ext}"
+
+        try:
+            file_content = file.read()
+            content_type = file.content_type or "image/jpeg"
+
+            # Upload to item_images bucket
+            supabase.storage.from_(bucket).upload(
+                path=unique_filename,
+                file=file_content,
+                file_options={"conent-type": content_type},
+            )
+
+            # Get the URL from the bucket
+            public_url = supabase.storage.from_(bucket).get_public_url(unique_filename)
+
+            # Store URL to the associate item in item_images
+            supabase.table("item_images").insert(
+                {"item_id": item_id, "image_url": public_url}
+            )
+
+            item_urls.append(public_url)
+
+        except Exception as e:
+            error_messages.append({"file": file.filename, "type": ext, "error": str(e)})
+
+    if not item_urls:
+        return jsonify(
+            {
+                "message": "No images were processed correctly",
+                "errors": error_messages,
+                "status_code": 500,
+            }
+        ), 500
 
 
 @bp.route("/register", methods=["POST"])
