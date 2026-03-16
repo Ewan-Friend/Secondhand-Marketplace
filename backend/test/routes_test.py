@@ -126,7 +126,7 @@ def test_get_user_profile_success(client):
 
 
 def test_get_status(client):
-    """Test the /status endpoint"""
+    # Test the /status endpoint
     response = client.get("/api/status")
     data = response.get_json()
 
@@ -137,7 +137,7 @@ def test_get_status(client):
 
 
 def test_get_items_with_user_filter(client):
-    """Test /items endpoint with user_id filter"""
+    # Test /items endpoint with user_id filter
     with (
         patch("app.routes.supabase") as mock_supabase,
         patch("app.routes.fetch_user_by_id") as mock_fetch,
@@ -169,7 +169,7 @@ def test_get_items_with_user_filter(client):
 
 
 def test_get_item_success(client):
-    """Test /item/<id> endpoint successful retrieval"""
+    # Test /item/<id> endpoint successful retrieval
     with patch("app.routes.fetch_item_by_id") as mock_fetch:
         mock_fetch.return_value = {
             "id": 1,
@@ -226,7 +226,7 @@ def test_post_item_success(client):
 
 
 def test_register_user_missing_email(client):
-    """Test registration without email"""
+    # Test registration without email
     response = client.post(
         "/api/register", json={"username": "newuser", "password": "SecurePass123!"}
     )
@@ -237,7 +237,7 @@ def test_register_user_missing_email(client):
 
 
 def test_register_user_missing_username(client):
-    """Test registration without username"""
+    # Test registration without username
     response = client.post(
         "/api/register",
         json={"email": "newuser@example.com", "password": "SecurePass123!"},
@@ -249,7 +249,7 @@ def test_register_user_missing_username(client):
 
 
 def test_register_user_duplicate_email(client):
-    """Test registration with duplicate email"""
+    # Test registration with duplicate email
     with patch("app.routes.supabase") as mock_supabase:
         mock_supabase.auth.sign_up.side_effect = Exception(
             "duplicate key value violates unique constraint"
@@ -270,7 +270,7 @@ def test_register_user_duplicate_email(client):
 
 
 def test_get_current_user(client):
-    """Test GET /me endpoint"""
+    # Test GET /me endpoint 
     response = client.get("/api/me")
     data = response.get_json()
 
@@ -282,7 +282,7 @@ def test_get_current_user(client):
 
 
 def test_update_current_user_success(client):
-    """Test PATCH /me endpoint with valid data"""
+    # Test PATCH /me endpoint with valid data 
     response = client.patch(
         "/api/me",
         json={
@@ -301,7 +301,7 @@ def test_update_current_user_success(client):
 
 
 def test_update_current_user_display_name_too_long(client):
-    """Test PATCH /me with display name exceeding 40 chars"""
+    # Test PATCH /me with display name exceeding 40 chars 
     response = client.patch(
         "/api/me",
         json={
@@ -315,7 +315,7 @@ def test_update_current_user_display_name_too_long(client):
 
 
 def test_get_reviews_default_user(client):
-    """Test GET /reviews endpoint"""
+    # Test GET /reviews endpoint 
     response = client.get("/api/reviews")
     data = response.get_json()
 
@@ -328,7 +328,7 @@ def test_get_reviews_default_user(client):
 
 
 def test_get_reviews_with_user_id(client):
-    """Test GET /reviews with user_id query param"""
+    # Test GET /reviews with user_id query param 
     response = client.get("/api/reviews?user_id=550e8400-e29b-41d4-a716-446655440000")
     data = response.get_json()
 
