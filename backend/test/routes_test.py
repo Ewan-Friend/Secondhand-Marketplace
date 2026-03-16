@@ -187,6 +187,44 @@ def test_get_item_success(client):
         assert data["table_data"]["title"] == "Test Item"
 
 
+def test_post_item_success(client):
+    with patch("app.routes.supabase") as mock_supabase:
+        mock_response = MagicMock()
+        mock_response.data = [
+            {
+                "id": "1",
+                "title": "Test Item",
+                "description": "An item used for testing",
+                "price": 99.99,
+                "seller_id": "user1",
+                "rating": 0.0,
+                "category_id": "37d39021-f90e-4c62-9be4-2723864e3ceb",
+            }
+        ]
+
+        mock_supabase.table.return_value.insert.return_value.execute.return_value = (
+            mock_response
+        )
+
+        example_data = {
+            "title": "Test Item",
+            "description": "An item used for testing",
+            "price": 99.99,
+            "seller_id": "user1",
+        }
+
+        response = client.post("/api/items", json=example_data)
+        data = response.get_json()
+
+        assert response.status_code == 201
+        assert data["status_code"] == 201
+        assert data["message"] == "Item posted successfully"
+        assert data["data"][0]["title"] == "Test Item"
+
+        mock_supabase.table.assert_called_with("items")
+        mock_supabase.table.return_value.insert.assert_called_once()
+
+
 def test_register_user_missing_email(client):
     """Test registration without email"""
     response = client.post(
