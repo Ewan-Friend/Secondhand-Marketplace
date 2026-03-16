@@ -5,7 +5,7 @@ from app import create_app
 
 def test_get_user_profile_success(client):
     # Use a "mock" supabase for testting purposes
-    with patch("app.routes.supabase") as mock_supabase:
+    with patch("app.routes.users.supabase") as mock_supabase:
         mock_response = MagicMock()
         mock_response.data = {
             "id": "550e8400-e29b-41d4-a716-446655440000",

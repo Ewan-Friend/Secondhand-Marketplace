@@ -28,7 +28,7 @@ def test_register_user_missing_username(client):
 
 def test_register_user_duplicate_email(client):
     # Test registration with duplicate email
-    with patch("app.routes.supabase") as mock_supabase:
+    with patch("app.routes.auth.supabase") as mock_supabase:
         mock_supabase.auth.sign_up.side_effect = Exception(
             "duplicate key value violates unique constraint"
         )
