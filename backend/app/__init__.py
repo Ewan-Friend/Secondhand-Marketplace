@@ -8,6 +8,7 @@ load_dotenv()
 
 from .routes import bp
 from .routes.health import health_bp
+from .routes.reviews import reviews_bp
 
 
 # Creates and configures a new flask app
@@ -22,4 +23,5 @@ def create_app():
 
     app.register_blueprint(bp, url_prefix="/api")
     app.register_blueprint(health_bp, url_prefix="/api")
+    app.register_blueprint(reviews_bp, url_prefix="/api")
     return app
