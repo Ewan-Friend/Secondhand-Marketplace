@@ -7,11 +7,14 @@ on:
   push:
     branches:
       - dev
-      - feature/247-connecting-flutter-deployment-with-githubactions
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
 
     steps:
       # Step 1: Checkout the repository code
@@ -32,21 +35,39 @@ jobs:
           pip install -r requirements.txt
 
       # Step 4: Generate deployment package
-      # Creates a zip file of the backend folder for Elastic Beanstalk
       - name: Create deployment package
         run: |
           cd backend
           zip -r ../deploy.zip . -x "*.git*" -x "*__pycache__*" -x "*.pytest_cache*" -x "test/*"
 
-      # Step 5: Deploy to AWS Elastic Beanstalk
-      
-      - name: Deploy to Elastic Beanstalk
-        uses: einaregilsson/beanstalk-deploy@v22
+      # Step 5: Configure AWS credentials via OIDC
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          region: ${{ secrets.AWS_REGION }}
-          application_name: secondhand-backend 
-          environment_name: Secondhand-backend-env-1
-          version_label: ${{ github.sha }}
-          deployment_package: deploy.zip
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      # Step 6: Upload deployment package to S3
+      - name: Upload to S3
+        run: |
+          aws s3 cp deploy.zip s3://${{ vars.AWS_S3_BUCKET_BACKEND }}/deploy-${{ github.sha }}.zip
+
+      # Step 7: Deploy to Elastic Beanstalk via AWS CLI
+      - name: Deploy to Elastic Beanstalk
+        run: |
+          aws elasticbeanstalk create-application-version \
+            --application-name secondhand-backend \
+            --version-label ${{ github.sha }} \
+            --source-bundle S3Bucket="${{ vars.AWS_S3_BUCKET_BACKEND }}",S3Key="deploy-${{ github.sha }}.zip"
+
+          aws elasticbeanstalk update-environment \
+            --application-name secondhand-backend \
+            --environment-name Secondhand-backend-env-1 \
+            --version-label ${{ github.sha }}
+
+      # Step 8: Wait for deployment to complete
+      - name: Wait for deployment
+        run: |
+          aws elasticbeanstalk wait environment-updated \
+            --application-name secondhand-backend \
+            --environment-name Secondhand-backend-env-1
