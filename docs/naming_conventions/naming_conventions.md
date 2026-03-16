@@ -5,7 +5,7 @@ When naming branches, use only **lower case**, **hyphens (-)**, and **slashes (/
 `<type>/<issue-number#>-<short-description>`  
 
 **Examples**  
-`feature/10-initial-pages`  
+`feat/10-initial-pages`  
 it is a new feature and closes [ISSUE]: create pages for website in Flutter #10
   
 `fix/45-mapping-between-pages`  
@@ -14,12 +14,12 @@ it is a fix to a bug and closes [ISSUE]: fix linking between pages
 ---
 ### Pull Request Naming
 when naming pull requests (PR), start with the **type of change** followed by short description  
-`[Type] decription`
+`[TYPE]: decription`
 
 **Examples**  
-`[Feature] created 5 pages in flutter` 
+`[FEAT]: created 5 pages in flutter` 
 
-`[Fix] Crash when user is not authenticated`
+`[FIX]: Crash when user is not authenticated`
 
 ---
 ### Commit Messages

@@ -1,6 +1,4 @@
-import 'package:application/services/api_service.dart';
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/item_model.dart';
 import '../widgets/user_widget.dart';
 
@@ -32,6 +30,12 @@ class ItemCard extends StatelessWidget{
     else{
       return _placeholderImage();
     }
+  }
+
+  // Format pricing (currency, decimals, etc.)
+  String _priceFormat() {
+    if (item.price == 0) return 'Free';
+    return '£${item.price.toStringAsFixed(2)}';
   }
 
   @override
@@ -126,7 +130,7 @@ class ItemCard extends StatelessWidget{
                         ),
                         // Price on the same row as seller info
                         Text(
-                          'CHF ${item.price.toString()}',
+                          _priceFormat(),
                             style: TextStyle(
                               fontWeight: FontWeight.w500, fontSize: 18),
                         ),
