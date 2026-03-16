@@ -1,7 +1,7 @@
 # Imports
 from flask import Blueprint, jsonify, request
 from supabase import create_client, Client
-from .services import fetch_user_by_id, fetch_item_by_id
+from ..services import fetch_user_by_id, fetch_item_by_id
 import os
 
 # Create a blueprint called 'main'

@@ -7,6 +7,7 @@ import os
 load_dotenv()
 
 from .routes import bp
+from .routes.health import health_bp
 
 
 # Creates and configures a new flask app
@@ -20,4 +21,5 @@ def create_app():
     CORS(app)  # Enable CORS for routes to establish connection with Flutter
 
     app.register_blueprint(bp, url_prefix="/api")
+    app.register_blueprint(health_bp, url_prefix="/api")
     return app
