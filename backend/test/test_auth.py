@@ -45,3 +45,7 @@ def test_register_user_duplicate_email(client):
 
         assert response.status_code == 409
         assert "Email already registered" in data["message"]
+
+
+# run
+# pytest -v -s --cov=app --cov-report=term-missing test/

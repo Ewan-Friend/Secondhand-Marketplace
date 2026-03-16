@@ -104,3 +104,7 @@ def test_get_reviews_with_user_id(client):
     assert response.status_code == 200
     assert data["status_code"] == 200
     assert isinstance(data["data"], list)
+
+
+# run
+# pytest -v -s --cov=app --cov-report=term-missing test/

@@ -169,3 +169,7 @@ def test_post_item_success(client):
 
         mock_supabase.table.assert_called_with("items")
         mock_supabase.table.return_value.insert.assert_called_once()
+
+
+# run
+# pytest -v -s --cov=app --cov-report=term-missing test/
