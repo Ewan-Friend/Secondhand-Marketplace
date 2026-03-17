@@ -269,9 +269,6 @@ class APIService {
       final decoded = _decodeBody(response.body);
 
       if (response.statusCode == 201 || response.statusCode == 200) {
-        if (kDebugMode) {
-          debugPrint('Item posted successfully: ${response.body}');
-        }
         return decoded is Map
             ? Map<String, dynamic>.from(decoded)
             : {'status': 'success'};
@@ -284,6 +281,44 @@ class APIService {
     } catch (e) {
       if (e is ApiException) rethrow;
       throw ApiException('Post item failed: $e');
+    }
+  }
+
+  Future<Map<String, dynamic>> uploadItemImage({
+    required String itemId,
+    required List<http.MultipartFile> images,
+    List<String> imageUrls = const [],
+  }) async {
+    final url = _uri('/items/upload-images');
+
+    try {
+      final request = http.MultipartRequest('POST', url);
+      request.headers.addAll(_headers());
+      request.fields['item_id'] = itemId;
+      request.fields['image_urls'] = json.encode(imageUrls);
+      request.files.addAll(images);
+
+      final streamedResponse = await request.send();
+      final response = await http.Response.fromStream(streamedResponse);
+      final decoded = _decodeBody(response.body);
+
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        return decoded is Map
+            ? Map<String, dynamic>.from(decoded)
+            : {'status': 'success'};
+      }
+
+      throw ApiException(
+        _extractErrorMessage(
+          decoded,
+          response.statusCode,
+          'Failed to upload images',
+        ),
+        statusCode: response.statusCode,
+      );
+    } catch (e) {
+      if (e is ApiException) rethrow;
+      throw ApiException('Upload images failed: $e');
     }
   }
 
