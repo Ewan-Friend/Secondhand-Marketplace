@@ -1,4 +1,5 @@
 import os
+import uuid
 from flask import Blueprint, jsonify, request
 from supabase import create_client, Client
 from ..services import fetch_user_by_id, fetch_item_by_id
@@ -144,8 +145,6 @@ def post_item():
             .execute()
         )
 
-        print("created response")
-
         return jsonify(
             {
                 "message": "Item posted successfully",
@@ -153,6 +152,7 @@ def post_item():
                 "data": response.data,
             }
         ), 201
+
     except Exception as e:
         print(f"Error posting item: {str(e)}")  # This will show the actual error
         print(f"Error type: {type(e)}")
@@ -169,8 +169,6 @@ def upload_item_images():
     # Gets all files under the "image" category (that flask recognises)
     files = request.files.getlist("images")
     item_id = request.form.get("item_id")
-
-    import uuid
 
     if not files:
         return jsonify({"message": "No Item Images provided", "status_code": 400}), 400
@@ -215,6 +213,16 @@ def upload_item_images():
 
         except Exception as e:
             error_messages.append({"file": file.filename, "type": ext, "error": str(e)})
+
+    if item_urls:
+        return jsonify(
+            {
+                "message": "Images uploaded successfully",
+                "status_code": 201,
+                "image_urls": item_urls,
+                "errors": error_messages,
+            }
+        ), 201
 
     if not item_urls:
         return jsonify(

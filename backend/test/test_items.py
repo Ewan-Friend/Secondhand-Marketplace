@@ -1,4 +1,5 @@
 import pytest
+import io
 from unittest.mock import patch, MagicMock
 from app import create_app
 
@@ -169,6 +170,74 @@ def test_post_item_success(client):
 
         mock_supabase.table.assert_called_with("items")
         mock_supabase.table.return_value.insert.assert_called_once()
+
+
+def test_upload_item_images_success(client):
+    with (
+        patch("app.routes.items.supabase") as mock_supabase,
+        patch("app.routes.items.uuid.uuid4") as mock_uuid,
+    ):
+        # Always the same uuid is returned and tested with
+        mock_uuid.return_value = "test-uuid"
+
+        # Mocking the storage
+        mock_bucket = MagicMock()
+        mock_supabase.storage.from_.return_value = mock_bucket
+        mock_bucket.upload.return_value = None
+        mock_bucket.get_public_url.side_effect = [
+            "https://testproject.supabase.co/storage/v1/object/public/item_images/1/image1.jpg",
+            "https://testproject.supabase.co/storage/v1/object/public/item_images/1/image2.png",
+        ]
+
+        # Inesrt into the DB mock data
+        mock_insert_response = MagicMock()
+        mock_supabase.table.return_value.insert.return_value = mock_insert_response
+
+        # Data to be mock posted
+        example_data = {
+            "item_id": "1",
+            "images": [
+                (
+                    io.BytesIO(b"image-byte-sequence-i-guess?"),
+                    "image1.jpg",
+                    "image/jpeg",
+                ),
+                (
+                    io.BytesIO(b"another-one-for-the-png-as-well"),
+                    "image1.jpg",
+                    "image/jpeg",
+                ),
+            ],
+        }
+
+        # Defines as a "file upload request"
+        response = client.post(
+            "/api/items/upload-images",
+            data=example_data,
+            content_type="multipart/form-data",
+        )
+        data = response.get_json()
+
+        # Assert response successfullness
+        assert response.status_code == 201
+        assert data["status_code"] == 201
+        assert data["message"] == "Images uploaded successfully"
+        
+        # Assert correct image_urls
+        assert len(data["image_urls"]) == 2
+        assert data["image_urls"][0].endswith(".jpg")
+        assert data["image_urls"][1].endswith(".png")
+
+        # Assert that errors does exist
+        assert "errors" in data
+
+        # Assert that the correct database calls were made to the bucket
+        assert mock_bucket.upload.call_count == 2
+        assert mock_bucket.upload.call_count == 2
+        assert mock_bucket.get_public_url.call_count == 2
+
+        # Assert that unique identifiers were given to both items
+        assert mock_uuid.call_count == 2
 
 
 # run
