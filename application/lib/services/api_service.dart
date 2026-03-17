@@ -298,7 +298,7 @@ class APIService {
       request.fields['image_urls'] = json.encode(imageUrls);
       request.files.addAll(images);
 
-      final streamedResponse = await request.send();
+      final streamedResponse = await _client.send(request);
       final response = await http.Response.fromStream(streamedResponse);
       final decoded = _decodeBody(response.body);
 
