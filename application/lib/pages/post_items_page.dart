@@ -1,6 +1,5 @@
 import 'package:application/widgets/header.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
 import '../widgets/upload_image.dart';
@@ -52,14 +51,18 @@ class _PostItemsPage extends State<PostItemsPage> {
     final item = createItem();
     final apiService = APIService();
     try {
-        titleController.clear();
-        descriptionController.clear();
-        priceController.clear();
-        locationController.clear();
-        setState(() => condition = null);
-        setState(() => selectedImages.clear());
+      await apiService.postItemWithSelectedImages(
+        itemData: item.toJson(),
+        selectedImages: selectedImages,
+      );
 
-      await apiService.postNewItem(item.toJson());
+      titleController.clear();
+      descriptionController.clear();
+      priceController.clear();
+      locationController.clear();
+      setState(() => condition = null);
+      setState(() => selectedImages = []);
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Item posted successfully!')),
@@ -409,7 +412,7 @@ class _SideButtons extends StatelessWidget {
   final TextEditingController descriptionController;
   final TextEditingController priceController;
   final TextEditingController locationController;
-  String? condition;
+  final String? condition;
   final VoidCallback onPublish;
 
   _SideButtons(
