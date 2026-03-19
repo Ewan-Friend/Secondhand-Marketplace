@@ -121,8 +121,12 @@ def update_xp():
     data = request.get_json()
     # extract xp form the request
     xp = data.get("xp")
+    level = data.get("level")
     # TODO: extract user_id from token instead of request body once authentication is working
     user_id = '55d89a2e-d30c-4b20-a51d-6a979ba6b7da'    # for testing uses hardcoded user
+    
+    # check whether user has reached a new level
+    
 
     if xp is None:
         return jsonify({"message": "XP value is required", "status_code": 400}), 400
