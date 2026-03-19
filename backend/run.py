@@ -27,7 +27,7 @@ python -m venv venv                  # create a virtual environment
 venv/Scripts/Activate.ps1            # activate the virtual environment  
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process     # run this command if you get an execution policy error
 pip install -r backend/requirements.txt      # install dependencies
-python run.py                                # run the backend server
+python backend/run.py                        # run the backend server
 
 note:
 appending /hello to the end of the url will show output, this is a test of the blue print functionality
