@@ -121,12 +121,18 @@ def update_xp():
     data = request.get_json()
     # extract xp form the request
     xp = data.get("xp")
-    level = data.get("level")
+    currentLevel = data.get("level")
+    nextLevelXP = LEVEL_CONFIGURATION[currentLevel]["xp"]
+    print(f"current level: {currentLevel}")
+    print(f"new XP: {xp}")
+    print(f"nextXP for level {currentLevel+1}: {nextLevelXP}")
+
     # TODO: extract user_id from token instead of request body once authentication is working
     user_id = '55d89a2e-d30c-4b20-a51d-6a979ba6b7da'    # for testing uses hardcoded user
     
-    # check whether user has reached a new level
-    
+    # check whether user has reached a new level, if yes, update level
+    if xp >= nextLevelXP:
+        currentLevel = currentLevel + 1
 
     if xp is None:
         return jsonify({"message": "XP value is required", "status_code": 400}), 400
@@ -135,7 +141,7 @@ def update_xp():
         print(f"Attempting to update XP for user {user_id} with XP: {xp}")
         response = (
             supabase.table("profiles")
-            .update({"xp": xp})
+            .update({"xp": xp, "level": currentLevel})
             .eq("id", user_id)
             .execute()
         )
