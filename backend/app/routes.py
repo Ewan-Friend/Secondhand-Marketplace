@@ -116,7 +116,7 @@ def get_item(item_id):
 
     return jsonify({"table_data": item, "status_code": 200}), 200
 
-@bp.route("/me", methods=["POST"])
+@bp.route("/me/xp", methods=["PATCH"])
 def update_xp():
     data = request.get_json()
     # extract xp form the request
@@ -130,7 +130,7 @@ def update_xp():
     try:
         print(f"Attempting to update XP for user {user_id} with XP: {xp}")
         response = (
-            supabase.table("users")
+            supabase.table("profiles")
             .update({"xp": xp})
             .eq("id", user_id)
             .execute()

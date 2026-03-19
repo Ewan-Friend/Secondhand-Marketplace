@@ -514,7 +514,7 @@ class APIService {
   
   /// Adds XP to the current user
   Future<Map<String, dynamic>> addXP(int xp) async {
-    final url = _uri('/me'); // PATCH endpoint for current user
+    final url = _uri('/me/xp'); // PATCH endpoint for current user
     try {
       final response = await _client.patch(
         url,
