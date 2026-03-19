@@ -14,25 +14,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _selectedCategoryIndex = 0;
   final TextEditingController _searchController = TextEditingController();
 
   late APIService _apiService;
   late Future<List<Item>> _futureItems;
   String _apiMessage = 'Checking API connection...';
-
-  final List<String> _categories = [
-    'Explore',
-    'Clothing',
-    'Electronics',
-    'Home',
-    'Kids',
-    'Sports',
-    'Books & Media',
-    'Vehicles',
-    'Hobbies',
-    'Beauty'
-  ];
 
   @override
   void initState() {
@@ -83,40 +69,6 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-
-            // Categories
-            SizedBox(
-              height: 40,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                itemCount: _categories.length,
-                separatorBuilder: (_, __) => const SizedBox(width: 12),
-                itemBuilder: (context, index) {
-                  final isSelected = index == _selectedCategoryIndex;
-                  return TextButton(
-                    onPressed: () {
-                      setState(() => _selectedCategoryIndex = index);
-                    },
-                    style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      minimumSize: const Size(0, 0),
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    ),
-                    child: Text(
-                      _categories[index],
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight:
-                            isSelected ? FontWeight.bold : FontWeight.normal,
-                        color: Colors.black,
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-            const SizedBox(height: 24),
 
             // Items grid from API
             Padding(
