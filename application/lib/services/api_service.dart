@@ -373,7 +373,6 @@ class APIService {
   Future<Map<String, dynamic>> uploadItemImage({
     required String itemId,
     required List<http.MultipartFile> images,
-    List<String> imageUrls = const [],
   }) async {
     final url = _uri('/items/upload-images');
 
@@ -381,7 +380,6 @@ class APIService {
       final request = http.MultipartRequest('POST', url);
       request.headers.addAll(_headers());
       request.fields['item_id'] = itemId;
-      request.fields['image_urls'] = json.encode(imageUrls);
       request.files.addAll(images);
 
       final streamedResponse = await _client.send(request);
