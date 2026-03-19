@@ -222,7 +222,6 @@ def test_upload_item_images_success(client):
         assert response.status_code == 201
         assert data["status_code"] == 201
         assert data["message"] == "Images uploaded successfully"
-        
         # Assert correct image_urls
         assert len(data["image_urls"]) == 2
         assert data["image_urls"][0].endswith(".jpg")

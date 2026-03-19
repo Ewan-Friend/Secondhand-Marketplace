@@ -180,6 +180,7 @@ def upload_item_images():
     item_urls = []
     bucket = "item_images"
     error_messages = []
+    iteration = 1
 
     for file in files:
         # In case fault file, skip collecting images
@@ -198,7 +199,7 @@ def upload_item_images():
             supabase.storage.from_(bucket).upload(
                 path=unique_filename,
                 file=file_content,
-                file_options={"conent-type": content_type},
+                file_options={"content-type": content_type},
             )
 
             # Get the URL from the bucket
@@ -206,10 +207,12 @@ def upload_item_images():
 
             # Store URL to the associate item in item_images
             supabase.table("item_images").insert(
-                {"item_id": item_id, "image_url": public_url}
-            )
+                {"item_id": item_id, "image_url": public_url, "sort_order": iteration}
+            ).execute()
 
             item_urls.append(public_url)
+
+            iteration += 1
 
         except Exception as e:
             error_messages.append({"file": file.filename, "type": ext, "error": str(e)})
