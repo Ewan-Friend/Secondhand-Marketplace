@@ -34,7 +34,6 @@ class _PostItemsPage extends State<PostItemsPage> {
       price: double.tryParse(priceController.text) ?? 0.0,
       location: locationController.text,
       condition: condition ?? 'good',
-      //TODO: implement image processing from upload_image.dart
       imageUrls: [],
       // Publishes under a created test user
       //TODO: This placeholder user should be replaced by the current session user

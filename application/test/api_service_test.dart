@@ -168,11 +168,9 @@ void main() {
         final result = await apiService.uploadItemImage(
           itemId: 'item-123',
           images: [multipart],
-          imageUrls: ['https://existing.example.com/image.jpg'],
         );
 
         expect(result['status_code'], equals(201));
-        expect(result['image_urls'], isA<List>());
 
         final captured =
             verify(mockClient.send(captureAny)).captured.single as http.BaseRequest;
@@ -181,10 +179,7 @@ void main() {
 
         final multipartRequest = captured as http.MultipartRequest;
         expect(multipartRequest.fields['item_id'], equals('item-123'));
-        expect(
-          multipartRequest.fields['image_urls'],
-          equals('["https://existing.example.com/image.jpg"]'),
-        );
+
         expect(multipartRequest.files.length, equals(1));
       });
 
