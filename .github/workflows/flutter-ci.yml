@@ -1,3 +1,6 @@
+flutter-ci.yml nin içeriği: 
+
+yaml
 name: Flutter CI
 
 on:
@@ -42,3 +45,4 @@ jobs:
       - name: Run tests
         working-directory: ./application
         run: flutter test
+
