@@ -124,6 +124,9 @@ def update_xp():
     # TODO: extract user_id from token instead of request body once authentication is working
     user_id = '55d89a2e-d30c-4b20-a51d-6a979ba6b7da'    # for testing uses hardcoded user
 
+    if xp is None:
+        return jsonify({"message": "XP value is required", "status_code": 400}), 400
+
     try:
         print(f"Attempting to update XP for user {user_id} with XP: {xp}")
         response = (
@@ -134,11 +137,17 @@ def update_xp():
         )
         print(f"XP updated successfully for user {user_id}. Response: {response}")
         # return the response of the request
-        return jsonify({"message": "XP updated successfully", "status_code": 200}), 200
+        return jsonify({
+            "message": "XP updated successfully", 
+            "status_code": 200
+            }), 200
     
     except Exception as e:
         print(f"Error updating XP: {str(e)}")
-        return jsonify({"message": "Failed to update XP", "status_code": 400}), 400
+        return jsonify({
+            "message": "Failed to update XP",
+              "status_code": 400
+              }), 400
 
 @bp.route("/items", methods=["POST"])
 def post_item():
