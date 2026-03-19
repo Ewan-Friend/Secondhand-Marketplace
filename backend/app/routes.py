@@ -14,7 +14,7 @@ SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 LEVEL_CONFIGURATION = [
-    {"level": 1, "name": "Member", "xp": 0},
+    {"level": 1, "name": "Starter", "xp": 0},
     {"level": 2, "name": "Verified Member", "xp": 250},
     {"level": 3, "name": "Trusted Seller", "xp": 1000},
     {"level": 4, "name": "Power Seller", "xp": 2000},
