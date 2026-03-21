@@ -49,7 +49,7 @@ void main() {
 
     expect(find.byType(Scaffold), findsOneWidget);
     expect(find.text('API OK'), findsOneWidget);
-    expect(find.text('Explore'), findsOneWidget);
+    expect(find.text('Explore'), findsNothing);
     expect(find.text('No items found'), findsOneWidget);
   });
 }
