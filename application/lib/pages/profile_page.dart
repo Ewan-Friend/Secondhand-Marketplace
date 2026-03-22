@@ -3,6 +3,7 @@ import '../services/api_service.dart';
 import '../widgets/header.dart';
 import '../widgets/item_widget.dart';
 import '../models/item_model.dart';
+import '../models/user_model.dart';
 
 class ProfilePage extends StatefulWidget {
   final String? userId; // If null, shows current user's profile
@@ -28,6 +29,11 @@ class _ProfilePageState extends State<ProfilePage> {
   List<dynamic> _userListings = [];
   List<dynamic> _userFavorites = [];
   List<dynamic> _userReviews = [];
+  List<Map<String, dynamic>> _levelConfigurations = [];
+  double _progress = 0.0;
+  int _currentLevel = 1;
+  int _userXP = 0;
+  String _levelName = 'Starter';
 
   @override
   void initState() {
@@ -39,7 +45,8 @@ class _ProfilePageState extends State<ProfilePage> {
     setState(() => _isLoading = true);
 
     // hardcode userID for testing
-    final userID = widget.userId ?? '55d89a2e-d30c-4b20-a51d-6a979ba6b7da';
+    // final userID = widget.userId ?? '55d89a2e-d30c-4b20-a51d-6a979ba6b7da';
+    final userID = '55d89a2e-d30c-4b20-a51d-6a979ba6b7da';
 
     try {
       // Fetch full profile for the chosen id so `_userData` has avatar/name/location
@@ -69,15 +76,41 @@ class _ProfilePageState extends State<ProfilePage> {
       if (reviewsResponse['data'] != null) {
         _userReviews = reviewsResponse['data'];
       }
-      
+      // Load level configurations
+      final levelsResponse = await _apiService.getLevelConfiguration();
+      _levelConfigurations = List<Map<String, dynamic>>.from(levelsResponse);
 
+      final userGamifications = User.fromJson(_userData ?? {});
+      final maxLevel = _levelConfigurations.isNotEmpty ? _levelConfigurations.last['level'] : 1;
+      _userXP = userGamifications.xp;
+      _currentLevel = userGamifications.level;
+      final currentLevelObj = _levelConfigurations.firstWhere(
+        (level) => level['level'] == _currentLevel,
+        orElse: () => <String, dynamic>{'xp': 0, 'name': 'Newbie'},
+      );
+      // debugging purposes
+      // print('levelConfigurations:');
+      // for (var level in _levelConfigurations) {
+      //   print(level);
+      // }
 
+      final nextLevelObj = _levelConfigurations.firstWhere(
+        (level) => level['level'] == _currentLevel + 1,
+        orElse: () => <String, dynamic>{'xp': currentLevelObj['xp'] ?? 0, 'name': currentLevelObj['name'] ?? 'Newbie'},
+      );
+    
+      final currentLevelXP = currentLevelObj['xp'] as int? ?? 0;
+      final nextLevelXP = nextLevelObj['xp'] as int? ?? currentLevelXP;
+      _levelName = currentLevelObj['name'] ?? 'Newbie';
+      _progress = (_currentLevel == maxLevel)
+        ? 1.0
+        : ((_userXP - currentLevelXP) / (nextLevelXP - currentLevelXP)).clamp(0.0, 1.0);
 
-    } catch (e) {
-      print('Error loading profile: $e');
-    } finally {
-      setState(() => _isLoading = false);
-    }
+      } catch (e) {
+        print('Error loading profile: $e');
+      } finally {
+        setState(() => _isLoading = false);
+      }
   }
 
   @override
@@ -206,43 +239,151 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
 
-          
-          // Edit Profile / Message button
-          widget.isOwnProfile
-              ? ElevatedButton(
-                  onPressed: _showEditProfileDialog,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.grey.shade200,
-                    foregroundColor: Colors.black,
-                    elevation: 0,
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24),
-                    ),
-                  ),
-                  child: const Text(
-                    'Edit Profile',
-                    style: TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                )
-              : ElevatedButton(
-                  onPressed: () {
-                    // Handle message action
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFFF7B7B),
-                    foregroundColor: Colors.white,
-                    elevation: 0,
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24),
-                    ),
-                  ),
-                  child: const Text(
-                    'Message',
-                    style: TextStyle(fontWeight: FontWeight.w600),
+          // User info
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  'Level $_currentLevel - $_levelName',
+                  style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            const SizedBox(height: 12),
+            // progress bar for xp
+            Row(
+              children: [
+                Expanded(
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      double progress = _progress;
+                      double width = constraints.maxWidth;  // full width of the progress bar
+                      double knobPosition = width * progress;
+
+                      return SizedBox(
+                        height: 24,
+                        child: Stack(
+                          alignment: Alignment.centerLeft,
+                          children: [
+
+                            // background bar
+                            Container(
+                              height: 8,
+                              decoration: BoxDecoration(
+                                color: Colors.grey[300],
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+
+                            // progress bar
+                            Container(
+                              width: knobPosition,
+                              height: 8,
+                              decoration: BoxDecoration(
+                                color: Color(0xFFFF7B7B),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+
+                            // circle indicator
+                            Positioned(
+                              left: knobPosition - 10,
+                              child: Container(
+                                width: 20,
+                                height: 20,
+                                decoration: const BoxDecoration(
+                                  color: Color(0xFFFF7B7B),
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
                   ),
                 ),
+                const SizedBox(width: 20),
+                // XP text
+                Text(
+                  '$_userXP XP',
+                  style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xAD000000)),
+                ),
+              ],
+            ),
+          
+          ],
+          )
+            
+          ),
+          const SizedBox(width: 100),
+
+          
+
+          // Edit Profile / Message button
+          Column(
+            children: [
+              widget.isOwnProfile
+                  ? ElevatedButton(
+                      onPressed: _showEditProfileDialog,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey.shade200,
+                        foregroundColor: Colors.black,
+                        elevation: 0,
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(24),
+                        ),
+                      ),
+                      child: const Text(
+                        'Edit Profile',
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                    )
+                  : ElevatedButton(
+                      onPressed: () {
+                        // Handle message action
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFFF7B7B),
+                        foregroundColor: Colors.white,
+                        elevation: 0,
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(24),
+                        ),
+                      ),
+                      child: const Text(
+                        'Message',
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+
+                    ElevatedButton(
+                      onPressed: () async {
+                        await _apiService.addXP(_userXP + 20);
+                        await _loadProfileData(); // Refresh profile data after XP update
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey.shade200,
+                        foregroundColor: Colors.black,
+                        elevation: 0,
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(24),
+                        ),
+                      ),
+                      child: const Text(
+                        'Add XP',
+                        style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                      ),
+                    )
+            ],
+          ),
+                SizedBox(width:300),
         ],
       ),
     );
@@ -602,16 +743,17 @@ class _ProfilePageState extends State<ProfilePage> {
     if (raw is Item) return raw;
     final map = Map<String, dynamic>.from(raw as Map);
 
-    if (!map.containsKey('seller_info')) {
+    if (!map.containsKey('seller_info') || map['seller_info'] == null) {
       map['seller_info'] = {
         'username': map['seller_name'] ?? 'Seller',
         'rating_score': map['seller_rating'] ?? 0.0,
         'rating_count': map['seller_reviews'] ?? 0,
-        'avatar_url': map['seller_avatar'] ?? null,
+        'avatar_url': map['seller_avatar'] ?? '',
+        'location': map['location'] ?? 'no location',
       };
     }
 
-    if (!map.containsKey('image_urls')) {
+    if (!map.containsKey('image_urls') || map['image_urls'] == null) {
       map['image_urls'] = [];
     }
 
@@ -619,6 +761,14 @@ class _ProfilePageState extends State<ProfilePage> {
     if (map['price'] is String) {
       map['price'] = double.tryParse(map['price']) ?? 0.0;
     }
+
+    // Ensure all string fields are not null
+    map['id'] = map['id'] ?? '';
+    map['seller_id'] = map['seller_id'] ?? '';
+    map['title'] = map['title'] ?? 'Untitled';
+    map['description'] = map['description'] ?? 'No description';
+    map['condition'] = map['condition'] ?? 'no condition';
+    map['location'] = map['location'] ?? 'no location';
 
     return Item.fromJson(map);
   }
