@@ -34,6 +34,7 @@ nav:
       - Database Structure: database-structure/database-structure.md
       - Naming Conventions: naming_conventions/naming_conventions.md
   - AI Usage: AI_usage/Ai_info.md
+  - Project Handover: handover/handover.md
  
 
 markdown_extensions:
