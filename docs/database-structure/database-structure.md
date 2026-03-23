@@ -1,14 +1,17 @@
 # Supabase database structure
-<img width="712" height="366" alt="image" src="https://github.com/user-attachments/assets/b8ebe8f9-4fd8-427c-bcd8-3b4bc6b1600c" />
+
+<img width="712" height="366" alt="image" src="../../assets/database-structure/overallstructure.png";>
 
 ## Categories
-<img width="332" height="142" alt="image" src="https://github.com/user-attachments/assets/dc612b5d-0aa4-4d43-9ddb-619ab29e860e" />
+
+<img width="332" height="142" alt="image" src="../../assets/database-structure/categories.png";>
 
 - ```id <uuid>``` - unique identifier
 - ```name <string>``` - category name
 
 ## Items
-<img width="385" height="475" alt="image" src="https://github.com/user-attachments/assets/ec841918-6464-4037-8068-22864198e108" />
+
+<img width="385" height="475" alt="image" src="../../assets/database-structure/items.png";>
 
 - ```id <uuid>``` - unique identifier
 - ```seller_id <uuid>``` - foreign key for the profiles table
@@ -21,7 +24,8 @@
 - ```condition <string>``` - selling condition of the item
 
 ## Item Images
-<img width="388" height="272" alt="image" src="https://github.com/user-attachments/assets/0195aac3-82c1-41c0-b017-5df54432ba77" />
+
+<img width="388" height="272" alt="image" src="../../assets/database-structure/item_images.png";>
 
 - ```id <uuid>``` - unique identifier
 - ```item_id <uuid>``` - foreign key for the items table
@@ -29,7 +33,8 @@
 - ```sort_order <int>``` - priority of image
 
 ## Profiles
-<img width="385" height="531" alt="image" src="https://github.com/user-attachments/assets/050ffa52-ae81-4224-9ad0-dbe56c32d1fe" />
+
+<img width="385" height="531" alt="image" src="../../assets/database-structure/profiles.png";>
 
 - ```id <uuid>``` - unique identifier
 - ```created_at <string>``` - exact date and time that profile was created

@@ -8,15 +8,16 @@
 ## To buy items
 
 <p align="center">
-  <img width="750" alt="purchase item" src="https://github.com/user-attachments/assets/f6795b9b-cc2c-488b-a9d9-d64eeae5eab0">
+  <img width="750" alt="purchase item" src="../../assets/user-instructions/buyitems.gif";>
 </p>
 
 - To browse or purchase a product from the home page, click on the product you would like to look at to open the "item detail page", where there is a prompt to contact the seller.
 - All critical information about quality, price and other details are displayed on the item detail page.
 
 ## To sell items
+
 <p align="center">
-  <img width="750" alt="create listing" src="https://github.com/user-attachments/assets/55be299f-48e3-4ac2-80f1-9a7407dd84e1";>
+  <img width="750" alt="create listing" src="../../assets/user-instructions/sellitems.gif";>
 </p>
 
 - Click the '+' icon on the header to navigate to the "post item page"
@@ -24,8 +25,9 @@
 - You are able to post your item immediately, or check what it would look like with the draft option
 
 ## To view your profile
+
 <p align="center">
-  <img width="750" alt="create listing" src="https://github.com/user-attachments/assets/01d1ebd9-2b62-4435-ade5-0e0a5f6a5469";>
+  <img width="750" alt="create listing" src="../../assets/user-instructions/viewprofile.gif";>
 </p>
 
 - Click on the "profile" icon on the header to navigate to your "profile page"
