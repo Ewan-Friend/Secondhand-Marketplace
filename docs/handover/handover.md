@@ -2,6 +2,9 @@
 
 ## Contents
 [Introduction](#introduction)
+[Project Setup](#project-setup)
+[System Architecture](#system-architecture) 
+[Project Structure](#project-structure)
 
 ## Introduction
 This document is designed to give detailed information on certain aspects of the project: If a new developer were to begin working on it. 
@@ -10,9 +13,10 @@ The majority of need-to-know, high-level information will be outlined within thi
 
 ## Project Setup
 - [Prerequisites](#prerequisite-downloads)
-- [Environment setup](#setup-development-environment)
-- [Frontend](#frontend-environment)
+- [Environment Setup](#setup-development-environment)
 - [Backend](#backend-environment)
+- [Frontend](#frontend-environment)
+- [Docker Full Stack](#docker-full-stack-setup)
 - [Documentation](#optional-mkdocs-documentation-server)
 
 ### Prerequisite Downloads
@@ -47,11 +51,140 @@ SUPABASE_KEY= "..." # Supabase API service role key
 > variable assignment template held in the [`.env.template`](https://github.com/spe-uob/2025-SecondhandMarketplace/blob/dev/.env.template) within the root of the project
 >
 > Comments within the template tell you what to assign each variable to!
-### Frontend environment
 
 ### Backend environment
+> [!WARNING]
+>
+> It is highly reccomended that if you are running backend and frontend manually - that you run the backend first
+>
+> Running the Frontend first is fine for testing UI, however may break functionality
+
+**Initialise virtual environment**
+
+On a Unix based OS (Linux, MacOS, ...):
+```bash
+python3 -m venv venv                         # Create a virtual environment
+source venv/bin/activate                     # Start up the virtual environment
+```
+
+On Windows:
+```
+python -m venv venv                          # Create a virtual environment
+venv/Scripts/Activate.ps1                    # Start up the virtual environment
+```
+
+**Install dependancies**
+
+```bash
+pip install -r backend/requirements.txt      # Install dependencies
+```
+
+**Running using Python**
+
+```
+python backend/run.py                        # Run the backend server
+```
+
+> [!NOTE]
+>
+> The virtual environment and dependencies only need to be set up once
+>
+> They can be used henceforth, unless dependencies are updated
+>
+> If that is the case simply run `pip install -r backend/requirements.txt` again
+
+### Frontend environment
+
+**Enter the frontend root**
+```bash
+cd application                               # Navigate to the frontend directory
+```
+
+**Install dependencies**
+
+```
+flutter pub get                              # Install required packages
+```
+
+> [!NOTE]
+> 
+> Only necessary to run once, or after any project updates / ```flutter clean``` commands
+>
+> *make sure to run ```flutter doctor``` to make sure you arent missing any toolchains*
+
+**Running using Flutter**
+
+make sure you are in the application folder when running this command:
+
+```bash
+flutter run                                  # Run flutter frontend server
+```
+
+you will be prompted to press a key to run on a certain emulator/environment - alternatively use:
+
+```bash
+flutter run -d [environment name - e.g: chrome]
+```
+
+### Docker Full Stack Setup
+
+> [!NOTE]
+>
+> This approach should only be ran when in a non-production environment
+>
+> The primary usage is when you want an image that you can repeatedly run for testing purposes
+
+**Running the application**
+
+```
+docker compose up --build     # Builds the projects in a docker container, then launches it
+```
+>[!TIP]
+>
+>Container can then be ran within docker desktop (or alternative) for quick access
+
+**Accessing URLS**
+
+- Frontend: http://localhost:8080
+- Backend API: http://localhost:5000
 
 ### (Optional) MKdocs documentation server
+
+If you want to keep documentation up to date, it is recommended to change the projects' GitHub Pages
+server to keep everything adequately documented
+
+**Key configurations**
+
+under `mkdocs.yml`:
+
+- `site_name`: Holds the name of the project
+- `repo_url`: Links to Projects GitHub repository
+- `markdown_extensions`: Holds any markdown extensions you want added
+- `nav`: Holds the documentation table of contents structure
+
+**Running docs server**
+>[!NOTE]
+>
+>This shows how to run on a non-production environment (within the backends virtual environment)
+>
+>The site is automatically updated when pushing to `dev`/`main` using Actions
+
+```bash
+mkdocs serve
+```
+
+**Accessing docs URL**
+
+found at http://localhost:8000
+
+**Adding new docs**
+
+- Create new `.md` file under `/docs`
+- Add entry to `nav:` in `mkdocs.yml`
+
+## System Architecture
+
+## Project Structure
 
 [^1]: An example SUPABASE_URL:  "https://abc123.supabase.co"
 [^2]: An example `service_role` key will usually be formatted: "eyJhbGci..." (200-300 characters long)
