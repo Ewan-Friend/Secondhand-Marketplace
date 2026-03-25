@@ -53,3 +53,15 @@ jobs:
         run: |
           aws s3 cp deploy.zip s3://${{ vars.AWS_S3_BUCKET_BACKEND }}/deploy-${{ github.sha }}.zip
 
+      - name: Deploy to Elastic Beanstalk
+        run: |
+          aws elasticbeanstalk create-application-version \
+            --application-name secondhand-backend \
+            --version-label ${{ github.sha }} \
+            --source-bundle S3Bucket="${{ vars.AWS_S3_BUCKET_BACKEND }}",S3Key="deploy-${{ github.sha }}.zip"
+
+          aws elasticbeanstalk update-environment \
+            --application-name secondhand-backend \
+            --environment-name Secondhand-backend-env-1 \
+            --version-label ${{ github.sha }}
+
