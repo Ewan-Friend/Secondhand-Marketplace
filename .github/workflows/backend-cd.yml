@@ -32,6 +32,14 @@ jobs:
         run: |
           cd backend
           zip -r ../deploy.zip . -x "*.git*" -x "*__pycache__*" -x "*.pytest_cache*" -x "test/*"
+      
+      # Step 5: Configure AWS credentials 
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
 
       - name: Configure AWS credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
