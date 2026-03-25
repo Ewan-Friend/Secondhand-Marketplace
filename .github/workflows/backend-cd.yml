@@ -1,20 +1,19 @@
-# Backend Continuous Deployment to AWS Elastic Beanstalk
-# Triggers on push to dev branch and deploys the Flask backend
-
 name: Backend CD
 
 on:
   push:
     branches:
       - dev
-      - feature/247-connecting-flutter-deployment-with-githubactions
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
+    permissions:
+      id-token: write
+      contents: read
+
     steps:
-      # Step 1: Checkout the repository code
       - name: Checkout repository
         uses: actions/checkout@v4
 
