@@ -33,7 +33,6 @@ jobs:
           cd backend
           zip -r ../deploy.zip . -x "*.git*" -x "*__pycache__*" -x "*.pytest_cache*" -x "test/*"
 
-      # Step 5: Deploy to AWS Elastic Beanstalk
       
       - name: Deploy to Elastic Beanstalk
         uses: einaregilsson/beanstalk-deploy@v22
