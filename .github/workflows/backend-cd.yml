@@ -65,3 +65,22 @@ jobs:
             --environment-name Secondhand-backend-env-1 \
             --version-label ${{ github.sha }}
 
+      - name: Wait for deployment and verify health
+        run: |
+          aws elasticbeanstalk wait environment-updated \
+            --application-name secondhand-backend \
+            --environment-name Secondhand-backend-env-1
+
+          HEALTH=$(aws elasticbeanstalk describe-environments \
+            --application-name secondhand-backend \
+            --environment-names Secondhand-backend-env-1 \
+            --query "Environments[0].Health" \
+            --output text)
+
+          echo "Environment Health: $HEALTH"
+
+          if [ "$HEALTH" != "Green" ]; then
+            echo "Deployment failed: Environment health is $HEALTH"
+            exit 1
+          fi
+
