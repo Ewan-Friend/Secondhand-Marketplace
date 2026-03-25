@@ -38,7 +38,6 @@ jobs:
       # Simply Analyzes the project
       - name: Analyze project
         working-directory: ./application
-        continue-on-error: true
         run: flutter analyze --no-fatal-warnings --no-fatal-infos
 
       # Run all tests
