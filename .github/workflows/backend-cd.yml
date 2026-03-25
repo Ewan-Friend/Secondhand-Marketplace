@@ -84,3 +84,17 @@ jobs:
             exit 1
           fi
 
+      - name: Rollback on failure
+        if: failure()
+        run: |
+          echo "Deployment failed, rolling back to ${{ steps.current_version.outputs.version }}"
+          aws elasticbeanstalk update-environment \
+            --application-name secondhand-backend \
+            --environment-name Secondhand-backend-env-1 \
+            --version-label ${{ steps.current_version.outputs.version }}
+
+          aws elasticbeanstalk wait environment-updated \
+            --application-name secondhand-backend \
+            --environment-name Secondhand-backend-env-1
+
+          echo "Rollback complete"
