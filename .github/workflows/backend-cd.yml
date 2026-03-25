@@ -33,6 +33,23 @@ jobs:
           cd backend
           zip -r ../deploy.zip . -x "*.git*" -x "*__pycache__*" -x "*.pytest_cache*" -x "test/*"
 
-      - name: Deploy to Elastic Beanstalk
-        uses: einaregilsson/beanstalk-deploy@v22
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
         with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Get current deployment version (for rollback)
+        id: current_version
+        run: |
+          VERSION=$(aws elasticbeanstalk describe-environments \
+            --application-name secondhand-backend \
+            --environment-names Secondhand-backend-env-1 \
+            --query "Environments[0].VersionLabel" \
+            --output text)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Upload to S3
+        run: |
+          aws s3 cp deploy.zip s3://${{ vars.AWS_S3_BUCKET_BACKEND }}/deploy-${{ github.sha }}.zip
+
