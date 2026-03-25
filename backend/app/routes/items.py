@@ -1,4 +1,5 @@
 import os
+import uuid
 from flask import Blueprint, jsonify, request
 from supabase import create_client, Client
 from ..services import fetch_user_by_id, fetch_item_by_id
@@ -144,8 +145,6 @@ def post_item():
             .execute()
         )
 
-        print("created response")
-
         return jsonify(
             {
                 "message": "Item posted successfully",
@@ -153,6 +152,7 @@ def post_item():
                 "data": response.data,
             }
         ), 201
+
     except Exception as e:
         print(f"Error posting item: {str(e)}")  # This will show the actual error
         print(f"Error type: {type(e)}")
@@ -162,3 +162,76 @@ def post_item():
         return jsonify(
             {"message": f"Failed to post item: {str(e)}", "status_code": 400}
         ), 400
+
+
+@items_bp.route("/items/upload-images", methods=["POST"])
+def upload_item_images():
+    # Gets all files under the "image" category (that flask recognises)
+    files = request.files.getlist("images")
+    item_id = request.form.get("item_id")
+
+    if not files:
+        return jsonify({"message": "No Item Images provided", "status_code": 400}), 400
+    if not item_id:
+        return jsonify(
+            {"message": "No Item ID attatched to images", "status_code": 400}
+        ), 400
+
+    item_urls = []
+    bucket = "item_images"
+    error_messages = []
+    iteration = 1
+
+    for file in files:
+        # In case fault file, skip collecting images
+        if not file or file.filename == "":
+            continue
+
+        # Determine extension from the filename (default is jpg)
+        ext = os.path.splitext(file.filename)[1] or ".jpg"
+        unique_filename = f"{item_id}/{uuid.uuid4()}{ext}"
+
+        try:
+            file_content = file.read()
+            content_type = file.content_type or "image/jpeg"
+
+            # Upload to item_images bucket
+            supabase.storage.from_(bucket).upload(
+                path=unique_filename,
+                file=file_content,
+                file_options={"content-type": content_type},
+            )
+
+            # Get the URL from the bucket
+            public_url = supabase.storage.from_(bucket).get_public_url(unique_filename)
+
+            # Store URL to the associate item in item_images
+            supabase.table("item_images").insert(
+                {"item_id": item_id, "image_url": public_url, "sort_order": iteration}
+            ).execute()
+
+            item_urls.append(public_url)
+
+            iteration += 1
+
+        except Exception as e:
+            error_messages.append({"file": file.filename, "type": ext, "error": str(e)})
+
+    if item_urls:
+        return jsonify(
+            {
+                "message": "Images uploaded successfully",
+                "status_code": 201,
+                "image_urls": item_urls,
+                "errors": error_messages,
+            }
+        ), 201
+
+    if not item_urls:
+        return jsonify(
+            {
+                "message": "No images were processed correctly",
+                "errors": error_messages,
+                "status_code": 500,
+            }
+        ), 500
