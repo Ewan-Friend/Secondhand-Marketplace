@@ -1,12 +1,10 @@
 name: Deploy Web (S3 + CloudFront)
 
 on:
-     - dev
  workflow_dispatch:
 
 
 jobs:
-   runs-on: ubuntu-latest
 
 
    # id-token: required for OIDC federation; allows this workflow to request
@@ -27,6 +25,7 @@ jobs:
      - name: Checkout repository
        uses: actions/checkout@v4
 
+    permissions:
 
      - name: Set up Flutter
        uses: subosito/flutter-action@v2
