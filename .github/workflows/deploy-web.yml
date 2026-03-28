@@ -1,8 +1,6 @@
 name: Deploy Web (S3 + CloudFront)
 
-
 on:
- push:
    branches:
      - dev
  workflow_dispatch:
