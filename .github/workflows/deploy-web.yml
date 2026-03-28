@@ -1,13 +1,11 @@
 name: Deploy Web (S3 + CloudFront)
 
 on:
-   branches:
      - dev
  workflow_dispatch:
 
 
 jobs:
- deploy:
    runs-on: ubuntu-latest
 
 
