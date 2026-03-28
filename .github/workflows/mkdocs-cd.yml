@@ -13,7 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout default
-        uses: actions/checkout@v2
 
       - name: Deploy docs
         uses: mhausenblas/mkdocs-deploy-gh-pages@master
@@ -22,4 +21,3 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CONFIG_FILE: mkdocs.yml
           REQUIREMENTS: docs/requirements.txt
-          # GITHUB_DOMAIN: github.myenterprise.com
