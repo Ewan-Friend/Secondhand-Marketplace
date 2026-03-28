@@ -60,4 +60,9 @@ jobs:
 
           echo "HTTP Status: $STATUS"
 
+          if [ "$STATUS" != "200" ]; then
+            echo "Deployment verification failed: HTTP $STATUS"
+            exit 1
+          fi
 
+          echo "Deployment verified successfully"
