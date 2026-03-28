@@ -11,12 +11,15 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
+      id-token: write
 
-     - name: Set up Flutter
-       uses: subosito/flutter-action@v2
-       with:
-         channel: stable
+    defaults:
+      run:
+        working-directory: application
 
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
      - name: Install dependencies
        run: flutter pub get
