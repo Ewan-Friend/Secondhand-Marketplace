@@ -1,29 +1,14 @@
 name: Deploy Web (S3 + CloudFront)
 
 on:
- workflow_dispatch:
-
+  push:
+    branches:
+      - dev
+  workflow_dispatch:
 
 jobs:
-
-
-   # id-token: required for OIDC federation; allows this workflow to request
-   # a short-lived token and assume the AWS IAM role.
-   # contents: read is needed for actions/checkout to clone the repo.
-   permissions:
-     id-token: write
-     contents: read
-
-
-   defaults:
-     run:
-       # Flutter app lives in application/; build output is application/build/web
-       working-directory: application
-
-
-   steps:
-     - name: Checkout repository
-       uses: actions/checkout@v4
+  deploy:
+    runs-on: ubuntu-latest
 
     permissions:
 
