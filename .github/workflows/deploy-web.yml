@@ -22,7 +22,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-       run: flutter pub get
 
       - name: Install dependencies
         run: flutter pub get
@@ -32,12 +31,10 @@ jobs:
           API_BASE_URL: ${{ secrets.API_BASE_URL }}
         run: flutter build web --release --dart-define=API_BASE_URL=${API_BASE_URL:-/api}
 
+      - name: Configure AWS credentials (OIDC)
 
-     - name: Configure AWS credentials (OIDC)
-       uses: aws-actions/configure-aws-credentials@v4
-       with:
-         role-to-assume: ${{ vars.AWS_ROLE_ARN }}
-         aws-region: ${{ vars.AWS_REGION }}
+      - name: Sync to S3
+        run: aws s3 sync build/web s3://${{ vars.AWS_S3_BUCKET }} --delete
 
 
      - name: Sync to S3
