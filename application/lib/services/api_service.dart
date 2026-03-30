@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 
 import '../config/app_config.dart';
 import '../models/item_model.dart';
@@ -26,6 +28,15 @@ class APIService {
   DateTime? expiresAt;
 
   APIService({http.Client? client}) : _client = client ?? http.Client();
+
+  MediaType _imageMediaType(String filename) {
+    final lower = filename.toLowerCase();
+    if (lower.endsWith('.png')) return MediaType('image', 'png');
+    if (lower.endsWith('.jpg') || lower.endsWith('.jpeg')) {
+      return MediaType('image', 'jpeg');
+    }
+    return MediaType('image', 'jpeg');
+  }
 
   Uri _uri(String path) {
     final base = AppConfig.apiBaseUrl.trim();
@@ -94,6 +105,16 @@ class APIService {
           decoded['error'] ??
           decoded['detail'] ??
           decoded['msg'];
+
+      final errors = decoded['errors'];
+      if (errors is List && errors.isNotEmpty) {
+        final first = errors.first;
+        if (first is Map) {
+          final file = first['file']?.toString() ?? 'unknown file';
+          final errorText = first['error']?.toString() ?? 'unknown upload error';
+          return '$fallback: $file -> $errorText';
+        }
+      }
 
       if (message is String && message.trim().isNotEmpty) {
         return message;
@@ -269,9 +290,6 @@ class APIService {
       final decoded = _decodeBody(response.body);
 
       if (response.statusCode == 201 || response.statusCode == 200) {
-        if (kDebugMode) {
-          debugPrint('Item posted successfully: ${response.body}');
-        }
         return decoded is Map
             ? Map<String, dynamic>.from(decoded)
             : {'status': 'success'};
@@ -284,6 +302,107 @@ class APIService {
     } catch (e) {
       if (e is ApiException) rethrow;
       throw ApiException('Post item failed: $e');
+    }
+  }
+
+  Future<Map<String, dynamic>> postItemWithSelectedImages({
+    required Map<String, dynamic> itemData,
+    required List<PlatformFile> selectedImages,
+  }) async {
+    final createdItemResponse = await postNewItem(itemData);
+
+    final createdData = createdItemResponse['data'];
+    String? itemId;
+
+    if (createdData is List && createdData.isNotEmpty && createdData.first is Map) {
+      final first = Map<String, dynamic>.from(createdData.first as Map);
+      final rawId = first['id'];
+      itemId = rawId?.toString();
+    } else if (createdData is Map) {
+      final rawId = createdData['id'];
+      itemId = rawId?.toString();
+    }
+
+    if (selectedImages.isEmpty) {
+      return createdItemResponse;
+    }
+
+    if (itemId == null || itemId.isEmpty) {
+      throw const ApiException('Item created but no item id returned for image upload');
+    }
+
+    final files = <http.MultipartFile>[];
+    for (final image in selectedImages) {
+      final contentType = _imageMediaType(image.name);
+
+      if (image.bytes != null) {
+        final bytes = List<int>.from(image.bytes!);
+        files.add(
+          http.MultipartFile.fromBytes(
+            'images',
+            bytes,
+            filename: image.name,
+            contentType: contentType,
+          ),
+        );
+      } else if (!kIsWeb && image.path != null && image.path!.isNotEmpty) {
+        files.add(
+          await http.MultipartFile.fromPath(
+            'images',
+            image.path!,
+            filename: image.name,
+            contentType: contentType,
+          ),
+        );
+      }
+    }
+
+    if (files.isEmpty) {
+      throw const ApiException('No valid images to upload');
+    }
+
+    final uploadResponse = await uploadItemImage(itemId: itemId, images: files);
+
+    return {
+      ...createdItemResponse,
+      'uploaded_image_urls': uploadResponse['image_urls'] ?? const [],
+      'upload_status_code': uploadResponse['status_code'],
+    };
+  }
+
+  Future<Map<String, dynamic>> uploadItemImage({
+    required String itemId,
+    required List<http.MultipartFile> images,
+  }) async {
+    final url = _uri('/items/upload-images');
+
+    try {
+      final request = http.MultipartRequest('POST', url);
+      request.headers.addAll(_headers());
+      request.fields['item_id'] = itemId;
+      request.files.addAll(images);
+
+      final streamedResponse = await _client.send(request);
+      final response = await http.Response.fromStream(streamedResponse);
+      final decoded = _decodeBody(response.body);
+
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        return decoded is Map
+            ? Map<String, dynamic>.from(decoded)
+            : {'status': 'success'};
+      }
+
+      throw ApiException(
+        _extractErrorMessage(
+          decoded,
+          response.statusCode,
+          'Failed to upload images',
+        ),
+        statusCode: response.statusCode,
+      );
+    } catch (e) {
+      if (e is ApiException) rethrow;
+      throw ApiException('Upload images failed: $e');
     }
   }
 
