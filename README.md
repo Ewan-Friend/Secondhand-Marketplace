@@ -13,18 +13,33 @@ _[⛓️ Documentation Link ⛓️](https://urban-adventure-qm9y5k8.pages.github
 [![Pytest](https://img.shields.io/badge/Pytest-%230A9EDC?style=for-the-badge&logo=pytest&logoColor=white&logoSize=auto)](https://docs.pytest.org/en/stable/)
 
 ## Contents
-- [Project description](#project-description)
-- [Project goals](#project-goals)
-- [Project structure](#project-structure)
-- [Project setup](#project-setup)
-- [Deployment](#deployment)
-- [Software architecture](#software-architecture)
-- [User instructions](#user-instructions)
-- [Stakeholders](#stakeholders)
-- [User Stories](#user-stories)
-- [Project Management](#project-management)
-- [Other Documentation Links](#other-documentation-links)
-- [Team Members](#team-members)
+- [SecondhandMarketplace (2025)](#secondhandmarketplace-2025)
+  - [Contents](#contents)
+  - [Project description](#project-description)
+  - [Project goals](#project-goals)
+  - [Project structure](#project-structure)
+  - [Project setup](#project-setup)
+    - [Approach 1: Local Development](#approach-1-local-development)
+      - [Prerequisites](#prerequisites)
+      - [Steps](#steps)
+    - [Approach 2: Docker (recommended for quick start)](#approach-2-docker-recommended-for-quick-start)
+  - [Software architecture](#software-architecture)
+  - [Deployment](#deployment)
+    - [Infrastructure](#infrastructure)
+    - [Continuous Deployment](#continuous-deployment)
+  - [User instructions](#user-instructions)
+    - [Startup](#startup)
+    - [To buy items](#to-buy-items)
+    - [To sell items](#to-sell-items)
+    - [To view your profile](#to-view-your-profile)
+  - [Stakeholders](#stakeholders)
+    - [End Users](#end-users)
+    - [Core project \& Development](#core-project--development)
+    - [Business \& Strategy](#business--strategy)
+  - [User Stories](#user-stories)
+  - [Project Management](#project-management)
+  - [Other Documentation Links](#other-documentation-links)
+  - [Team Members](#team-members)
 
 ## Project description
 - **Project name:** Secondhand Marketplace
@@ -137,9 +152,8 @@ docker compose up --build
 > *if you are having issues, find a more detailed guide to docker setup [here](https://github.com/spe-uob/2025-SecondhandMarketplace/blob/task/193-improve-conciseness-of-readme/docs/project-setup/project-setup.md#docker)*
 ## Software architecture
 The following diagram illustrates the Secondhand Marketplace software architecture and the interaction between the Flutter frontend and the Python-Flask backend.
-<p align="left">
-  <img width="918" alt="architecture image" src="./docs/architecture/architecture2.png";>
-</p>
+
+![Software architecture](docs/assets/handover/Software-architecture.png)
 
 ## Deployment
 
