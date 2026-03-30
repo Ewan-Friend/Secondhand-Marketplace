@@ -60,4 +60,23 @@ void main() {
       expect(find.text('good'), findsOneWidget);
     });
   });
+
+  group('seller information', () {
+    testWidgets('ItemCard displays seller username correctly', (WidgetTester tester) async {
+      await pumpItemCard(tester);
+      expect(find.text('testuser'), findsOneWidget);
+    });
+
+    testWidgets('ItemCard displays seller rating correctly', (WidgetTester tester) async {
+      await pumpItemCard(tester);
+      expect(find.text('4.50'), findsOneWidget);
+    });
+
+    testWidgets('ItemCard displays seller review count correctly', (WidgetTester tester) async {
+      await pumpItemCard(tester);
+      expect(find.text('· 10 reviews'), findsOneWidget);
+    });
+  });
+
+  
 }
