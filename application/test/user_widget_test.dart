@@ -33,6 +33,17 @@ void main() {
         ),
       ),
     );
-    expect(find.text('10'), findsOneWidget);
+    expect(find.text('· 10 reviews'), findsOneWidget);
+  });
+
+  testWidgets('UserWidget displays default icon when no avatarUrl is provided', (WidgetTester tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: UserWidget(userName: 'No Avatar Test User', rating: 4.5, reviews: 10),
+        ),
+      ),
+    );
+    expect(find.byIcon(Icons.person_2), findsOneWidget);
   });
 }
