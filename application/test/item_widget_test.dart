@@ -21,8 +21,8 @@ void main() {
       'avatar_url': null,
     },
   );
-  testWidgets('ItemWidget displays the title correctly', (WidgetTester tester) async {
-    // increase the size of the viewport so we don't get overflow errors
+
+  Future<void> pumpItemCard(WidgetTester tester) async {
     tester.view.physicalSize = const Size(1200, 2000);
     tester.view.devicePixelRatio = 1.0;
     
@@ -33,55 +33,31 @@ void main() {
         ),
       ),
     );
-    // after the test is done, reset the view to avoid affecting other tests
     addTearDown(() {
       tester.view.resetPhysicalSize();
       tester.view.resetDevicePixelRatio();
     });
+  }
 
-    expect(find.text('Vintage Camera'), findsOneWidget);
-  });
-
-  testWidgets('ItemWidget displays the description correctly', (WidgetTester tester) async {
-    // increase the size of the viewport so we don't get overflow errors
-    tester.view.physicalSize = const Size(1200, 2000);
-    tester.view.devicePixelRatio = 1.0;
-    
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: ItemCard(item: mockItem),
-        ),
-      ),
-    );
-    // after the test is done, reset the view to avoid affecting other tests
-    addTearDown(() {
-      tester.view.resetPhysicalSize();
-      tester.view.resetDevicePixelRatio();
+  group('basic properties', () {
+    testWidgets('ItemCard displays the title correctly', (WidgetTester tester) async {
+      await pumpItemCard(tester);
+      expect(find.text('Vintage Camera'), findsOneWidget);
     });
 
-    expect(find.text('A beautiful vintage camera'), findsOneWidget);
-  });
-
-  testWidgets('ItemWidget displays the location correctly', (WidgetTester tester) async {
-    // increase the size of the viewport so we don't get overflow errors
-    tester.view.physicalSize = const Size(1200, 2000);
-    tester.view.devicePixelRatio = 1.0;
-    
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: ItemCard(item: mockItem),
-        ),
-      ),
-    );
-    // after the test is done, reset the view to avoid affecting other tests
-    addTearDown(() {
-      tester.view.resetPhysicalSize();
-      tester.view.resetDevicePixelRatio();
+    testWidgets('ItemCard displays the price correctly', (WidgetTester tester) async {
+      await pumpItemCard(tester);
+      expect(find.text('£120.50'), findsOneWidget);
     });
 
-    expect(find.text('Rome, Italy'), findsOneWidget);
-  });
+    testWidgets('ItemCard displays the location correctly', (WidgetTester tester) async {
+      await pumpItemCard(tester);
+      expect(find.text('Rome, Italy'), findsOneWidget);
+    });
 
+    testWidgets('ItemCard displays the condition correctly', (WidgetTester tester) async {
+      await pumpItemCard(tester);
+      expect(find.text('good'), findsOneWidget);
+    });
+  });
 }
