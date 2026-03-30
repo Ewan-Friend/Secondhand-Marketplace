@@ -36,11 +36,19 @@ def update_xp():
     
     # TODO: extract user_id from token instead of request body once authentication is working
     user_id = '55d89a2e-d30c-4b20-a51d-6a979ba6b7da'    # for testing uses hardcoded user
-    nextLevelXP = LEVEL_CONFIGURATION[currentLevel]["xp"]
     
-    # check whether user has reached a new level, if yes, update level
-    if xp >= nextLevelXP:
-        currentLevel = currentLevel + 1
+    max_level = LEVEL_CONFIGURATION[-1]["level"]
+
+    # only check for a next level if the user is not already at max level
+    if currentLevel < max_level:
+        nextLevelXP = LEVEL_CONFIGURATION[currentLevel]["xp"]
+
+        # check whether user has reached a new level, if yes, update level
+        if xp >= nextLevelXP:
+            currentLevel = currentLevel + 1
+    else:
+        # keep user at max level
+        currentLevel = max_level
 
     try:
         print(f"Attempting to update XP for user {user_id} with XP: {xp}")
