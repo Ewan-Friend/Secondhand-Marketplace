@@ -24,6 +24,18 @@ The majority of need-to-know, high-level information will be outlined within thi
     - [(Optional) MKdocs documentation server](#optional-mkdocs-documentation-server)
   - [System Architecture](#system-architecture)
   - [Project Structure](#project-structure)
+- [Secondhand Marketplace Handover](#secondhand-marketplace-handover)
+  - [Contents](#contents)
+  - [Introduction](#introduction)
+  - [Project Setup](#project-setup)
+    - [Prerequisite Downloads](#prerequisite-downloads)
+    - [Setup Development Environment](#setup-development-environment)
+    - [Backend environment](#backend-environment)
+    - [Frontend environment](#frontend-environment)
+    - [Docker Full Stack Setup](#docker-full-stack-setup)
+    - [(Optional) MKdocs documentation server](#optional-mkdocs-documentation-server)
+  - [System Architecture](#system-architecture)
+  - [Project Structure](#project-structure)
 
 ### Prerequisite Downloads
 - [Python 3.xx](https://www.python.org/downloads/) (currently 3.16)
