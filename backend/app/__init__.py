@@ -11,6 +11,7 @@ from .routes.reviews import reviews_bp
 from .routes.auth import auth_bp
 from .routes.users import users_bp
 from .routes.items import items_bp
+from .routes.gamification import game_bp
 
 
 # Creates and configures a new flask app
@@ -27,4 +28,5 @@ def create_app():
     app.register_blueprint(auth_bp, url_prefix="/api")
     app.register_blueprint(users_bp, url_prefix="/api")
     app.register_blueprint(items_bp, url_prefix="/api")
+    app.register_blueprint(game_bp, url_prefix="/api")
     return app
