@@ -12,12 +12,18 @@ This document is designed to give detailed information on certain aspects of the
 The majority of need-to-know, high-level information will be outlined within this document, with more fine grain details being outlined within code comments left throughout the projects codebase.
 
 ## Project Setup
-- [Prerequisites](#prerequisite-downloads)
-- [Environment Setup](#setup-development-environment)
-- [Backend](#backend-environment)
-- [Frontend](#frontend-environment)
-- [Docker Full Stack](#docker-full-stack-setup)
-- [Documentation](#optional-mkdocs-documentation-server)
+- [Secondhand Marketplace Handover](#secondhand-marketplace-handover)
+  - [Contents](#contents)
+  - [Introduction](#introduction)
+  - [Project Setup](#project-setup)
+    - [Prerequisite Downloads](#prerequisite-downloads)
+    - [Setup Development Environment](#setup-development-environment)
+    - [Backend environment](#backend-environment)
+    - [Frontend environment](#frontend-environment)
+    - [Docker Full Stack Setup](#docker-full-stack-setup)
+    - [(Optional) MKdocs documentation server](#optional-mkdocs-documentation-server)
+  - [System Architecture](#system-architecture)
+  - [Project Structure](#project-structure)
 
 ### Prerequisite Downloads
 - [Python 3.xx](https://www.python.org/downloads/) (currently 3.16)
@@ -183,6 +189,8 @@ found at http://localhost:8000
 - Add entry to `nav:` in `mkdocs.yml`
 
 ## System Architecture
+
+<img width="332" height="142" alt="image" src="../../assets/handover/Software-architecture.png";>
 
 ## Project Structure
 
