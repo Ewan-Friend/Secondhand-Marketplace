@@ -1,17 +1,18 @@
 # Supabase database structure
 
-<img width="712" height="366" alt="image" src="../../assets/database-structure/overallstructure.png";>
+![Database Structure](../assets/database-structure/overallstructure.png)
+
 
 ## Categories
 
-<img width="332" height="142" alt="image" src="../../assets/database-structure/categories.png";>
+![Categories](../assets/database-structure/categories.png)
 
 - ```id <uuid>``` - unique identifier
 - ```name <string>``` - category name
 
 ## Items
 
-<img width="385" height="475" alt="image" src="../../assets/database-structure/items.png";>
+![Items](../assets/database-structure/items.png)
 
 - ```id <uuid>``` - unique identifier
 - ```seller_id <uuid>``` - foreign key for the profiles table
@@ -25,7 +26,7 @@
 
 ## Item Images
 
-<img width="388" height="272" alt="image" src="../../assets/database-structure/item_images.png";>
+![Item images](../assets/database-structure/item_images.png)
 
 - ```id <uuid>``` - unique identifier
 - ```item_id <uuid>``` - foreign key for the items table
@@ -34,7 +35,7 @@
 
 ## Profiles
 
-<img width="385" height="531" alt="image" src="../../assets/database-structure/profiles.png";>
+![Categories](../assets/database-structure/profiles.png)
 
 - ```id <uuid>``` - unique identifier
 - ```created_at <string>``` - exact date and time that profile was created
