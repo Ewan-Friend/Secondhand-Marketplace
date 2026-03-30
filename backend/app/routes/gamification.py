@@ -27,22 +27,20 @@ def get_levels():
 def update_xp():
     data = request.get_json()
     # extract xp form the request
+    
     xp = data.get("xp")
     currentLevel = data.get("level")
-    nextLevelXP = LEVEL_CONFIGURATION[currentLevel]["xp"]
-    print(f"current level: {currentLevel}")
-    print(f"new XP: {xp}")
-    print(f"nextXP for level {currentLevel+1}: {nextLevelXP}")
 
+    if xp is None or currentLevel is None:
+        return jsonify({"message": "XP value and level are required", "status_code": 400}), 400
+    
     # TODO: extract user_id from token instead of request body once authentication is working
     user_id = '55d89a2e-d30c-4b20-a51d-6a979ba6b7da'    # for testing uses hardcoded user
+    nextLevelXP = LEVEL_CONFIGURATION[currentLevel]["xp"]
     
     # check whether user has reached a new level, if yes, update level
     if xp >= nextLevelXP:
         currentLevel = currentLevel + 1
-
-    if xp is None:
-        return jsonify({"message": "XP value is required", "status_code": 400}), 400
 
     try:
         print(f"Attempting to update XP for user {user_id} with XP: {xp}")
@@ -56,7 +54,8 @@ def update_xp():
         # return the response of the request
         return jsonify({
             "message": "XP updated successfully", 
-            "status_code": 200
+            "status_code": 200,
+            "data": {"xp": xp, "level": currentLevel}
             }), 200
     
     except Exception as e:
