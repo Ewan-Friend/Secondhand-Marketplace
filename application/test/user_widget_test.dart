@@ -14,5 +14,16 @@ void main() {
     expect(find.text('Test User'), findsOneWidget);
   });
 
+  testWidgets('UserWidget displays the rating correctly', (WidgetTester tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: UserWidget(userName: 'Test User', rating: 4.5, reviews: 10),
+        ),
+      ),
+    );
+    expect(find.text('4.50'), findsOneWidget);
+  });
+
   
 }
