@@ -78,5 +78,20 @@ void main() {
     });
   });
 
-  
+  group('icons', () {
+    testWidgets('ItemCard displays location icon', (WidgetTester tester) async {
+      await pumpItemCard(tester);
+      expect(find.byIcon(Icons.location_on), findsOneWidget);
+    });
+
+    testWidgets('ItemCard displays condition icon', (WidgetTester tester) async {
+      await pumpItemCard(tester);
+      expect(find.byIcon(Icons.sell), findsOneWidget);
+    });
+
+    testWidgets('ItemCard displays star icon for rating', (WidgetTester tester) async {
+      await pumpItemCard(tester);
+      expect(find.byIcon(Icons.star), findsOneWidget);
+    });
+  });
 }
