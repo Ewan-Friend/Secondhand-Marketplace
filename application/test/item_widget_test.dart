@@ -42,4 +42,46 @@ void main() {
     expect(find.text('Vintage Camera'), findsOneWidget);
   });
 
+  testWidgets('ItemWidget displays the description correctly', (WidgetTester tester) async {
+    // increase the size of the viewport so we don't get overflow errors
+    tester.view.physicalSize = const Size(1200, 2000);
+    tester.view.devicePixelRatio = 1.0;
+    
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: ItemCard(item: mockItem),
+        ),
+      ),
+    );
+    // after the test is done, reset the view to avoid affecting other tests
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    expect(find.text('A beautiful vintage camera'), findsOneWidget);
+  });
+
+  testWidgets('ItemWidget displays the location correctly', (WidgetTester tester) async {
+    // increase the size of the viewport so we don't get overflow errors
+    tester.view.physicalSize = const Size(1200, 2000);
+    tester.view.devicePixelRatio = 1.0;
+    
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: ItemCard(item: mockItem),
+        ),
+      ),
+    );
+    // after the test is done, reset the view to avoid affecting other tests
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    expect(find.text('Rome, Italy'), findsOneWidget);
+  });
+
 }
