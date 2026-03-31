@@ -238,6 +238,78 @@ class _Header extends StatelessWidget { // build the top bar: back button, locat
   }
 }
 
+class _ImageCarousel extends StatefulWidget {
+  final List<String> imageUrls;
+
+  const _ImageCarousel({required this.imageUrls});
+
+  @override
+  State<_ImageCarousel> createState() => _ImageCarouselState();
+}
+
+class _ImageCarouselState extends State<_ImageCarousel> {
+  int currentIndex = 0;
+
+  void nextImage() {
+    if (widget.imageUrls.isEmpty) return;
+    setState(() {
+      currentIndex = (currentIndex + 1) % widget.imageUrls.length;
+    });
+  }
+
+  void previousImage() {
+    if (widget.imageUrls.isEmpty) return;
+    setState(() {
+      currentIndex =
+          (currentIndex - 1 + widget.imageUrls.length) %
+              widget.imageUrls.length;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final hasImages = widget.imageUrls.isNotEmpty;
+
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        AspectRatio(
+          aspectRatio: 4 / 3,
+          child: hasImages
+              ? ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.network(
+                    widget.imageUrls[currentIndex],
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) =>
+                        const _ImagePlaceholder(),
+                  ),
+                )
+              : const _ImagePlaceholder(),
+        ),
+
+        /// LEFT ARROW
+        Positioned(
+          left: 8,
+          child: _ArrowButton(
+            icon: Icons.arrow_back_ios,
+            onTap: previousImage,
+          ),
+        ),
+
+        /// RIGHT ARROW
+        Positioned(
+          right: 8,
+          child: _ArrowButton(
+            icon: Icons.arrow_forward_ios,
+            onTap: nextImage,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class _ImagePlaceholder extends StatelessWidget { // placeholder for real images
   const _ImagePlaceholder();
 
