@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'image_filename_box.dart';
 
 class UploadImage extends StatefulWidget{
   const UploadImage({
@@ -16,6 +17,9 @@ class UploadImage extends StatefulWidget{
 
 class _UploadImageState extends State<UploadImage> { 
   final List<PlatformFile> _images = [];
+  
+  // Max slots is 10, can grow no larger
+  static const maxSlots = 10;
 
   // Picks images from desktop file system
   Future<void> _pick() async {
@@ -28,9 +32,6 @@ class _UploadImageState extends State<UploadImage> {
     if (result == null) return;
 
     setState(() {
-      // Max slots is 3, can grow no larger
-      const maxSlots = 3;
-      
       // Combine lists
       final combinedList = List<PlatformFile>.from(_images);
       combinedList.addAll(result.files);
@@ -86,9 +87,17 @@ class _UploadImageState extends State<UploadImage> {
             ),
             const SizedBox(height: 8),
             const Text(
-              'Select up to 3 images for your listing',
+              'Select up to 10 images for your listing',
               style: TextStyle(fontSize: 13, color: Colors.grey),
             ),
+            Text(
+              '${_images.length}/$maxSlots images selected',
+              style: const TextStyle(fontSize: 13, color: Colors.grey),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 24.0),
+            ),
+            ImageFilenameBox(filename: 'filename'),
           ],
         ),
       ),
