@@ -28,6 +28,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      # Step 4: Generate deployment package
       - name: Create deployment package
         run: |
           cd backend
@@ -41,26 +42,19 @@ jobs:
           role-to-assume: ${{ vars.AWS_ROLE_ARN }}
           aws-region: ${{ vars.AWS_REGION }}
 
+      # Step 5: Configure AWS credentials via OIDC
       - name: Configure AWS credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ vars.AWS_ROLE_ARN }}
           aws-region: ${{ vars.AWS_REGION }}
 
-      - name: Get current deployment version (for rollback)
-        id: current_version
-        run: |
-          VERSION=$(aws elasticbeanstalk describe-environments \
-            --application-name secondhand-backend \
-            --environment-names Secondhand-backend-env-1 \
-            --query "Environments[0].VersionLabel" \
-            --output text)
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-
+      # Step 6: Upload deployment package to S3
       - name: Upload to S3
         run: |
           aws s3 cp deploy.zip s3://${{ vars.AWS_S3_BUCKET_BACKEND }}/deploy-${{ github.sha }}.zip
 
+      # Step 7: Deploy to Elastic Beanstalk via AWS CLI
       - name: Deploy to Elastic Beanstalk
         run: |
           aws elasticbeanstalk create-application-version \
@@ -73,6 +67,7 @@ jobs:
             --environment-name Secondhand-backend-env-1 \
             --version-label ${{ github.sha }}
 
+      # # Step 8: Wait for deployment to complete and verify health
       - name: Wait for deployment and verify health
         run: |
           aws elasticbeanstalk wait environment-updated \
@@ -85,24 +80,16 @@ jobs:
             --query "Environments[0].Health" \
             --output text)
 
+          STATUS=$(aws elasticbeanstalk describe-environments \
+            --application-name secondhand-backend \
+            --environment-names Secondhand-backend-env-1 \
+            --query "Environments[0].Status" \
+            --output text)
+
           echo "Environment Health: $HEALTH"
+          echo "Environment Status: $STATUS"
 
           if [ "$HEALTH" != "Green" ]; then
             echo "Deployment failed: Environment health is $HEALTH"
             exit 1
           fi
-
-      - name: Rollback on failure
-        if: failure()
-        run: |
-          echo "Deployment failed, rolling back to ${{ steps.current_version.outputs.version }}"
-          aws elasticbeanstalk update-environment \
-            --application-name secondhand-backend \
-            --environment-name Secondhand-backend-env-1 \
-            --version-label ${{ steps.current_version.outputs.version }}
-
-          aws elasticbeanstalk wait environment-updated \
-            --application-name secondhand-backend \
-            --environment-name Secondhand-backend-env-1
-
-          echo "Rollback complete"
