@@ -110,6 +110,7 @@ class _ItemDetailState extends State<ItemDetailPage> {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
+                                      _ImageCarousel(imageUrls: item.imageUrls),
                                       SizedBox(height: 20),
                                       _ConditionTag(),
                                       SizedBox(height: 10),
@@ -142,6 +143,7 @@ class _ItemDetailState extends State<ItemDetailPage> {
                           : Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                _ImageCarousel(imageUrls: item.imageUrls),
                                 const SizedBox(height: 16),
                                 const _Price(text: 'CHF 120'),
                                 const SizedBox(height: 12),
