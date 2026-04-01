@@ -2,9 +2,15 @@
 from flask import Flask
 from flask_cors import CORS
 from dotenv import load_dotenv
+from supabase import create_client, Client
 import os
 
 load_dotenv()
+
+# Initialize Supabase client
+SUPABASE_URL = os.environ.get("SUPABASE_URL")
+SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 from .routes.health import health_bp
 from .routes.reviews import reviews_bp
