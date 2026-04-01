@@ -8,11 +8,13 @@ import '../models/user_model.dart';
 class ProfilePage extends StatefulWidget {
   final String? userId; // If null, shows current user's profile
   final bool isOwnProfile; // True if viewing own profile
+  final APIService? apiService; // allow a mock API service for testing
 
   const ProfilePage({
     super.key,
     this.userId,
     this.isOwnProfile = true,
+    this.apiService,  // allow passing a mock API service for testing
   });
 
   @override
@@ -20,7 +22,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  final APIService _apiService = APIService();
+  late final APIService _apiService;
   
   bool _isLoading = true;
   bool _showAllReviews = false;
@@ -38,6 +40,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
+    _apiService = widget.apiService ?? APIService();
     _loadProfileData();
   }
 
