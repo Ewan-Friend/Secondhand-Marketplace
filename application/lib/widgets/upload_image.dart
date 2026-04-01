@@ -97,7 +97,28 @@ class _UploadImageState extends State<UploadImage> {
             Padding(
               padding: const EdgeInsets.only(top: 24.0),
             ),
-            ImageFilenameBox(filename: 'filename'),
+            Expanded(
+              child: _images.isEmpty
+                  ? const Center(
+                      child: Text(
+                        'No images selected yet',
+                        style: TextStyle(fontSize: 13, color: Colors.grey),
+                      ),
+                    )
+                  : ListView.separated(
+                      itemCount: _images.length,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) {
+                        return Align(
+                          child: ImageFilenameBox(
+                            filename: _images[index].name,
+                          ),
+                        );
+                      },
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(width: 8),
+                    ),
+            ),
           ],
         ),
       ),
