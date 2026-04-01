@@ -303,7 +303,7 @@ class _PriceField extends StatelessWidget {
           child: Row(
             children: [
               const Text(
-                'CHF',
+                '£',
                 style: TextStyle(
                     fontSize: 13, color: Colors.grey, height: 1.4),
               ),

@@ -133,7 +133,7 @@ class _ItemDetailState extends State<ItemDetailPage> {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.stretch,
                                     children: [
-                                      _Price(text: "${item.price.toString()} CHF"),
+                                      _Price(text: "£${item.price.toString()}"),
                                       SizedBox(height: 12),
                                       _ContactSellerButton(),
                                       SizedBox(height: 12),
@@ -151,7 +151,7 @@ class _ItemDetailState extends State<ItemDetailPage> {
                                   child: _ImageCarousel(imageUrls: item.imageUrls),
                                 ),
                                 const SizedBox(height: 16),
-                                const _Price(text: 'CHF 120'),
+                                _Price(text: '£${item.price}'),
                                 const SizedBox(height: 12),
                                 const _ContactSellerButton(),
                                 const SizedBox(height: 16),
