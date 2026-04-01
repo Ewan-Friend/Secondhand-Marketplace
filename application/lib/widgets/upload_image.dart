@@ -28,8 +28,8 @@ class _UploadImageState extends State<UploadImage> {
     if (result == null) return;
 
     setState(() {
-      // Max slots is 3, can grow no larger
-      const maxSlots = 3;
+      // Max slots is 7, can grow no larger
+      const maxSlots = 7;
       
       // Combine lists
       final combinedList = List<PlatformFile>.from(_images);
