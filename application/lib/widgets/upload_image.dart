@@ -62,6 +62,7 @@ class UploadImage extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            const SizedBox(height: 16),
             InkWell(
               onTap: _pick,
               borderRadius: BorderRadius.circular(14),
@@ -94,7 +95,7 @@ class UploadImage extends StatelessWidget {
                       ),
                     )
                   : ListView.separated(
-                      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                      padding: const EdgeInsets.only(left: 24.0, right: 8.0),
                       itemCount: _images.length,
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) {
