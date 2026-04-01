@@ -1,23 +1,20 @@
-import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
+
 import 'image_filename_box.dart';
 
-class UploadImage extends StatefulWidget{
+class UploadImage extends StatelessWidget {
   const UploadImage({
     super.key,
+    required List<PlatformFile> images,
     required this.onImagesChanged,
-    });
+  }) : _images = images;
 
-  // Reports that the images value has changed (added / remove choses image)
+  final List<PlatformFile> _images;
+
+  // Reports that the images value has changed (added / remove chosen image)
   final ValueChanged<List<PlatformFile>> onImagesChanged;
 
-  @override
-  State<UploadImage> createState() => _UploadImageState();
-}
-
-class _UploadImageState extends State<UploadImage> { 
-  final List<PlatformFile> _images = [];
-  
   // Max slots is 10, can grow no larger
   static const maxSlots = 10;
 
@@ -31,42 +28,35 @@ class _UploadImageState extends State<UploadImage> {
 
     if (result == null) return;
 
-    setState(() {
-      // Combine lists
-      final combinedList = List<PlatformFile>.from(_images);
-      combinedList.addAll(result.files);
+    // Combine lists using the parent-owned image list so resize/rebuilds do not
+    // clear the selection.
+    final combinedList = List<PlatformFile>.from(_images);
+    combinedList.addAll(result.files);
 
-      // Remove all the (older) images that dont fit within the max slots
-      final startNo = (combinedList.length - maxSlots).clamp(0, combinedList.length);
-      final latestImages = combinedList.sublist(startNo);
+    // Remove all the (older) images that dont fit within the max slots
+    final startNo = (combinedList.length - maxSlots).clamp(
+      0,
+      combinedList.length,
+    );
+    final latestImages = combinedList.sublist(startNo);
 
-      // Clear and add to _images
-      _images.clear();
-      _images.addAll(latestImages); 
-    });
-
-    debugPrint('Selected image count: ${_images.length}');
-    for (final image in _images) {
+    debugPrint('Selected image count: ${latestImages.length}');
+    for (final image in latestImages) {
       debugPrint('Selected image: ${image.path ?? image.name}');
     }
 
     // Sends out the images on a call
-    widget.onImagesChanged(List.unmodifiable(_images));
+    onImagesChanged(List.unmodifiable(latestImages));
   }
 
-
-
-@override
+  @override
   Widget build(BuildContext context) {
     return Container(
       height: 230,
       decoration: BoxDecoration(
-        color: const Color(0xFFFAFAFA),
+        color: const Color(0xFFF2F2F2),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: const Color(0xFFDADCE0),
-          width: 1.3,
-        ), 
+        border: Border.all(color: const Color(0xFFDADCE0), width: 1.3),
       ),
       child: Center(
         child: Column(
@@ -94,9 +84,7 @@ class _UploadImageState extends State<UploadImage> {
               '${_images.length}/$maxSlots images selected',
               style: const TextStyle(fontSize: 13, color: Colors.grey),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 24.0),
-            ),
+            Padding(padding: const EdgeInsets.only(top: 24.0)),
             Expanded(
               child: _images.isEmpty
                   ? const Center(
@@ -106,6 +94,7 @@ class _UploadImageState extends State<UploadImage> {
                       ),
                     )
                   : ListView.separated(
+                      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
                       itemCount: _images.length,
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) {

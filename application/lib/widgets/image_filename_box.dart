@@ -8,13 +8,17 @@ class ImageFilenameBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final boxWidth = (screenWidth * 0.23).clamp(84.0, 100.0);
+    final boxHeight = (screenWidth * 0.032).clamp(30.0, 42.0);
+
     return Container(
-        height: 40,
-        width: 100,
+      height: boxHeight,
+      width: boxWidth,
       padding: const EdgeInsets.symmetric(horizontal: 12.0),
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 216, 216, 216),
-        border: Border.all(color: Colors.black, width: 2.0),
+        color: const Color.fromARGB(255, 221, 224, 223),
+        border: Border.all(color: Colors.black, width: 1.3),
         borderRadius: BorderRadius.circular(6.0),
       ),
       child: Center(
@@ -23,9 +27,9 @@ class ImageFilenameBox extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
           style: GoogleFonts.firaCode(
             color: Colors.black,
-            fontSize: 14.0,
-            fontWeight: FontWeight.w400,
-            letterSpacing: 0.4,
+            fontSize: (boxHeight * 0.20).clamp(8.0, 11.0),
+            fontWeight: FontWeight.w500,
+            letterSpacing: 0.15,
           ),
         ),
       ),
