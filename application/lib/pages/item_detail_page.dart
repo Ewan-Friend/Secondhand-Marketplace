@@ -111,7 +111,7 @@ class _ItemDetailState extends State<ItemDetailPage> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       SizedBox(
-                                        height: 250,
+                                        height: 400,
                                         child: _ImageCarousel(imageUrls: item.imageUrls),
                                       ),
                                       SizedBox(height: 20),
@@ -147,7 +147,7 @@ class _ItemDetailState extends State<ItemDetailPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 SizedBox(
-                                  height: 250,
+                                  height: 400,
                                   child: _ImageCarousel(imageUrls: item.imageUrls),
                                 ),
                                 const SizedBox(height: 16),
