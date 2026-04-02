@@ -32,9 +32,6 @@ class _HomePageState extends State<HomePage> {
       await _apiService.checkConnection();
     } catch (e) {
       if (!mounted) return;
-      setState(() {
-        _apiMessage = 'Error: $e';
-      });
     }
   }
 
