@@ -49,6 +49,24 @@ class _HomePageState extends State<HomePage> {
                 BoxShadow(
                   color: Colors.redAccent.withOpacity(0.15),
                   blurRadius: 20,
+                  spreadRadius: 2,
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: Colors.redAccent.withOpacity(0.15),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.wifi_off_rounded,
+                    color: Colors.redAccent,
+                    size: 18,
+                  ),
+                ),
     }
   }
 
