@@ -32,6 +32,23 @@ class _HomePageState extends State<HomePage> {
       await _apiService.checkConnection();
     } catch (e) {
       if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          behavior: SnackBarBehavior.floating,
+          margin: const EdgeInsets.all(16),
+          duration: const Duration(seconds: 4),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          content: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            decoration: BoxDecoration(
+              color: const Color(0xFF1A1A1A),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: Colors.redAccent.withOpacity(0.6)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.redAccent.withOpacity(0.15),
+                  blurRadius: 20,
     }
   }
 
