@@ -13,18 +13,33 @@ _[⛓️ Documentation Link ⛓️](https://urban-adventure-qm9y5k8.pages.github
 [![Pytest](https://img.shields.io/badge/Pytest-%230A9EDC?style=for-the-badge&logo=pytest&logoColor=white&logoSize=auto)](https://docs.pytest.org/en/stable/)
 
 ## Contents
-- [Project description](#project-description)
-- [Project goals](#project-goals)
-- [Project structure](#project-structure)
-- [Project setup](#project-setup)
-- [Deployment](#deployment)
-- [Software architecture](#software-architecture)
-- [User instructions](#user-instructions)
-- [Stakeholders](#stakeholders)
-- [User Stories](#user-stories)
-- [Project Management](#project-management)
-- [Other Documentation Links](#other-documentation-links)
-- [Team Members](#team-members)
+- [SecondhandMarketplace (2025)](#secondhandmarketplace-2025)
+  - [Contents](#contents)
+  - [Project description](#project-description)
+  - [Project goals](#project-goals)
+  - [Project structure](#project-structure)
+  - [Project setup](#project-setup)
+    - [Approach 1: Local Development](#approach-1-local-development)
+      - [Prerequisites](#prerequisites)
+      - [Steps](#steps)
+    - [Approach 2: Docker (recommended for quick start)](#approach-2-docker-recommended-for-quick-start)
+  - [Software architecture](#software-architecture)
+  - [Deployment](#deployment)
+    - [Infrastructure](#infrastructure)
+    - [Continuous Deployment](#continuous-deployment)
+  - [User instructions](#user-instructions)
+    - [Startup](#startup)
+    - [To buy items](#to-buy-items)
+    - [To sell items](#to-sell-items)
+    - [To view your profile](#to-view-your-profile)
+  - [Stakeholders](#stakeholders)
+    - [End Users](#end-users)
+    - [Core project \& Development](#core-project--development)
+    - [Business \& Strategy](#business--strategy)
+  - [User Stories](#user-stories)
+  - [Project Management](#project-management)
+  - [Other Documentation Links](#other-documentation-links)
+  - [Team Members](#team-members)
 
 ## Project description
 - **Project name:** Secondhand Marketplace
@@ -48,12 +63,13 @@ _[⛓️ Documentation Link ⛓️](https://urban-adventure-qm9y5k8.pages.github
 │   │   ├── services                # Frontend services
 │   │   └── widgets                 # Reusable UI elements
 │   ├── test                        # Frontend tests
+|   ├── nginx.conf                  # Serves the frontend
 │   ├── Dockerfile                  # Docker build info
 │   ├── ...
 ├── backend                         # Python Flask backend
 │   ├── app
 │   │   ├── __init__.py             # Blueprint + frontend connection
-│   │   └── routes.py               # API endpoints
+│   │   └── routes                  # API endpoints
 │   ├── run.py                      # Run backend server
 │   ├── test                        # Backend tests
 │   ├── requirements.txt            # Backend dependencies
@@ -61,6 +77,7 @@ _[⛓️ Documentation Link ⛓️](https://urban-adventure-qm9y5k8.pages.github
 ├── docs                            # Project docs
 ├── .env.template                   # Template for .env (API keys)
 ├── docker-compose.yml              # Multi-container setup (frontend/backend)
+├── mkdocs.yml                      # Online docs structure
 ```
 
 ## Project setup
@@ -93,8 +110,6 @@ source venv/bin/activate
 python -m venv venv
 venv/Scripts/Activate.ps1
 ```
-> First line creates the venv; the second line activates it (reuse for future sessions).
-
 3) **Install backend dependencies**
 ```bash
 pip install -r backend/requirements.txt
@@ -114,7 +129,8 @@ flutter run
 # or specify a device:
 flutter run -d [environment name - e.g: chrome]
 ```
-*if you are having issues, find a more detailed guide to local setup [here](https://github.com/spe-uob/2025-SecondhandMarketplace/blob/task/193-improve-conciseness-of-readme/docs/project-setup/project-setup.md#local-development)*
+> [!NOTE]
+> *if you are having issues, find a more detailed guide to local setup [here](https://github.com/spe-uob/2025-SecondhandMarketplace/blob/task/193-improve-conciseness-of-readme/docs/project-setup/project-setup.md#local-development)*
 ### Approach 2: Docker (recommended for quick start)
 This approach only requires Docker Desktop (or alternatives). All dependencies run inside containers.
 
@@ -132,12 +148,12 @@ docker compose up --build
 - Frontend: http://localhost:8080
 - Backend: http://localhost:5000
 
-*if you are having issues, find a more detailed guide to docker setup [here](https://github.com/spe-uob/2025-SecondhandMarketplace/blob/task/193-improve-conciseness-of-readme/docs/project-setup/project-setup.md#docker)*
+> [!NOTE]
+> *if you are having issues, find a more detailed guide to docker setup [here](https://github.com/spe-uob/2025-SecondhandMarketplace/blob/task/193-improve-conciseness-of-readme/docs/project-setup/project-setup.md#docker)*
 ## Software architecture
 The following diagram illustrates the Secondhand Marketplace software architecture and the interaction between the Flutter frontend and the Python-Flask backend.
-<p align="left">
-  <img width="918" alt="architecture image" src="./docs/architecture/architecture2.png";>
-</p>
+
+![Software architecture](docs/assets/handover/Software-architecture.png)
 
 ## Deployment
 
@@ -153,11 +169,10 @@ On every push to the dev branch:
 - build artifacts are uploaded to an S3 bucket
 The latest version is automatically deployed to production
 
-available at both: 
-www.sepsecondhand.co.uk
-sepsecondhand.co.uk
-
-
+> [!NOTE]
+> the website is available at both: 
+> www.sepsecondhand.co.uk
+> sepsecondhand.co.uk
 
 ## User instructions
 
@@ -182,7 +197,8 @@ sepsecondhand.co.uk
 - This page contains information about your account, inclueding items you have listed and your seller rating
 - You are also to change your profile information on this screen
 
-*if you want a visual guide to some of the pages, check out our [Visual user instructions](https://github.com/spe-uob/2025-SecondhandMarketplace/blob/dev/docs/user-instructions/user-instructions.md)*
+> [!NOTE]
+> *if you want a visual guide to some of the pages, check out our [Visual user instructions](https://github.com/spe-uob/2025-SecondhandMarketplace/blob/dev/docs/user-instructions/user-instructions.md)*
 
 ## Stakeholders
 
