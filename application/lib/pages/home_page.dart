@@ -18,7 +18,6 @@ class _HomePageState extends State<HomePage> {
 
   late APIService _apiService;
   late Future<List<Item>> _futureItems;
-  String _apiMessage = 'Checking API connection...';
 
   @override
   void initState() {
@@ -30,11 +29,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _checkApi() async {
     try {
-      final message = await _apiService.checkConnection(); // <-- String dönüyor
-      if (!mounted) return;
-      setState(() {
-        _apiMessage = message;
-      });
+      await _apiService.checkConnection();
     } catch (e) {
       if (!mounted) return;
       setState(() {
