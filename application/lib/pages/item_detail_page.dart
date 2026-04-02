@@ -301,7 +301,7 @@ class _ImageCarouselState extends State<_ImageCarousel> {
           left: 8,
           child: _ArrowButton(
             icon: Icons.arrow_back_ios,
-            onTap: previousImage,
+            onTap: hasImages ? previousImage : null,
           ),
         ),
 
@@ -310,7 +310,7 @@ class _ImageCarouselState extends State<_ImageCarousel> {
           right: 8,
           child: _ArrowButton(
             icon: Icons.arrow_forward_ios,
-            onTap: nextImage,
+            onTap: hasImages ? nextImage : null,
           ),
         ),
       ],
@@ -320,7 +320,7 @@ class _ImageCarouselState extends State<_ImageCarousel> {
 
 class _ArrowButton extends StatelessWidget {
   final IconData icon;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   const _ArrowButton({
     required this.icon,
@@ -329,16 +329,19 @@ class _ArrowButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDisabled = onTap == null;
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(20),
       child: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: Colors.black.withValues(alpha: 0.4),
+          color: isDisabled
+              ? Colors.black.withValues(alpha: 0.2)
+              : Colors.black.withValues(alpha: 0.4),
           shape: BoxShape.circle,
         ),
-        child: Icon(icon, color: Colors.white, size: 18),
+        child: Icon(icon, color: isDisabled ? Colors.white38 : Colors.white, size: 18),
       ),
     );
   }
