@@ -81,6 +81,22 @@ class _HomePageState extends State<HomePage> {
                           fontSize: 13,
                         ),
                       ),
+                      SizedBox(height: 2),
+                      Text(
+                        'Unable to reach the server. Please try again.',
+                        style: TextStyle(
+                          color: Colors.white54,
+                          fontSize: 11,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
     }
   }
 
@@ -92,7 +108,7 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: cs.surface,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(80),
-        child: Header(),// not show search and back button on home page
+        child: Header(),
       ),
       body: SingleChildScrollView(
         child: Column(
