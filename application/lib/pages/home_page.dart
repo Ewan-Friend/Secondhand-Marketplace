@@ -114,20 +114,6 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // API message (debug)
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                _apiMessage,
-                style: const TextStyle(
-                  color: Colors.red,
-                  fontSize: 10,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-
-            // Items grid from API
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: FutureBuilder<List<Item>>(
@@ -164,7 +150,6 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
             ),
-
             const SizedBox(height: 20),
           ],
         ),
