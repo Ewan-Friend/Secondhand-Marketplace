@@ -101,7 +101,7 @@ class UploadImage extends StatelessWidget {
                       itemBuilder: (context, index) {
                         return Align(
                           child: ImageFilenameBox(
-                            filename: _images[index].name,
+                            file: _images[index].xFile,
                           ),
                         );
                       },

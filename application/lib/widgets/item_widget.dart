@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../models/item_model.dart';
 import '../widgets/user_widget.dart';
 
@@ -42,8 +43,8 @@ class ItemCard extends StatelessWidget{
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, '/item/${item.id}', arguments: item.id);
-      },
+        Navigator.pushNamed(context, '/item/${item.id}', arguments: item.id);},
+        //context.go('/item/${item.id}'),
       child: ConstrainedBox(
         constraints: BoxConstraints(
           minWidth: 400,

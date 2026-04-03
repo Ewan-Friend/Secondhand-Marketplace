@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ImageFilenameBox extends StatelessWidget {
-  final String filename;
+  final XFile file;
 
-  const ImageFilenameBox({super.key, required this.filename});
+  const ImageFilenameBox({
+    super.key, 
+    required this.file
+    });
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +27,7 @@ class ImageFilenameBox extends StatelessWidget {
       ),
       child: Center(
         child: Text(
-          filename,
+          file.name,
           overflow: TextOverflow.ellipsis,
           style: GoogleFonts.firaCode(
             color: Colors.black,
