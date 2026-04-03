@@ -110,10 +110,13 @@ class _ItemDetailState extends State<ItemDetailPage> {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      SizedBox(
-                                        height: 400,
-                                        child: _ImageCarousel(imageUrls: item.imageUrls),
-                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 24),
+                                        child: SizedBox(
+                                          height: 400,
+                                          child: _ImageCarousel(imageUrls: item.imageUrls),
+                                        ),
+                                      ),                               
                                       SizedBox(height: 20),
                                       _ConditionTag(),
                                       SizedBox(height: 10),
@@ -146,10 +149,13 @@ class _ItemDetailState extends State<ItemDetailPage> {
                           : Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                SizedBox(
-                                  height: 400,
-                                  child: _ImageCarousel(imageUrls: item.imageUrls),
-                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 24),
+                                  child: SizedBox(
+                                      height: 400,
+                                      child: _ImageCarousel(imageUrls: item.imageUrls),
+                                      ),
+                                  ),  
                                 const SizedBox(height: 16),
                                 _Price(text: '£${item.price}'),
                                 const SizedBox(height: 12),
