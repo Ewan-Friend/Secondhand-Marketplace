@@ -5,19 +5,20 @@ from flask import Flask
 from flask_cors import CORS
 from supabase import create_client, Client
 
+load_dotenv()
+
+# Initialize Supabase client BEFORE importing routes
+SUPABASE_URL = os.environ.get("SUPABASE_URL")
+SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+
+# Import blueprints AFTER supabase initialization
 from .routes.health import health_bp
 from .routes.reviews import reviews_bp
 from .routes.auth import auth_bp
 from .routes.users import users_bp
 from .routes.items import items_bp
 from .routes.gamification import game_bp
-
-load_dotenv()
-
-# Initialize Supabase client
-SUPABASE_URL = os.environ.get("SUPABASE_URL")
-SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
-supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 
 # Creates and configures a new flask app
