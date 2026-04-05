@@ -632,13 +632,13 @@ class APIService {
   }
   
   /// Adds XP to the current user
-  Future<Map<String, dynamic>> addXP(int xp) async {
-    final url = _uri('/me'); // PATCH endpoint for current user
+  Future<Map<String, dynamic>> addXP(int xp, int level) async {
+    final url = _uri('/me/xp'); // PATCH endpoint for current user
     try {
       final response = await _client.patch(
         url,
         headers: _headers(jsonBody: true),
-        body: json.encode({'xp': xp}),
+        body: json.encode({'xp': xp, 'level': level}),
       );
       final decoded = _decodeBody(response.body);
       if (response.statusCode == 200) {

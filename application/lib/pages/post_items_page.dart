@@ -294,8 +294,9 @@ class _PriceField extends StatelessWidget {
           child: Row(
             children: [
               const Text(
-                'CHF',
-                style: TextStyle(fontSize: 13, color: Colors.grey, height: 1.4),
+                '£',
+                style: TextStyle(
+                    fontSize: 13, color: Colors.grey, height: 1.4),
               ),
               const SizedBox(width: 8),
               Expanded(

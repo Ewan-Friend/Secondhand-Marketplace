@@ -8,7 +8,8 @@ class AppConfig {
   /// Priority:
   /// 1) `--dart-define=API_BASE_URL=...`
   /// 2) On localhost web dev: `http://localhost:5000/api`
-  /// 3) Default relative `/api` for reverse-proxy/deployed environments
+  /// 3) On non-web platforms: `http://localhost:5000/api`
+  /// 4) Default relative `/api` for reverse-proxy/deployed web environments
   static final String apiBaseUrl = _resolveApiBaseUrl();
 
   static String _resolveApiBaseUrl() {
@@ -22,8 +23,10 @@ class AppConfig {
       if (host == 'localhost' || host == '127.0.0.1') {
         return 'http://localhost:5000/api';
       }
+
+      return '/api';
     }
 
-    return '/api';
+    return 'http://localhost:5000/api';
   }
 }
