@@ -528,20 +528,28 @@ class _SellerCard extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 26,
+                  backgroundColor: const Color(0xFFD9D9D9),
+                  backgroundImage: sellerInfo?["avatar_url"] != null
+                      ? NetworkImage(sellerInfo?["avatar_url"])
+                      : null,
+                  child: sellerInfo?["avatar_url"] == null
+                      ? Icon(Icons.person_2, size: 24, color: Colors.grey.shade500)
+                      : null,
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                       Text(
+                      Text(
                         sellerInfo?["username"],
-                        style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+                        style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
                       ),
                       const SizedBox(height: 2),
                       Row(
                         children: [
-                          Text(sellerInfo!["rating_score"].toString(), style: TextStyle(fontSize: 13, color: Colors.black87)),
+                          Text(sellerInfo!["rating_score"].toString(),
+                              style: const TextStyle(fontSize: 13, color: Colors.black87)),
                           const SizedBox(width: 6),
                           ...List.generate(5, (i) {
                             return Icon(
