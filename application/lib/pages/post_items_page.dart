@@ -50,6 +50,15 @@ class _PostItemsPage extends State<PostItemsPage> {
         selectedImages: selectedImages,
       );
 
+      // Fetch current XP and level
+      final profile = await apiService.getCurrentUserProfile();
+      final data = profile['data'] ?? profile;
+      final currentXp = (data['xp'] as num?)?.toInt() ?? 0;
+      final currentLevel = (data['level'] as num?)?.toInt() ?? 1;
+      final newXp = currentXp + xpPerPost;
+
+      await apiService.addXP(newXp, currentLevel);
+
       titleController.clear();
       descriptionController.clear();
       priceController.clear();
@@ -58,9 +67,7 @@ class _PostItemsPage extends State<PostItemsPage> {
       setState(() => selectedImages = []);
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Item posted successfully!')),
-        );
+        _showXpPopup(xpPerPost);
       }
     } catch (e) {
       if (mounted) {
