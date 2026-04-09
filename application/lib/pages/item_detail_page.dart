@@ -377,8 +377,114 @@ class _Price extends StatelessWidget {
   }
 }
 
-class _ContactSellerButton extends StatelessWidget {
-  const _ContactSellerButton();
+class _ContactSellerButton extends StatefulWidget {
+  final APIService apiService;
+  const _ContactSellerButton({required this.apiService});
+
+  @override
+  State<_ContactSellerButton> createState() => _ContactSellerButtonState();
+}
+
+class _ContactSellerButtonState extends State<_ContactSellerButton> {
+  bool _contacted = false;
+
+  Future<void> _onContact() async {
+    if (_contacted) return;
+
+    try {
+      final profile = await widget.apiService.getCurrentUserProfile();
+      final data = profile['data'] ?? profile;
+      final currentXp = (data['xp'] as num?)?.toInt() ?? 0;
+      final currentLevel = (data['level'] as num?)?.toInt() ?? 1;
+      final newXp = currentXp + xpPerContact;
+
+      await widget.apiService.addXP(newXp, currentLevel);
+
+      setState(() => _contacted = true);
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            behavior: SnackBarBehavior.floating,
+            margin: const EdgeInsets.all(16),
+            duration: const Duration(seconds: 3),
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            content: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              decoration: BoxDecoration(
+                color: const Color(0xFF1A1A1A),
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: const Color(0xFFFF6C6C).withOpacity(0.6)),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFFFF6C6C).withOpacity(0.15),
+                    blurRadius: 20,
+                    spreadRadius: 2,
+                  ),
+                ],
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFF6C6C).withOpacity(0.15),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Text('⭐', style: TextStyle(fontSize: 16)),
+                  ),
+                  const SizedBox(width: 12),
+                  const Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Seller contacted!',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 13,
+                          ),
+                        ),
+                        SizedBox(height: 2),
+                        Text(
+                          'You earned +$xpPerContact XP',
+                          style: TextStyle(color: Colors.white54, fontSize: 11),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFF6C6C).withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: const Text(
+                      '+$xpPerContact XP',
+                      style: TextStyle(
+                        color: Color(0xFFFF6C6C),
+                        fontWeight: FontWeight.w700,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
