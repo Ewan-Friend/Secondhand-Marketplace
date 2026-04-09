@@ -279,19 +279,11 @@ class _ImageCarouselState extends State<_ImageCarousel> {
         ),
         Positioned(
           left: 8,
-          child: _ArrowButton(
-            icon: Icons.arrow_back_ios,
-            onTap: hasImages ? previousImage : null,
-          ),
+          child: _ArrowButton(icon: Icons.arrow_back_ios, onTap: hasImages ? previousImage : null),
         ),
-
-        /// RIGHT ARROW
         Positioned(
           right: 8,
-          child: _ArrowButton(
-            icon: Icons.arrow_forward_ios,
-            onTap: hasImages ? nextImage : null,
-          ),
+          child: _ArrowButton(icon: Icons.arrow_forward_ios, onTap: hasImages ? nextImage : null),
         ),
       ],
     );
@@ -301,11 +293,7 @@ class _ImageCarouselState extends State<_ImageCarousel> {
 class _ArrowButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback? onTap;
-
-  const _ArrowButton({
-    required this.icon,
-    required this.onTap,
-  });
+  const _ArrowButton({required this.icon, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -327,7 +315,7 @@ class _ArrowButton extends StatelessWidget {
   }
 }
 
-class _ImagePlaceholder extends StatelessWidget { // placeholder for real images
+class _ImagePlaceholder extends StatelessWidget {
   const _ImagePlaceholder();
 
   @override
