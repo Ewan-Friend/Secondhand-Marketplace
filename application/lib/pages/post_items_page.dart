@@ -339,8 +339,7 @@ class _DescriptionField extends StatelessWidget {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
-              borderSide:
-                  const BorderSide(color: Color(0xFFFF6C6C), width: 1.5),
+              borderSide: const BorderSide(color: Color(0xFFFF6C6C), width: 1.5),
             ),
           ),
         ),
@@ -371,8 +370,7 @@ class _PriceField extends StatelessWidget {
             children: [
               const Text(
                 '£',
-                style: TextStyle(
-                    fontSize: 13, color: Colors.grey, height: 1.4),
+                style: TextStyle(fontSize: 13, color: Colors.grey, height: 1.4),
               ),
               const SizedBox(width: 8),
               Expanded(
@@ -382,10 +380,7 @@ class _PriceField extends StatelessWidget {
                     border: InputBorder.none,
                     hintText: '0.00',
                   ),
-                  keyboardType:
-                      const TextInputType.numberWithOptions(
-                    decimal: true,
-                  ),
+                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
                 ),
               ),
             ],
@@ -423,10 +418,7 @@ class _ConditionField extends StatelessWidget {
   final String? value;
   final void Function(String?) onChanged;
 
-  const _ConditionField({
-    required this.value,
-    required this.onChanged,
-  });
+  const _ConditionField({required this.value, required this.onChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -436,9 +428,7 @@ class _ConditionField extends StatelessWidget {
         const _FieldLabel('Condition'),
         const SizedBox(height: 4),
         DropdownButtonFormField<String>(
-          decoration: const InputDecoration(
-            hintText: 'Pick a condition',
-          ),
+          decoration: const InputDecoration(hintText: 'Pick a condition'),
           initialValue: value,
           items: const [
             DropdownMenuItem(value: 'New', child: Text('New')),
@@ -464,9 +454,7 @@ class _CategoryField extends StatelessWidget {
         _FieldLabel('Category'),
         SizedBox(height: 4),
         TextField(
-          decoration: InputDecoration(
-            hintText: 'Start typing',
-          ),
+          decoration: InputDecoration(hintText: 'Start typing'),
         ),
       ],
     );
@@ -481,7 +469,7 @@ class _SideButtons extends StatelessWidget {
   final String? condition;
   final VoidCallback onPublish;
 
-  _SideButtons(
+  const _SideButtons(
     this.titleController,
     this.descriptionController,
     this.priceController,
