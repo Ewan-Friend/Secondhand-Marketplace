@@ -31,9 +31,9 @@ class _ItemDetailState extends State<ItemDetailPage> {
       backgroundColor: cs.surface,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(80),
+        child: Header(showSearch: false, showBackButton: true),
       ),
       body: SafeArea(
-        // CREATE THE ITEM INFO HOORAY
         child: FutureBuilder<Item>(
           future: _itemFuture,
           builder: (context, snapshot) {
@@ -47,7 +47,6 @@ class _ItemDetailState extends State<ItemDetailPage> {
 
             final item = snapshot.data!;
 
-            // Data is fetched
             return LayoutBuilder(
               builder: (context, constraints) {
                 final isWide = constraints.maxWidth >= 980;
@@ -57,13 +56,11 @@ class _ItemDetailState extends State<ItemDetailPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: 24),
-                      // Title row
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Expanded(
                             child: Text(
-                              item.title  ,
                               style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
