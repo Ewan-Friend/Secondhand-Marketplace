@@ -185,6 +185,33 @@ class _PostItemsPage extends State<PostItemsPage> {
                                 child: SingleChildScrollView(
                                   child: _buildForm(context),
                                 ),
+                              ),
+                              const SizedBox(width: 48),
+                              _SideButtons(
+                                titleController,
+                                descriptionController,
+                                priceController,
+                                locationController,
+                                condition,
+                                onPublish,
+                              ),
+                            ],
+                          )
+                        : Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              _buildForm(context),
+                              const SizedBox(height: 24),
+                              _SideButtons(
+                                titleController,
+                                descriptionController,
+                                priceController,
+                                locationController,
+                                condition,
+                                onPublish,
+                              ),
+                            ],
+                          ),
                   ),
                 ],
               ),
@@ -201,10 +228,7 @@ class _PostItemsPage extends State<PostItemsPage> {
       children: [
         const Text(
           'Upload photo',
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.black87,
-          ),
+          style: TextStyle(fontSize: 14, color: Colors.black87),
         ),
         const SizedBox(height: 8),
 
