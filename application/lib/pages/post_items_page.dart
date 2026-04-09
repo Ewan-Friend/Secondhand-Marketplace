@@ -231,27 +231,18 @@ class _PostItemsPage extends State<PostItemsPage> {
           style: TextStyle(fontSize: 14, color: Colors.black87),
         ),
         const SizedBox(height: 8),
-
-        // Upload Image widget that can take image files from users filesystem
         UploadImage(
           onImagesChanged: (images) {
             setState(() {
               selectedImages = images;
             });
-          }
+          },
         ),
-        
         const SizedBox(height: 20),
-
-        /// Title
         _TitleField(titleController),
         const SizedBox(height: 18),
-
-        /// Description
         _DescriptionField(descriptionController),
         const SizedBox(height: 18),
-
-        /// Price + Location
         Row(
           children: [
             SizedBox(
@@ -265,8 +256,6 @@ class _PostItemsPage extends State<PostItemsPage> {
           ],
         ),
         const SizedBox(height: 18),
-
-        /// Condition + Category
         Row(
           children: [
             Expanded(
@@ -317,7 +306,7 @@ class _TitleField extends StatelessWidget {
           decoration: const InputDecoration(
             hintText: 'What are you selling?',
           ),
-          controller: titleController
+          controller: titleController,
         ),
       ],
     );
