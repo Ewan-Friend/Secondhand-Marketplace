@@ -177,10 +177,11 @@ class _Header extends StatelessWidget {
     final cs = Theme.of(context).colorScheme;
     return Row(
       children: [
-         IconButton(
+        IconButton(
           icon: const Icon(Icons.arrow_back),
           tooltip: 'Back',
           onPressed: () {
+            Navigator.pop(context);
           },
         ),
         const SizedBox(width: 8),
@@ -217,6 +218,7 @@ class _Header extends StatelessWidget {
                   width: 32,
                   height: 32,
                   child: const Icon(Icons.search, color: Colors.white, size: 18),
+                ),
               ],
             ),
           ),
@@ -252,16 +254,13 @@ class _ImageCarouselState extends State<_ImageCarousel> {
   void previousImage() {
     if (widget.imageUrls.isEmpty) return;
     setState(() {
-      currentIndex =
-          (currentIndex - 1 + widget.imageUrls.length) %
-              widget.imageUrls.length;
+      currentIndex = (currentIndex - 1 + widget.imageUrls.length) % widget.imageUrls.length;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final hasImages = widget.imageUrls.isNotEmpty;
-
     return Stack(
       alignment: Alignment.center,
       children: [
@@ -273,14 +272,11 @@ class _ImageCarouselState extends State<_ImageCarousel> {
                   child: Image.network(
                     widget.imageUrls[currentIndex],
                     fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) =>
-                        const _ImagePlaceholder(),
+                    errorBuilder: (_, __, ___) => const _ImagePlaceholder(),
                   ),
                 )
               : const _ImagePlaceholder(),
         ),
-
-        /// LEFT ARROW
         Positioned(
           left: 8,
           child: _ArrowButton(
