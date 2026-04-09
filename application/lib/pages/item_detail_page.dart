@@ -138,9 +138,10 @@ class _ItemDetailState extends State<ItemDetailPage> {
                                 Padding(
                                   padding: const EdgeInsets.only(left: 24),
                                   child: SizedBox(
-                                      child: _ImageCarousel(imageUrls: item.imageUrls),
-                                      ),
-                                  ),  
+                                    height: 400,
+                                    child: _ImageCarousel(imageUrls: item.imageUrls),
+                                  ),
+                                ),
                                 const SizedBox(height: 16),
                                 _Price(text: '£${item.price}'),
                                 const SizedBox(height: 12),
@@ -168,7 +169,7 @@ class _ItemDetailState extends State<ItemDetailPage> {
   }
 }
 
-class _Header extends StatelessWidget { // build the top bar: back button, location chip, search bar, and action icons.
+class _Header extends StatelessWidget {
   const _Header();
 
   @override
@@ -176,17 +177,13 @@ class _Header extends StatelessWidget { // build the top bar: back button, locat
     final cs = Theme.of(context).colorScheme;
     return Row(
       children: [
-        // Back button
          IconButton(
           icon: const Icon(Icons.arrow_back),
           tooltip: 'Back',
           onPressed: () {
-             Navigator.pop(context);
           },
-         ),
-
+        ),
         const SizedBox(width: 8),
-        
         _LocationChip(
           icon: Icons.location_on,
           label: 'Bristol, UK',
@@ -194,7 +191,6 @@ class _Header extends StatelessWidget { // build the top bar: back button, locat
           fg: cs.primary,
         ),
         const SizedBox(width: 16),
-        // Search bar
         Expanded(
           child: Container(
             height: 44,
@@ -221,7 +217,6 @@ class _Header extends StatelessWidget { // build the top bar: back button, locat
                   width: 32,
                   height: 32,
                   child: const Icon(Icons.search, color: Colors.white, size: 18),
-                )
               ],
             ),
           ),
@@ -238,7 +233,6 @@ class _Header extends StatelessWidget { // build the top bar: back button, locat
 
 class _ImageCarousel extends StatefulWidget {
   final List<String> imageUrls;
-
   const _ImageCarousel({required this.imageUrls});
 
   @override
