@@ -497,7 +497,7 @@ class _ContactSellerButtonState extends State<_ContactSellerButton> {
           foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
         ),
-        onPressed: () {},
+        onPressed: _onContact,
         child: const Text(
           'Contact Seller',
           style: TextStyle(fontWeight: FontWeight.w600),
@@ -508,7 +508,7 @@ class _ContactSellerButtonState extends State<_ContactSellerButton> {
 }
 
 class _SellerCard extends StatelessWidget {
-  final Map<String, dynamic>? sellerInfo; // Accepts the seller_info from Python
+  final Map<String, dynamic>? sellerInfo;
   const _SellerCard({this.sellerInfo});
 
   @override
@@ -526,13 +526,8 @@ class _SellerCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                // ------ PROFILE PICTURE ------
                 CircleAvatar(
                   radius: 26,
-                  backgroundColor: Color(0xFFD9D9D9),
-                  backgroundImage:
-                    sellerInfo?["avatar_url"] != null ? NetworkImage(sellerInfo?["avatar_url"]) : null,
-                  child:  sellerInfo?["avatar_url"] == null ? Icon(Icons.person_2, size: 24, color: Colors.grey.shade500) : null,
                 ),
                 const SizedBox(width: 12),
                 Expanded(
