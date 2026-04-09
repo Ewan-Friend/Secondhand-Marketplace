@@ -61,11 +61,12 @@ class _ItemDetailState extends State<ItemDetailPage> {
                         children: [
                           Expanded(
                             child: Text(
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                              )
+                              item.title,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
                             ),
                           ),
                           IconButton(
@@ -76,14 +77,12 @@ class _ItemDetailState extends State<ItemDetailPage> {
                         ],
                       ),
                       const SizedBox(height: 8),
-                      // Location line
                       Align(
                         alignment: Alignment.centerRight,
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.location_on,
-                                size: 18, color: Colors.red.shade400),
+                            Icon(Icons.location_on, size: 18, color: Colors.red.shade400),
                             const SizedBox(width: 6),
                                 Text('Redland, Bristol, UK',
                                 style: TextStyle(fontSize: 13, color: Colors.black54)),
