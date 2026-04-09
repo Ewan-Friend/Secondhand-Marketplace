@@ -164,29 +164,26 @@ class _PostItemsPage extends State<PostItemsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        // top navigation bar
-        preferredSize: Size.fromHeight(80),
-        child: Header(showSearch: false, showBackButton: true), 
+        preferredSize: const Size.fromHeight(80),
+        child: Header(showSearch: false, showBackButton: true),
       ),
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
             final bool isWide = constraints.maxWidth > 900;
             return Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 24.0, vertical: 0),
+              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 0),
               child: Column(
                 children: [
                   const SizedBox(height: 24),
                   Expanded(
-                      child: isWide
-                          ? Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  child: SingleChildScrollView(
-                                    child: _buildForm(context),
-                                  ),
+                    child: isWide
+                        ? Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: SingleChildScrollView(
+                                  child: _buildForm(context),
                                 ),
                                 const SizedBox(width: 48),
 
