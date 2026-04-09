@@ -78,6 +78,44 @@ class _PostItemsPage extends State<PostItemsPage> {
     }
   }
 
+  void _showXpPopup(int xpEarned) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.all(16),
+        duration: const Duration(seconds: 3),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        content: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          decoration: BoxDecoration(
+            color: const Color(0xFF1A1A1A),
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: const Color(0xFFFF6C6C).withOpacity(0.6)),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFFFF6C6C).withOpacity(0.15),
+                blurRadius: 20,
+                spreadRadius: 2,
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFF6C6C).withOpacity(0.15),
+                  shape: BoxShape.circle,
+                ),
+                child: const Text(
+                  '⭐',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
   @override
   Widget build(BuildContext context) {
     return Scaffold(
