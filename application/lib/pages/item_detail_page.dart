@@ -84,18 +84,16 @@ class _ItemDetailState extends State<ItemDetailPage> {
                           children: [
                             Icon(Icons.location_on, size: 18, color: Colors.red.shade400),
                             const SizedBox(width: 6),
-                                Text('Redland, Bristol, UK',
+                            Text('Redland, Bristol, UK',
                                 style: TextStyle(fontSize: 13, color: Colors.black54)),
                           ],
                         ),
                       ),
                       const SizedBox(height: 16),
-                      // Main content area
                       isWide
                           ? Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                // Left: media + description
                                 Expanded(
                                   flex: 7,
                                   child: Column(
@@ -107,15 +105,6 @@ class _ItemDetailState extends State<ItemDetailPage> {
                                           height: 400,
                                           child: _ImageCarousel(imageUrls: item.imageUrls),
                                         ),
-                                      ),                               
-                                      SizedBox(height: 20),
-                                      _ConditionTag(),
-                                      SizedBox(height: 10),
-                                      _SectionTitle('Description'),
-                                      SizedBox(height: 8),
-                                      Text(
-                                        item.description, 
-                                        style: TextStyle(fontSize: 14, height: 1.5)  
                                       ),
                                     ],
                                   ),
