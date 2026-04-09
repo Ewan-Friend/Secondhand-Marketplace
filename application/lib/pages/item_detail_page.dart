@@ -341,7 +341,8 @@ class _ConditionTag extends StatelessWidget {
       children: [
         Icon(Icons.sell_outlined, size: 18, color: Colors.red.shade400),
         const SizedBox(width: 6),
-        Text('CONDITION NOT IMPLEMENTED', style: TextStyle(fontSize: 13, color: Colors.grey.shade700)),
+        Text('CONDITION NOT IMPLEMENTED',
+            style: TextStyle(fontSize: 13, color: Colors.grey.shade700)),
       ],
     );
   }
@@ -370,9 +371,7 @@ class _Price extends StatelessWidget {
       alignment: Alignment.centerRight,
       child: Text(
         text,
-        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.w700,
-            ),
+        style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
       ),
     );
   }
