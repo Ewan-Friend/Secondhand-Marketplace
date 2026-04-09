@@ -3,8 +3,9 @@ import '../widgets/header.dart';
 import '../services/api_service.dart';
 import '../models/item_model.dart';
 
+const int xpPerContact = 10;
+
 class ItemDetailPage extends StatefulWidget {
-  // accepts the ID from the
   final String? itemId;
   const ItemDetailPage({super.key, this.itemId});
   
@@ -13,29 +14,23 @@ class ItemDetailPage extends StatefulWidget {
 }
 
 class _ItemDetailState extends State<ItemDetailPage> {
-  // Takes the id that was passed in from the navigator of the item widget
   late Future<Item> _itemFuture;
   final APIService _apiService = APIService();
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // Extracting arguments is best done here or in build, 
     final itemId = widget.itemId;
     _itemFuture = _apiService.getItemFromID(itemId);
   }
-
-  
 
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     return Scaffold(
       backgroundColor: cs.surface,
-      // Header (navigation bar)
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(80),
-        child: Header(showSearch: false, showBackButton: true), // search functionality disabled
       ),
       body: SafeArea(
         // CREATE THE ITEM INFO HOORAY
