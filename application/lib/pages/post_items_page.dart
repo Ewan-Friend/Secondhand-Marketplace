@@ -494,10 +494,7 @@ class _SideButtons extends StatelessWidget {
               shadowColor: const Color(0x55FF6C6C),
             ),
             onPressed: onPublish,
-            child: const Text(
-              'Publish',
-              style: TextStyle(color: Colors.white, fontSize: 15),
-            ),
+            child: const Text('Publish', style: TextStyle(color: Colors.white, fontSize: 15)),
           ),
           const SizedBox(height: 12),
           OutlinedButton(
@@ -508,10 +505,7 @@ class _SideButtons extends StatelessWidget {
               backgroundColor: const Color(0xFFF2F2F2),
             ),
             onPressed: () {},
-            child: const Text(
-              'Preview',
-              style: TextStyle(color: Colors.black87, fontSize: 15),
-            ),
+            child: const Text('Preview', style: TextStyle(color: Colors.black87, fontSize: 15)),
           ),
           const SizedBox(height: 12),
           OutlinedButton(
@@ -522,10 +516,7 @@ class _SideButtons extends StatelessWidget {
               backgroundColor: const Color(0xFFF6F6F6),
             ),
             onPressed: () {},
-            child: const Text(
-              'Save Draft',
-              style: TextStyle(color: Colors.black87, fontSize: 15),
-            ),
+            child: const Text('Save Draft', style: TextStyle(color: Colors.black87, fontSize: 15)),
           ),
         ],
       ),
