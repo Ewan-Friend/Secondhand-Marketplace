@@ -308,7 +308,6 @@ class _TitleField extends StatelessWidget {
 
 class _DescriptionField extends StatelessWidget {
   final TextEditingController controller;
-
   const _DescriptionField(this.controller);
 
   @override
@@ -323,9 +322,7 @@ class _DescriptionField extends StatelessWidget {
           maxLines: 5,
           decoration: InputDecoration(
             hintText: 'Describe what are you selling',
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
               borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
@@ -343,7 +340,6 @@ class _DescriptionField extends StatelessWidget {
 
 class _PriceField extends StatelessWidget {
   final TextEditingController controller;
-
   const _PriceField(this.controller);
 
   @override
