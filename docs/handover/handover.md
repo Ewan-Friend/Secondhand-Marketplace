@@ -12,6 +12,7 @@
     - [Docker Full Stack Setup](#docker-full-stack-setup)
     - [(Optional) MKdocs documentation server](#optional-mkdocs-documentation-server)
   - [System Architecture](#system-architecture)
+  - [API Overview](#api-overview)
   - [Project Structure](#project-structure)
 
 ## Introduction
@@ -212,6 +213,19 @@ GitHub Actions manage continuous integrations (CI) and continuous deployment (CD
 In development, a reverse proxy (Nginx) is used to route requests between the frontend and backend services.
 In production, the frontend is deployed as a static site on an AWS S3 bucket and delivered by CloudFront to improve performance. The backend is deployed on AWS by ECS or Elastic Beanstalk (depending on the environment).
 In short, AWS is responsible for hosting and deployment of the application, whereas Supabase provides database and authentication services.
+
+## API Overview
+
+The backend exposes RESTful API used by the Flutter frontend to manage user data, item listings, and gamification features. The API is implemented in Flask and communicates with Supabase to store and query data.
+
+### Authentication
+Authentication is only partially implemented
+- backend routes currently use hardcoded user IDs
+- Supabase has been choosen to provide authentication, but is not yet enforced across endpoints
+
+### Main Endpoints
+-
+- 
 
 ## Project Structure
 
