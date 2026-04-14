@@ -357,18 +357,12 @@ class _PriceField extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Row(
             children: [
-              const Text(
-                '£',
-                style: TextStyle(fontSize: 13, color: Colors.grey, height: 1.4),
-              ),
+              const Text('£', style: TextStyle(fontSize: 13, color: Colors.grey, height: 1.4)),
               const SizedBox(width: 8),
               Expanded(
                 child: TextField(
                   controller: controller,
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    hintText: '0.00',
-                  ),
+                  decoration: const InputDecoration(border: InputBorder.none, hintText: '0.00'),
                   keyboardType: const TextInputType.numberWithOptions(decimal: true),
                 ),
               ),
@@ -382,7 +376,6 @@ class _PriceField extends StatelessWidget {
 
 class _LocationField extends StatelessWidget {
   final TextEditingController controller;
-
   const _LocationField(this.controller);
 
   @override
