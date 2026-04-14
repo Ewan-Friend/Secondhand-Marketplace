@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/header.dart';
 
 class FavouritesPage extends StatelessWidget {
   const FavouritesPage({super.key});
@@ -6,7 +7,10 @@ class FavouritesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Favourites')),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(80),
+        child: Header(showSearch: false, showBackButton: true), // search functionality disabled
+      ),
       body: const Center(child: Text('Favourites Page')),
     );
   }
