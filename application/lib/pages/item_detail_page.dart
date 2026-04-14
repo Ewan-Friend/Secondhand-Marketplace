@@ -246,16 +246,12 @@ class _ImageCarouselState extends State<_ImageCarousel> {
 
   void nextImage() {
     if (widget.imageUrls.isEmpty) return;
-    setState(() {
-      currentIndex = (currentIndex + 1) % widget.imageUrls.length;
-    });
+    setState(() => currentIndex = (currentIndex + 1) % widget.imageUrls.length);
   }
 
   void previousImage() {
     if (widget.imageUrls.isEmpty) return;
-    setState(() {
-      currentIndex = (currentIndex - 1 + widget.imageUrls.length) % widget.imageUrls.length;
-    });
+    setState(() => currentIndex = (currentIndex - 1 + widget.imageUrls.length) % widget.imageUrls.length);
   }
 
   @override
@@ -392,8 +388,8 @@ class _ContactSellerButtonState extends State<_ContactSellerButton> {
     if (_contacted) return;
 
     try {
-      final profile = await widget.apiService.getCurrentUserProfile();
-      final data = profile['data'] ?? profile;
+      final profile = await widget.apiService.getUserById(_testUserId);
+      final data = profile['table_data'] ?? profile['data'] ?? profile;
       final currentXp = (data['xp'] as num?)?.toInt() ?? 0;
       final currentLevel = (data['level'] as num?)?.toInt() ?? 1;
       final newXp = currentXp + xpPerContact;
