@@ -75,8 +75,9 @@ source venv/bin/activate                     # Start up the virtual environment
 
 On Windows:
 ```
-python -m venv venv                          # Create a virtual environment
-venv/Scripts/Activate.ps1                    # Start up the virtual environment
+python -m venv venv                                                  # Create a virtual environment
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process     # Allows locally created scripts to run
+venv/Scripts/Activate.ps1                                            # Start up the virtual environment
 ```
 
 **Install dependancies**
