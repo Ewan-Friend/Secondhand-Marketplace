@@ -1,4 +1,6 @@
 import 'dart:ui_web';
+import 'package:application/pages/favourites_page.dart';
+import 'package:application/pages/messages_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_strategy/url_strategy.dart';
