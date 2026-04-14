@@ -43,7 +43,7 @@ Of course you also need to clone the repository:
 
 ### Setup Development Environment
 
-In order for the project to run, these constants must be declared within a `.env` file
+In order for the project to run, these constants must be declared within a `.env` file in the root directory
 
 ```env
 SUPABASE_URL= "..." # Supabase project URL, used to connect to the Supabase instance.
@@ -54,13 +54,14 @@ SUPABASE_KEY= "..." # Supabase API service role key with elevated privileges
 >
 > `SUPABASE_KEY` must never be exposed in client-side code or commited to the repository.
 > Ensure `.env` file is ignored by github
->
 
 >[!NOTE]
 >
 > Set `SUPABASE_URL` to be the url of your supabase project [^1]
 >
 > Set `SUPABASE_KEY` to be the Supabase `service_role` key [^2] 
+>
+> Frontend does not use any `.env` variables
 
 > [!TIP]
 > variable assignment template held in the [`.env.template`](https://github.com/spe-uob/2025-SecondhandMarketplace/blob/dev/.env.template) within the root of the project
