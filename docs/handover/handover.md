@@ -219,6 +219,14 @@ In short, AWS is responsible for hosting and deployment of the application, wher
 The backend exposes RESTful API used by the Flutter frontend to manage user data, item listings, and gamification features. The API is implemented in Flask and communicates with Supabase to store and query data.
 
 ### Base URL
+The frontend uses a configurable base URL defined in `app_config.dart`
+
+The value is resolved by this logic and order:
+1. If provided via `--dart-define=API_BASE_URL`, that value is used.
+2. In local development (web or mobile), the default is:
+   - `http://localhost:5000/api`
+3. In deployed web environments, a relative path is used (relies on a proxy):
+   - `/api`
 
 ### Authentication
 Authentication is only partially implemented
