@@ -4,6 +4,7 @@ import '../services/api_service.dart';
 import '../models/item_model.dart';
 
 const int xpPerContact = 10;
+const String _testUserId = '55d89a2e-d30c-4b20-a51d-6a979ba6b7da';
 
 class ItemDetailPage extends StatefulWidget {
   final String? itemId;
@@ -180,9 +181,7 @@ class _Header extends StatelessWidget {
         IconButton(
           icon: const Icon(Icons.arrow_back),
           tooltip: 'Back',
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          onPressed: () => Navigator.pop(context),
         ),
         const SizedBox(width: 8),
         _LocationChip(
@@ -211,10 +210,7 @@ class _Header extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  decoration: BoxDecoration(
-                    color: cs.primary,
-                    shape: BoxShape.circle,
-                  ),
+                  decoration: BoxDecoration(color: cs.primary, shape: BoxShape.circle),
                   width: 32,
                   height: 32,
                   child: const Icon(Icons.search, color: Colors.white, size: 18),
