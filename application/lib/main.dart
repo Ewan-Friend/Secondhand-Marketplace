@@ -14,6 +14,7 @@ import 'pages/sign_up_page.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   setPathUrlStrategy();
+  GoRouter.optionURLReflectsImperativeAPIs = true;
   runApp(const MainApp());
 }
 
