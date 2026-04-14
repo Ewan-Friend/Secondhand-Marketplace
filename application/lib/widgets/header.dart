@@ -119,10 +119,7 @@ class Header extends StatelessWidget {
           // Action icons
           IconButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const FavouritesPage()),
-              );
+              context.go('/favourites');
             },
             tooltip: 'Wishlist',
             icon: const HoverFillHeart(iconSize: 30),
@@ -130,10 +127,7 @@ class Header extends StatelessWidget {
           HoverScale(
             child: IconButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const MessagesPage()),
-                );
+                context.go('/messages');
               },
               tooltip: 'Messages',
               icon: const Icon(Icons.chat_bubble_outline, size: 30),

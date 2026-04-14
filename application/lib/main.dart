@@ -91,5 +91,17 @@ final GoRouter _router = GoRouter(
         return ItemDetailPage(itemId: itemId);
       }
     ),
+    GoRoute(
+      path: '/favourites',
+      builder: (context, state) {
+        return const FavouritesPage();
+      },
+    ),
+    GoRoute(
+      path: '/messages',
+      builder: (context, state) {
+        return const MessagesPage();
+      },
+    ),
   ]
 );
