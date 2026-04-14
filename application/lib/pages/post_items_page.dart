@@ -108,10 +108,7 @@ class _PostItemsPage extends State<PostItemsPage> {
                   color: const Color(0xFFFF6C6C).withOpacity(0.15),
                   shape: BoxShape.circle,
                 ),
-                child: const Text(
-                  '⭐',
-                  style: TextStyle(fontSize: 16),
-                ),
+                child: const Text('⭐', style: TextStyle(fontSize: 16)),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -279,7 +276,6 @@ class _PostItemsPage extends State<PostItemsPage> {
 
 class _FieldLabel extends StatelessWidget {
   final String text;
-
   const _FieldLabel(this.text);
 
   @override
@@ -293,7 +289,6 @@ class _FieldLabel extends StatelessWidget {
 
 class _TitleField extends StatelessWidget {
   final TextEditingController titleController;
-
   const _TitleField(this.titleController);
 
   @override
@@ -303,9 +298,7 @@ class _TitleField extends StatelessWidget {
       children: [
         const _FieldLabel('Title'),
         TextFormField(
-          decoration: const InputDecoration(
-            hintText: 'What are you selling?',
-          ),
+          decoration: const InputDecoration(hintText: 'What are you selling?'),
           controller: titleController,
         ),
       ],
