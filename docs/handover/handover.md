@@ -46,9 +46,15 @@ Of course you also need to clone the repository:
 In order for the project to run, these constants must be declared within a `.env` file
 
 ```env
-SUPABASE_URL= "..." # Supabase project URL
-SUPABASE_KEY= "..." # Supabase API service role key
+SUPABASE_URL= "..." # Supabase project URL, used to connect to the Supabase instance.
+SUPABASE_KEY= "..." # Supabase API service role key with elevated privileges
 ```
+
+>[!WARNING]
+>
+> `SUPABASE_KEY` must never be exposed in client-side code or commited to the repository.
+> Ensure `.env` file is ignored by github
+>
 
 >[!NOTE]
 >
@@ -64,7 +70,7 @@ SUPABASE_KEY= "..." # Supabase API service role key
 ### Backend environment
 > [!WARNING]
 >
-> It is highly reccomended that if you are running backend and frontend manually - that you run the backend first
+> It is highly recommended that if you are running backend and frontend manually - that you run the backend first
 >
 > Running the Frontend first is fine for testing UI, however may break functionality
 
