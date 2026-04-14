@@ -246,6 +246,31 @@ Authentication is only partially implemented
 - Some routes currently return mock data rather than actual data from the database (e.g. `/reviews`)
 
 ## Project Structure
+```txt
+2025-SecondhandMarketPlace
+├── application                     # Flutter frontend
+│   ├── lib
+│   │   ├── models                  # Reusable data structures
+│   │   ├── pages                   # Application pages
+│   │   ├── services                # Frontend services
+│   │   └── widgets                 # Reusable UI elements
+│   ├── test                        # Frontend tests
+|   ├── nginx.conf                  # Serves the frontend
+│   ├── Dockerfile                  # Docker build info
+│   ├── ...
+├── backend                         # Python Flask backend
+│   ├── app
+│   │   ├── __init__.py             # Blueprint + frontend connection
+│   │   └── routes                  # API endpoints
+│   ├── run.py                      # Run backend server
+│   ├── test                        # Backend tests
+│   ├── requirements.txt            # Backend dependencies
+│   ├── Dockerfile                  # Docker build info
+├── docs                            # Project docs
+├── .env.template                   # Template for .env (API keys)
+├── docker-compose.yml              # Multi-container setup (frontend/backend)
+├── mkdocs.yml                      # Online docs structure
+```
 
 [^1]: An example SUPABASE_URL:  "https://abc123.supabase.co"
 [^2]: An example `service_role` key will usually be formatted: "eyJhbGci..." (200-300 characters long)
