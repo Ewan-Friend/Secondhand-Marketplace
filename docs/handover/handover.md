@@ -205,12 +205,12 @@ Here is our final architecture diagram for the system
 
 ![Software architecture](../assets/handover/Software-architecture.png)
 
-The frontend is developed in Flutter (Dart) communicates with Flask backend via HTTP requests. The backend provides RESTful API endpoints to handle application logic and data operations. 
-Data storage and authentication (not properly implemented) are managed by Supabase which provides a PostgreSQL database.
+The frontend is developed in Flutter (Dart) and communicates with Flask backend via HTTP requests. The backend provides RESTful API endpoints to handle application logic and data operations. 
+Data storage and authentication (partially implemented) are managed by Supabase which provides a PostgreSQL database.
 Everything is containerised using Docker to ensure consistency across environments. 
 GitHub Actions manage continuous integrations (CI) and continuous deployment (CD). 
 In development, a reverse proxy (Nginx) is used to route requests between the frontend and backend services.
-In production (deployment), the frontend is deployed as a static site on AWS S3 bucket and delivered by CloudFront to improve performance. The backend is deployed on AWS by ECS or Elastic Beanstalk (depending on the environment).
+In production, the frontend is deployed as a static site on an AWS S3 bucket and delivered by CloudFront to improve performance. The backend is deployed on AWS by ECS or Elastic Beanstalk (depending on the environment).
 In short, AWS is responsible for hosting and deployment of the application, whereas Supabase provides database and authentication services.
 
 ## Project Structure
