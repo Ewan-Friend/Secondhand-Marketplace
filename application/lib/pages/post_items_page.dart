@@ -6,6 +6,7 @@ import '../widgets/upload_image.dart';
 import '../models/item_model.dart';
 
 const int xpPerPost = 50;
+const String _testUserId = '55d89a2e-d30c-4b20-a51d-6a979ba6b7da';
 
 class PostItemsPage extends StatefulWidget {
   const PostItemsPage({super.key});
@@ -25,7 +26,7 @@ class _PostItemsPage extends State<PostItemsPage> {
   Item createItem() {
     return Item(
       id: '',
-      sellerId: '745a9056-66f1-4eb1-901b-16bfa402116f',
+      sellerId: _testUserId,
       title: titleController.text,
       description: descriptionController.text,
       rating: 0,
@@ -34,7 +35,7 @@ class _PostItemsPage extends State<PostItemsPage> {
       condition: condition ?? 'good',
       imageUrls: [],
       sellerInfo: {
-        'seller_id': '745a9056-66f1-4eb1-901b-16bfa402116f',
+        'seller_id': _testUserId,
         'seller_name': 'Upload Test User',
         'location': 'Bristol, UK'
       },
@@ -50,9 +51,8 @@ class _PostItemsPage extends State<PostItemsPage> {
         selectedImages: selectedImages,
       );
 
-      // Fetch current XP and level
-      final profile = await apiService.getCurrentUserProfile();
-      final data = profile['data'] ?? profile;
+      final profile = await apiService.getUserById(_testUserId);
+      final data = profile['table_data'] ?? profile['data'] ?? profile;
       final currentXp = (data['xp'] as num?)?.toInt() ?? 0;
       final currentLevel = (data['level'] as num?)?.toInt() ?? 1;
       final newXp = currentXp + xpPerPost;
