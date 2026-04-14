@@ -398,9 +398,7 @@ class _LocationField extends StatelessWidget {
         const SizedBox(height: 4),
         TextField(
           controller: controller,
-          decoration: const InputDecoration(
-            hintText: 'Start typing location',
-          ),
+          decoration: const InputDecoration(hintText: 'Start typing location'),
         ),
       ],
     );
@@ -410,7 +408,6 @@ class _LocationField extends StatelessWidget {
 class _ConditionField extends StatelessWidget {
   final String? value;
   final void Function(String?) onChanged;
-
   const _ConditionField({required this.value, required this.onChanged});
 
   @override
@@ -446,9 +443,7 @@ class _CategoryField extends StatelessWidget {
       children: const [
         _FieldLabel('Category'),
         SizedBox(height: 4),
-        TextField(
-          decoration: InputDecoration(hintText: 'Start typing'),
-        ),
+        TextField(decoration: InputDecoration(hintText: 'Start typing')),
       ],
     );
   }
