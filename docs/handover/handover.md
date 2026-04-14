@@ -218,9 +218,11 @@ In short, AWS is responsible for hosting and deployment of the application, wher
 
 The backend exposes RESTful API used by the Flutter frontend to manage user data, item listings, and gamification features. The API is implemented in Flask and communicates with Supabase to store and query data.
 
+### Base URL
+
 ### Authentication
 Authentication is only partially implemented
-- backend routes currently use hardcoded user IDs
+- Backend routes currently use hardcoded user IDs or mock data
 - Supabase has been choosen to provide authentication, but is not yet enforced across endpoints
 
 ### Main Endpoints
@@ -230,6 +232,10 @@ Authentication is only partially implemented
 - `/profile/<user_id>` and `/me` for user profile retrieval and updates
 - `/reviews` for user review retrieval
 - `/levels` and `/me/xp` for gamification (level and XP progression)
+
+### Current Implementation Notes
+- Responses return JSON with a `status_code` field and either `data`, `table_data`, or `message`
+- Some routes currently return mock data rather than actual data from the database (e.g. `/reviews`)
 
 ## Project Structure
 
