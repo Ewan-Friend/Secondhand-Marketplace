@@ -224,8 +224,12 @@ Authentication is only partially implemented
 - Supabase has been choosen to provide authentication, but is not yet enforced across endpoints
 
 ### Main Endpoints
--
-- 
+- `/auth/` routes for authentication (login, sign-up)
+- `/status` for checking backend connectivity
+- `/items` for retrieving items for listings
+- `/profile/<user_id>` and `/me` for user profile retrieval and updates
+- `/reviews` for user review retrieval
+- `/levels` and `/me/xp` for gamification (level and XP progression)
 
 ## Project Structure
 
