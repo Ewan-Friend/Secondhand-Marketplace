@@ -1,17 +1,6 @@
 # Secondhand Marketplace Handover
 
 ## Contents
-- [Introduction](#introduction)
-- [Project Setup](#project-setup)
-- [System Architecture](#system-architecture) 
-- [Project Structure](#project-structure)
-
-## Introduction
-This document is designed to give detailed information on certain aspects of the project: If a new developer were to begin working on it. 
-
-The majority of need-to-know, high-level information will be outlined within this document, with more fine grain details being outlined within code comments left throughout the projects codebase.
-
-## Project Setup
 - [Secondhand Marketplace Handover](#secondhand-marketplace-handover)
   - [Contents](#contents)
   - [Introduction](#introduction)
@@ -24,6 +13,20 @@ The majority of need-to-know, high-level information will be outlined within thi
     - [(Optional) MKdocs documentation server](#optional-mkdocs-documentation-server)
   - [System Architecture](#system-architecture)
   - [Project Structure](#project-structure)
+
+## Introduction
+This document is designed to give detailed information on certain aspects of the project: If a new developer were to begin working on it. 
+
+The majority of need-to-know, high-level information will be outlined within this document, with more fine grain details being outlined within code comments left throughout the projects codebase.
+
+## Tech Stack
+Frontend: Flutter
+Backend/API: Flask (Python)
+Database: Supabase (PostgreSQL)
+Cloud Hosting & Deployment: AWS
+Infrastructure & CI/CD: Docker, GitHub Actions
+
+## Project Setup
 
 ### Prerequisite Downloads
 - [Python 3.xx](https://www.python.org/downloads/) (currently 3.16)
