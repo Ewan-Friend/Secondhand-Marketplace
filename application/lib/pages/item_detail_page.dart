@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../widgets/header.dart';
 import '../services/api_service.dart';
 import '../models/item_model.dart';
@@ -197,7 +198,7 @@ class _Header extends StatelessWidget { // build the top bar: back button, locat
           icon: const Icon(Icons.arrow_back),
           tooltip: 'Back',
           onPressed: () {
-             Navigator.pop(context);
+             context.pop();
           },
          ),
 

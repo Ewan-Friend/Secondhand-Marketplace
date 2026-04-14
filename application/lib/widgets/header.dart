@@ -119,7 +119,7 @@ class Header extends StatelessWidget {
           // Action icons
           IconButton(
             onPressed: () {
-              context.go('/favourites');
+              context.push('/favourites');
             },
             tooltip: 'Wishlist',
             icon: const HoverFillHeart(iconSize: 30),
@@ -127,7 +127,7 @@ class Header extends StatelessWidget {
           HoverScale(
             child: IconButton(
               onPressed: () {
-                context.go('/messages');
+                context.push('/messages');
               },
               tooltip: 'Messages',
               icon: const Icon(Icons.chat_bubble_outline, size: 30),
@@ -136,7 +136,7 @@ class Header extends StatelessWidget {
           HoverScale(
             child: IconButton(
               onPressed: () {
-                context.go('/post');
+                context.push('/post');
               },
               tooltip: 'Post Item',
               icon: const Icon(Icons.add_circle_outline, size: 30),
@@ -147,7 +147,7 @@ class Header extends StatelessWidget {
               tooltip: 'Account',
               icon: const Icon(Icons.person_outline, size: 30),
               onPressed: () {
-                context.go('/profile');
+                context.push('/profile');
               },
             ),
           ),
