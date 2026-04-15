@@ -18,14 +18,16 @@ on the request path.
 ---
 
 ## Architecture
-User
-│
-▼
-CloudFront Distribution (sepsecondhand.co.uk)
-├── /api/*      ──────────────────► Elastic Beanstalk (Flask API)
-├── /static/*   ──────────────────► S3 Bucket (static assets)
-└── /* (default)──────────────────► S3 Bucket (Flutter Web)
 
+```
+User
+ │
+ ▼
+CloudFront Distribution (sepsecondhand.co.uk)
+ ├── /api/*       ──────────────────► Elastic Beanstalk (Flask API)
+ ├── /static/*    ──────────────────► S3 Bucket (static assets)
+ └── /* (default) ──────────────────► S3 Bucket (Flutter Web)
+```
 ---
 
 ## S3 — Frontend Hosting
