@@ -194,6 +194,27 @@ Here is our final architecture diagram for the system
 
 ![Software architecture](../assets/handover/Software-architecture.png)
 
+## Testing
+
+navigate to the backend directory first:
+```bash
+cd backend
+```
+
+**Run all tests:**
+```bash
+pytest -v --cov=app --cov-report=term-missing test/
+```
+
+- runs all tests in `test/`
+- shows each test result
+- reports coverage for `app` (stores all backend logic)
+
+**Running one test file**
+```bash
+pytest -v test/test_items.py
+```
+
 ## Project Structure
 
 [^1]: An example SUPABASE_URL:  "https://abc123.supabase.co"
