@@ -81,8 +81,8 @@ frontend and backend under a single domain and handles HTTPS termination.
 
 | Origin name | Origin type | Description |
 |---|---|---|
-| `secondhand-backend-en` | Elastic Beanstalk | Flask API backend |
-| `secondhand-marketplace` | S3 | Flutter web frontend |
+| `secondhand-backend-env-1.eba-jx9gv23c.eu-north-1.elasticbeanstalk.com` | Elastic Beanstalk | Flask API backend |
+| `secondhand-marketplace-frontend.s3.eu-north-1.amazonaws.com-mlpc1pxnspm` | S3 | Flutter web frontend |
 
 ### Behaviors
 
