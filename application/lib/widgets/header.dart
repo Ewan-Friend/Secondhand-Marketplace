@@ -1,12 +1,15 @@
 import 'package:application/pages/home_page.dart';
 import 'package:application/pages/post_items_page.dart';
+import 'package:application/widgets/hover_scale.dart';
+import 'package:application/widgets/hover_fill_heart.dart';
+
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
 import '../pages/profile_page.dart';
 import '../pages/favourites_page.dart';
 import '../pages/messages_page.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:application/widgets/hover_scale.dart';
-import 'package:application/widgets/hover_fill_heart.dart';
 
 class Header extends StatelessWidget {
   Header({
@@ -29,10 +32,7 @@ class Header extends StatelessWidget {
           // Logo
           IconButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const HomePage()),
-              );
+              context.go('/');
             },
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints(
@@ -56,7 +56,7 @@ class Header extends StatelessWidget {
                     icon: const Icon(Icons.arrow_back, size: 28),
                     tooltip: 'Back',
                     onPressed: () {
-                      Navigator.pop(context);
+                      context.pop();
                     }                    
                   )
                 : const SizedBox(),
@@ -119,10 +119,7 @@ class Header extends StatelessWidget {
           // Action icons
           IconButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const FavouritesPage()),
-              );
+              context.push('/favourites');
             },
             tooltip: 'Wishlist',
             icon: const HoverFillHeart(iconSize: 30),
@@ -130,10 +127,7 @@ class Header extends StatelessWidget {
           HoverScale(
             child: IconButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const MessagesPage()),
-                );
+                context.push('/messages');
               },
               tooltip: 'Messages',
               icon: const Icon(Icons.chat_bubble_outline, size: 30),
@@ -142,10 +136,7 @@ class Header extends StatelessWidget {
           HoverScale(
             child: IconButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const PostItemsPage()),
-                );
+                context.push('/post');
               },
               tooltip: 'Post Item',
               icon: const Icon(Icons.add_circle_outline, size: 30),
@@ -156,10 +147,7 @@ class Header extends StatelessWidget {
               tooltip: 'Account',
               icon: const Icon(Icons.person_outline, size: 30),
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const ProfilePage()),
-                );
+                context.push('/profile');
               },
             ),
           ),

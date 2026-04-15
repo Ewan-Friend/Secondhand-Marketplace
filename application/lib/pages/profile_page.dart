@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../services/api_service.dart';
 import '../widgets/header.dart';
 import '../widgets/item_widget.dart';
@@ -806,7 +807,7 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => context.pop(),
             child: const Text('Cancel'),
           ),
           ElevatedButton(
@@ -824,7 +825,7 @@ class _ProfilePageState extends State<ProfilePage> {
               }
 
               if (context.mounted) {
-                Navigator.pop(context);
+                context.pop();
               }
             },
             style: ElevatedButton.styleFrom(
