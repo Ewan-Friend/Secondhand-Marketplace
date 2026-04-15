@@ -224,6 +224,28 @@ pytest -v test/test_health.py::test_get_status
 
 All tests are automatically run on every push thanks to the `flask-ci.yml` CI workflow
 
+**Test Coverage**
+
+For backend test coverage, from the `backend/` directory with the Python virtual environment activated, run:
+
+```bash
+pytest --cov=app --cov-report=term-missing test/
+```
+
+This runs all backend tests and prints the overall coverage summary in the terminal, including any missing lines
+
+To generate an interactive and more detailed HTML report, run:
+```bash
+pytest --cov=app --cov-report=html test/
+```
+
+Then open `htmlcov/index.html` in a browser
+
+> [!WARNING]
+>
+> Make sure that the Python virtual environment is activated before running test commands and that you are in the `backend/` directory
+>
+
 ### Frontend Testing
 
 Navigate to the frontend directory:
@@ -245,7 +267,7 @@ All tests are automatically run on every push thanks to the `flutter-ci.yml` CI 
 
 **Test Coverage**
 
-To get the overall summary of the frontend test coverage, run the following from `application/`:
+To get the frontend test coverage, run the following from `application/`:
 
 ```bash
 flutter test --coverage
