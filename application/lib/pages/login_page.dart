@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 
 import '../services/api_service.dart';
 import '../services/auth_storage.dart';
@@ -75,7 +76,9 @@ class _LoginPageState extends State<LoginPage> {
         const SnackBar(content: Text('Logged in successfully')),
       );
 
-      Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+      if (!mounted) return;
+
+      context.go('/');
     } on ApiException catch (e) {
       if (!mounted) return;
 
@@ -311,7 +314,7 @@ class _LoginPageState extends State<LoginPage> {
                           const SizedBox(height: 18),
                           GestureDetector(
                             onTap: () {
-                              Navigator.of(context).pushNamed('/signup');
+                              context.push('/signup');
                             },
                             child: Text.rich(
                               TextSpan(
