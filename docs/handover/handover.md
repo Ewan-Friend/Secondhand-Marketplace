@@ -245,13 +245,38 @@ All tests are automatically run on every push thanks to the `flutter-ci.yml` CI 
 
 **Test Coverage**
 
-To get the overall summary of the frontend test coverage, run the following from `application/` after installing lcov.
-```bash
-flutter test --coverage   # generates a file coverage/lcov.info containing the statistics
-genhtml coverage/lcov.info -o coverage/html # parse into html document that you can interact with
+To get the overall summary of the frontend test coverage, run the following from `application/`:
 
-lcov --summary coverage/lcov.info           # alternatively see the coverage just on the command line
+```bash
+flutter test --coverage
 ```
+
+This generates coverage/lcov.info which contains the frontend test coverage data
+
+To view the coverage in an interactive HTML report, run:
+
+```bash
+genhtml coverage/lcov.info -o coverage/html
+```
+Then open `coverage/html/index.html` in a browse
+
+Alternatively view the overall summary in the terminal by running:
+
+```bash
+lcov --summary coverage/lcov.info
+```
+
+> [!NOTE]
+>
+> lcov is easy to install on Mac and Linux
+> - Mac: `brew install lcov` 
+> - Linux: `sudo apt-get install lcov`
+>
+> However when it comes to Windows, we suggest using WSL
+> If `genhtml` fails due to Windows-style file paths in `lcov.info`, convert backslashes to forward slashes first: 
+> `sed -i 's|\\|/|g' coverage/lcov.info`
+> then rerun the command for HTML
+>
 
 ## Project Structure
 
