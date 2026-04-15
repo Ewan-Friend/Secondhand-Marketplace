@@ -94,7 +94,7 @@ frontend and backend under a single domain and handles HTTPS termination.
 
 > [!WARNING]
 >
-> `API_BASE_URL` must be set to `/api`. Setting it to a direct Elastic Beanstalk URL will bypass CloudFront and cause HTTP/HTTPS errors. See the [CI/CD documentation](../workflows/ci-cd.md) for more details.
+>`API_BASE_URL` must be set to `/api`. Setting it to a direct Elastic Beanstalk URL will bypass CloudFront and cause HTTP/HTTPS errors. See the [CI/CD documentation](../workflows/ci-cd.md) for more details.
 
 ---
 
