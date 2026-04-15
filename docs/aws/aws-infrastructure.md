@@ -92,10 +92,9 @@ frontend and backend under a single domain and handles HTTPS termination.
 | 1 | `/static/*` | S3 | Redirect HTTP to HTTPS | CachingOptimized |
 | 2 | `*` (default) | S3 | Redirect HTTP to HTTPS | CachingOptimized |
 
-> ⚠️ The Flutter app must use `/api` as the `API_BASE_URL` at build time —
-> not the direct Elastic Beanstalk URL. Using the EB URL directly bypasses
-> CloudFront and causes HTTP/HTTPS errors. See the
-> [CI/CD documentation](../workflows/ci-cd.md) for more details.
+> [!WARNING]
+>
+> `API_BASE_URL` must be set to `/api`. Setting it to a direct Elastic Beanstalk URL will bypass CloudFront and cause HTTP/HTTPS errors. See the [CI/CD documentation](../workflows/ci-cd.md) for more details.
 
 ---
 
