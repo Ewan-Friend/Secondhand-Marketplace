@@ -99,3 +99,56 @@ Steps:
 |---|---|
 | `AWS_ROLE_ARN` | IAM role ARN to assume via OIDC |
 | `AWS_REGION` | AWS region (e.g. `eu-north-1`) |
+| `AWS_S3_BUCKET` | Frontend S3 bucket name |
+| `CLOUDFRONT_DISTRIBUTION_ID` | CloudFront distribution ID |
+| `CLOUDFRONT_DOMAIN` | Production domain for health check |
+
+**Required GitHub secrets:**
+
+| Secret | Description |
+|---|---|
+| `API_BASE_URL` | API base URL injected at build time (should be `/api`) |
+
+> ⚠️ `API_BASE_URL` must be set to `/api`. Setting it to a direct Elastic 
+> Beanstalk URL will bypass CloudFront and cause HTTP/HTTPS errors.
+
+---
+
+### Backend CD (`backend-cd.yml`)
+
+Triggers on every push to `dev`. Packages the Flask backend and deploys it 
+to AWS Elastic Beanstalk via the AWS CLI.
+
+Uses OIDC-based authentication — no long-lived AWS access keys are stored 
+as secrets.
+
+Steps:
+1. Checkout code
+2. Set up Python 3.11
+3. Install dependencies
+4. Create deployment package (zip of `backend/`, excluding git files, 
+   pycache, and test files)
+5. Configure AWS credentials via OIDC
+6. Upload zip to S3 backend bucket
+7. Create a new Elastic Beanstalk application version
+8. Update the EB environment to the new version
+9. Wait for the environment to update and verify health is `Green`
+
+If health is not `Green` after deployment, the pipeline fails immediately.
+
+**Required GitHub variables:**
+
+| Variable | Description |
+|---|---|
+| `AWS_ROLE_ARN` | IAM role ARN to assume via OIDC |
+| `AWS_REGION` | AWS region (e.g. `eu-north-1`) |
+| `AWS_S3_BUCKET_BACKEND` | S3 bucket for backend deployment packages |
+
+---
+
+## Documentation (`mkdocs-cd.yml`)
+
+Triggers on pushes to `dev` or `main`. Automatically builds and publishes 
+the project documentation to GitHub Pages using MkDocs with the Material theme.
+
+Uses `GITHUB_TOKEN` for authentication — no additional secrets required.
