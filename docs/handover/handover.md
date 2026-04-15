@@ -194,6 +194,8 @@ Here is our final architecture diagram for the system
 
 ![Software architecture](../assets/handover/Software-architecture.png)
 
+## Project Structure
+
 ## Testing
 
 ### Backend Testing
@@ -300,7 +302,23 @@ lcov --summary coverage/lcov.info
 > then rerun the command for HTML
 >
 
-## Project Structure
+## Deployment
+
+
+## Limitations & Future Improvements
+
+**Backend**
+- Authentication is icomplete: missing login endpoint, token validation, email verification, and automatic profile creation on registration 
+- User information about "Posting for X months" not implemented
+
+**Frontend**
+- Test coverage is limited, primarily focused on widgets and models, with less coverage of full user flows and integration
+
+**General**
+- Favourites and Messaging page are not implemented
+- Reviews and ratings are hard-coded in the frontend, but the fitting API endpoints are present in the backend
+
+
 
 [^1]: An example SUPABASE_URL:  "https://abc123.supabase.co"
 [^2]: An example `service_role` key will usually be formatted: "eyJhbGci..." (200-300 characters long)
