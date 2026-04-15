@@ -97,3 +97,17 @@ frontend and backend under a single domain and handles HTTPS termination.
 
 ---
 
+## Deployment Flow
+
+### Frontend
+1. Flutter web app is built with `flutter build web --release`
+2. Build output is synced to the S3 bucket (`secondhand-marketplace-frontend`)
+3. CloudFront cache is invalidated (`/*`)
+4. Deployment is verified by checking `https://www.sepsecondhand.co.uk/index.html` returns HTTP 200
+
+### Backend
+1. Backend code is zipped (excluding tests, pycache, and git files)
+2. Zip is uploaded to the backend S3 bucket with the commit SHA as the filename
+3. A new Elastic Beanstalk application version is created with the commit SHA as the version label
+4. The EB environment is updated to the new version
+5. Pipeline waits for the environment health to become `Green` before completing
