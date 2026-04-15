@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 
 import '../config/app_config.dart';
@@ -493,7 +494,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              Navigator.pop(context);
+                              context.pop();
                             },
                             child: const Text(
                               "Sign In",

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../widgets/header.dart';
 import '../services/api_service.dart';
 import '../models/item_model.dart';
@@ -181,8 +182,16 @@ class _Header extends StatelessWidget {
         IconButton(
           icon: const Icon(Icons.arrow_back),
           tooltip: 'Back',
+<<<<<<< feature/385-xp-rewards-for-posting-and-contacting
           onPressed: () => Navigator.pop(context),
         ),
+=======
+          onPressed: () {
+             context.pop();
+          },
+         ),
+
+>>>>>>> dev
         const SizedBox(width: 8),
         _LocationChip(
           icon: Icons.location_on,
