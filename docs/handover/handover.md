@@ -196,7 +196,9 @@ Here is our final architecture diagram for the system
 
 ## Testing
 
-navigate to the backend directory first:
+### Backend Testing
+
+navigate to the backend directory and run it in the python virtual environment:
 ```bash
 cd backend
 ```
@@ -208,12 +210,21 @@ pytest -v --cov=app --cov-report=term-missing test/
 
 - runs all tests in `test/`
 - shows each test result
-- reports coverage for `app` (stores all backend logic)
+- reports coverage for `app` (which contains all backend logic)
 
-**Running one test file**
+**Run specific test file:**
 ```bash
 pytest -v test/test_items.py
 ```
+
+**Run a single test:**
+```bash
+pytest -v test/test_health.py::test_get_status
+```
+
+all tests are automatically run on every push thanks to the `flask-ci.yml` CI workflow
+
+### Frontend Testing
 
 ## Project Structure
 
