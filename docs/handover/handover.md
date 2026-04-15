@@ -198,7 +198,7 @@ Here is our final architecture diagram for the system
 
 ### Backend Testing
 
-navigate to the backend directory and run it in the python virtual environment:
+Navigate to the backend directory and run it in the python virtual environment:
 ```bash
 cd backend
 ```
@@ -222,9 +222,24 @@ pytest -v test/test_items.py
 pytest -v test/test_health.py::test_get_status
 ```
 
-all tests are automatically run on every push thanks to the `flask-ci.yml` CI workflow
+All tests are automatically run on every push thanks to the `flask-ci.yml` CI workflow
 
 ### Frontend Testing
+
+Navigate to the frontend directory:
+```bash
+cd application
+```
+
+**Run all tests:**
+```bash
+flutter test
+```
+
+**Run specific test file:**
+```bash
+flutter test test/post_items_page_test.dart
+```
 
 ## Project Structure
 
