@@ -241,6 +241,18 @@ flutter test
 flutter test test/post_items_page_test.dart
 ```
 
+All tests are automatically run on every push thanks to the `flutter-ci.yml` CI workflow
+
+**Test Coverage**
+
+To get the overall summary of the frontend test coverage, run the following from `application/` after installing lcov.
+```bash
+flutter test --coverage   # generates a file coverage/lcov.info containing the statistics
+genhtml coverage/lcov.info -o coverage/html # parse into html document that you can interact with
+
+lcov --summary coverage/lcov.info           # alternatively see the coverage just on the command line
+```
+
 ## Project Structure
 
 [^1]: An example SUPABASE_URL:  "https://abc123.supabase.co"
