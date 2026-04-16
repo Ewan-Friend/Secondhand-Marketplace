@@ -282,7 +282,7 @@ To view the coverage in an interactive HTML report, run:
 ```bash
 genhtml coverage/lcov.info -o coverage/html
 ```
-Then open `coverage/html/index.html` in a browse
+Then open `coverage/html/index.html` in a browser
 
 Alternatively view the overall summary in the terminal by running:
 
@@ -308,7 +308,8 @@ lcov --summary coverage/lcov.info
 ## Limitations & Future Improvements
 
 **Backend**
-- Authentication is icomplete: missing login endpoint, token validation, email verification, and automatic profile creation on registration 
+- Authentication is incomplete: missing login endpoint, token validation, email verification, and automatic profile creation on registration 
+- Posting an item is tied to a hard-coded testing user, rather than a logged in user (incomplete authentication)
 - User information about "Posting for X months" not implemented
 
 **Frontend**
