@@ -1,46 +1,81 @@
 /*
 
-
-AUTH GATE - THIS will continuously listen to the auth state changes
+AUTH GATE
 ------------------------------------------------------------------------
 
-unauthenticated -> LoginPage
-authenticated -> profile page
 
 */
 
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../pages/login_page.dart';
 import '../pages/profile_page.dart';
+import '../services/api_service.dart';
+import '../services/auth_storage.dart';
 
-class AuthGate extends StatelessWidget {
+class AuthGate extends StatefulWidget {
   const AuthGate({super.key});
 
   @override
+  State<AuthGate> createState() => _AuthGateState();
+}
+
+class _AuthGateState extends State<AuthGate> {
+  final APIService _api = APIService();
+  final AuthStorage _storage = AuthStorage();
+
+  late final Future<bool> _boot;
+
+  @override
+  void initState() {
+    super.initState();
+    _boot = _bootstrap();
+  }
+
+  Future<bool> _bootstrap() async {
+    final session = await _storage.readSession();
+    if (session == null) return false;
+
+    if (session.isExpired) {
+      await _storage.clear();
+      _api.clearSession();
+      return false;
+    }
+
+
+    _api.setSession(
+      accessToken: session.accessToken,
+      refreshToken: session.refreshToken,
+      expiresAt: session.expiresAt,
+    );
+
+    try {
+      final me = await _api.getCurrentUserProfile();
+      if (me['status_code'] == 401) {
+        await _storage.clear();
+        _api.clearSession();
+        return false;
+      }
+    } catch (_) {
+    }
+
+    return true;
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      // Listen to auth state changes
-      stream: Supabase.instance.client.auth.onAuthStateChange,
-
-      // Build appropriate page based on auth state
-      builder: (context, snapshot) {
-        // loading..
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Scaffold(
-  body: const Center(child: CircularProgressIndicator()),
-);
-
+    return FutureBuilder<bool>(
+      future: _boot,
+      builder: (context, snap) {
+        if (snap.connectionState != ConnectionState.done) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
         }
 
-    // check if there is a valid session currently
-return snapshot.data?.session != null
-    ? const ProfilePage()
-    : const LoginPage();
-
-
-    },
-    ); // StreamBuilder
+        final authed = snap.data ?? false;
+        return authed ? const ProfilePage() : const LoginPage();
+      },
+    );
   }
 }

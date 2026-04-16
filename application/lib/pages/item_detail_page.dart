@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../widgets/header.dart';
 import '../services/api_service.dart';
 import '../models/item_model.dart';
@@ -110,7 +111,13 @@ class _ItemDetailState extends State<ItemDetailPage> {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      _ImageCollage(item: item),
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 24),
+                                        child: SizedBox(
+                                          height: 400,
+                                          child: _ImageCarousel(imageUrls: item.imageUrls),
+                                        ),
+                                      ),                               
                                       SizedBox(height: 20),
                                       _ConditionTag(),
                                       SizedBox(height: 10),
@@ -130,7 +137,7 @@ class _ItemDetailState extends State<ItemDetailPage> {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.stretch,
                                     children: [
-                                      _Price(text: "${item.price.toString()} CHF"),
+                                      _Price(text: "£${item.price.toString()}"),
                                       SizedBox(height: 12),
                                       _ContactSellerButton(),
                                       SizedBox(height: 12),
@@ -143,9 +150,15 @@ class _ItemDetailState extends State<ItemDetailPage> {
                           : Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                 _ImageCollage(item: item),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 24),
+                                  child: SizedBox(
+                                      height: 400,
+                                      child: _ImageCarousel(imageUrls: item.imageUrls),
+                                      ),
+                                  ),  
                                 const SizedBox(height: 16),
-                                const _Price(text: 'CHF 120'),
+                                _Price(text: '£${item.price}'),
                                 const SizedBox(height: 12),
                                 const _ContactSellerButton(),
                                 const SizedBox(height: 16),
@@ -185,7 +198,7 @@ class _Header extends StatelessWidget { // build the top bar: back button, locat
           icon: const Icon(Icons.arrow_back),
           tooltip: 'Back',
           onPressed: () {
-             Navigator.pop(context);
+             context.pop();
           },
          ),
 
@@ -240,53 +253,104 @@ class _Header extends StatelessWidget { // build the top bar: back button, locat
   }
 }
 
-class _ImageCollage extends StatelessWidget {
-  final Item item;  
-  const _ImageCollage({required this.item});
+class _ImageCarousel extends StatefulWidget {
+  final List<String> imageUrls;
+
+  const _ImageCarousel({required this.imageUrls});
+
+  @override
+  State<_ImageCarousel> createState() => _ImageCarouselState();
+}
+
+class _ImageCarouselState extends State<_ImageCarousel> {
+  int currentIndex = 0;
+
+  void nextImage() {
+    if (widget.imageUrls.isEmpty) return;
+    setState(() {
+      currentIndex = (currentIndex + 1) % widget.imageUrls.length;
+    });
+  }
+
+  void previousImage() {
+    if (widget.imageUrls.isEmpty) return;
+    setState(() {
+      currentIndex =
+          (currentIndex - 1 + widget.imageUrls.length) %
+              widget.imageUrls.length;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    final hasImages = widget.imageUrls.isNotEmpty;
+
+    return Stack(
+      alignment: Alignment.center,
       children: [
-        Expanded(
-          flex: 3,
-          child: AspectRatio(
-            aspectRatio: 4 / 3,
-            child: _buildImage(0),
+        AspectRatio(
+          aspectRatio: 4 / 3,
+          child: hasImages
+              ? ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.network(
+                    widget.imageUrls[currentIndex],
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) =>
+                        const _ImagePlaceholder(),
+                  ),
+                )
+              : const _ImagePlaceholder(),
+        ),
+
+        /// LEFT ARROW
+        Positioned(
+          left: 8,
+          child: _ArrowButton(
+            icon: Icons.arrow_back_ios,
+            onTap: hasImages ? previousImage : null,
           ),
         ),
-        const SizedBox(width: 16),
-        Expanded(
-          flex: 2,
-          child: Column(
-            children: [
-              AspectRatio(aspectRatio: 4 / 3, child: _buildImage(1)),
-              SizedBox(height: 16),
-              AspectRatio(aspectRatio: 4 / 3, child: _buildImage(2)),
-            ],
+
+        /// RIGHT ARROW
+        Positioned(
+          right: 8,
+          child: _ArrowButton(
+            icon: Icons.arrow_forward_ios,
+            onTap: hasImages ? nextImage : null,
           ),
         ),
       ],
     );
   }
+}
 
-  // Builds the image, if no image then use placeholder
-  Widget _buildImage(int index) {
-    // Simply builds the image from the corresponding Supabase link
-    if (item.imageUrls.length > index) {
-      return ClipRRect(
-        borderRadius: BorderRadius.circular(8),
-        child: Image.network(
-          item.imageUrls[index],
-          fit: BoxFit.cover,
-          // Use the placeholder if the network request fails
-          errorBuilder: (context, error, stackTrace) => const _ImagePlaceholder(),
+class _ArrowButton extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback? onTap;
+
+  const _ArrowButton({
+    required this.icon,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isDisabled = onTap == null;
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: isDisabled
+              ? Colors.black.withValues(alpha: 0.2)
+              : Colors.black.withValues(alpha: 0.4),
+          shape: BoxShape.circle,
         ),
-      );
-    } else {
-      return const _ImagePlaceholder();
-    }
+        child: Icon(icon, color: isDisabled ? Colors.white38 : Colors.white, size: 18),
+      ),
+    );
   }
 }
 

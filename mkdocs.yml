@@ -1,0 +1,42 @@
+site_name: Secondhand Marketplace
+site_url: https://example.com
+
+repo_name: spe-uob/2025-SecondhandMarketplace
+repo_url: https://github.com/spe-uob/2025-SecondhandMarketplace
+
+theme:
+  name: material
+  favicon: logos/logo.png
+  logo: logos/logo.svg
+  locale: en
+  palette:
+    # Taken from https://squidfunk.github.io/mkdocs-material/setup/changing-the-colors/https://squidfunk.github.io/mkdocs-material/setup/changing-the-colors/
+    # Light mode
+    - scheme: default
+      primary: deep orange
+      toggle:
+        icon: material/brightness-7 
+        name: Switch to dark mode
+    # Dark mode
+    - scheme: slate
+      primary: deep orange
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+
+nav:
+  - Home: index.md
+  - Guides:
+      - User Guide: user-instructions/user-instructions.md
+      - Project Setup: project-setup/project-setup.md
+  - Project References:
+      - Database Structure: database-structure/database-structure.md
+      - Naming Conventions: naming_conventions/naming_conventions.md
+  - AI Usage: AI_usage/Ai_info.md
+  - Project Handover: handover/handover.md
+ 
+
+markdown_extensions:
+  - toc:
+      permalink: true

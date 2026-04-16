@@ -1,65 +1,68 @@
 name: Deploy Web (S3 + CloudFront)
 
-
 on:
- push:
-   branches:
-     - dev
-
+  push:
+    branches:
+      - dev
+  workflow_dispatch:
 
 jobs:
- deploy:
-   runs-on: ubuntu-latest
+  deploy:
+    runs-on: ubuntu-latest
 
+    permissions:
+      id-token: write
+      contents: read
 
-   # id-token: required for OIDC federation; allows this workflow to request
-   # a short-lived token and assume the AWS IAM role.
-   # contents: read is needed for actions/checkout to clone the repo.
-   permissions:
-     id-token: write
-     contents: read
+    defaults:
+      run:
+        working-directory: application
 
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-   defaults:
-     run:
-       # Flutter app lives in application/; build output is application/build/web
-       working-directory: application
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
 
+      - name: Install dependencies
+        run: flutter pub get
 
-   steps:
-     - name: Checkout repository
-       uses: actions/checkout@v4
+      - name: Build web (release)
+        env:
+          API_BASE_URL: ${{ secrets.API_BASE_URL }}
+        run: flutter build web --release --dart-define=API_BASE_URL=${API_BASE_URL:-/api}
 
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
 
-     - name: Set up Flutter
-       uses: subosito/flutter-action@v2
-       with:
-         channel: stable
+      - name: Sync to S3
+        run: aws s3 sync build/web s3://${{ vars.AWS_S3_BUCKET }} --delete
 
+      - name: Invalidate CloudFront
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/*"
 
-     - name: Install dependencies
-       run: flutter pub get
+      - name: Verify deployment
+        run: |
+          echo "Waiting for CloudFront invalidation to propagate..."
+          sleep 30
 
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            https://${{ vars.CLOUDFRONT_DOMAIN }}/index.html)
 
-     - name: Build web (release)
-       run: flutter build web --release
+          echo "HTTP Status: $STATUS"
 
+          if [ "$STATUS" != "200" ]; then
+            echo "Deployment verification failed: HTTP $STATUS"
+            exit 1
+          fi
 
-     - name: Configure AWS credentials (OIDC)
-       uses: aws-actions/configure-aws-credentials@v4
-       with:
-         role-to-assume: ${{ vars.AWS_ROLE_ARN }}
-         aws-region: ${{ vars.AWS_REGION }}
-
-
-     - name: Sync to S3
-       run: aws s3 sync build/web s3://${{ vars.AWS_S3_BUCKET }} --delete
-
-
-     - name: Invalidate CloudFront
-       run: |
-         aws cloudfront create-invalidation \
-          --distribution-id ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }} \
-          --paths "/*"
-
-
+          echo "Deployment verified successfully"

@@ -14,25 +14,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _selectedCategoryIndex = 0;
   final TextEditingController _searchController = TextEditingController();
 
   late APIService _apiService;
   late Future<List<Item>> _futureItems;
-  String _apiMessage = 'Checking API connection...';
-
-  final List<String> _categories = [
-    'Explore',
-    'Clothing',
-    'Electronics',
-    'Home',
-    'Kids',
-    'Sports',
-    'Books & Media',
-    'Vehicles',
-    'Hobbies',
-    'Beauty'
-  ];
 
   @override
   void initState() {
@@ -44,16 +29,74 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _checkApi() async {
     try {
-      final message = await _apiService.checkConnection(); // <-- String dönüyor
-      if (!mounted) return;
-      setState(() {
-        _apiMessage = message;
-      });
+      await _apiService.checkConnection();
     } catch (e) {
       if (!mounted) return;
-      setState(() {
-        _apiMessage = 'Error: $e';
-      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          behavior: SnackBarBehavior.floating,
+          margin: const EdgeInsets.all(16),
+          duration: const Duration(seconds: 4),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          content: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            decoration: BoxDecoration(
+              color: const Color(0xFF1A1A1A),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: Colors.redAccent.withOpacity(0.6)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.redAccent.withOpacity(0.15),
+                  blurRadius: 20,
+                  spreadRadius: 2,
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: Colors.redAccent.withOpacity(0.15),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.wifi_off_rounded,
+                    color: Colors.redAccent,
+                    size: 18,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                const Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Connection Failed',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 13,
+                        ),
+                      ),
+                      SizedBox(height: 2),
+                      Text(
+                        'Unable to reach the server. Please try again.',
+                        style: TextStyle(
+                          color: Colors.white54,
+                          fontSize: 11,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
     }
   }
 
@@ -65,60 +108,12 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: cs.surface,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(80),
-        child: Header(),// not show search and back button on home page
+        child: Header(),
       ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // API message (debug)
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                _apiMessage,
-                style: const TextStyle(
-                  color: Colors.red,
-                  fontSize: 10,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-
-            // Categories
-            SizedBox(
-              height: 40,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                itemCount: _categories.length,
-                separatorBuilder: (_, __) => const SizedBox(width: 12),
-                itemBuilder: (context, index) {
-                  final isSelected = index == _selectedCategoryIndex;
-                  return TextButton(
-                    onPressed: () {
-                      setState(() => _selectedCategoryIndex = index);
-                    },
-                    style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      minimumSize: const Size(0, 0),
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    ),
-                    child: Text(
-                      _categories[index],
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight:
-                            isSelected ? FontWeight.bold : FontWeight.normal,
-                        color: Colors.black,
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-            const SizedBox(height: 24),
-
-            // Items grid from API
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: FutureBuilder<List<Item>>(
@@ -155,7 +150,6 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
             ),
-
             const SizedBox(height: 20),
           ],
         ),

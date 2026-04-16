@@ -1,7 +1,9 @@
-import '../auth/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:supabase_flutter/supabase_flutter.dart'; 
+import 'package:go_router/go_router.dart';
+
+import '../services/api_service.dart';
+import '../services/auth_storage.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -11,7 +13,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final authService = AuthService();
+  final APIService _api = APIService();
+  final AuthStorage _storage = AuthStorage();
 
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -46,66 +49,63 @@ class _LoginPageState extends State<LoginPage> {
     FocusScope.of(context).unfocus();
     if (!_formKey.currentState!.validate()) return;
 
-    final email = _emailController.text.trim().toLowerCase(); // Standardized mailbox
+    final email = _emailController.text.trim().toLowerCase();
     final password = _passwordController.text;
 
     setState(() => _isLoading = true);
+
     try {
-      //  supabase.auth.signInWithPassword
-      await authService.signInwithEmailpassword(email, password);
+      await _api.login(email: email, password: password);
+
+      if (_rememberMe &&
+          _api.accessToken != null &&
+          _api.accessToken!.isNotEmpty) {
+        await _storage.saveSession(
+          AuthSession(
+            accessToken: _api.accessToken!,
+            refreshToken: _api.refreshToken ?? '',
+            expiresAt: _api.expiresAt,
+          ),
+        );
+      }
 
       if (!mounted) return;
+
       HapticFeedback.lightImpact();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Logged in successfully')),
       );
 
-      
-      // Navigator.of(context).pushReplacementNamed('/home');
-
-    } on AuthException catch (e) {
-      // Clearly show Supabase errors, such as Invalid login credentials
       if (!mounted) return;
+
+      context.go('/');
+    } on ApiException catch (e) {
+      if (!mounted) return;
+
       HapticFeedback.heavyImpact();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(e.message)),
       );
     } catch (e) {
       if (!mounted) return;
+
       HapticFeedback.heavyImpact();
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Unexpected error, please try again.')),
+        SnackBar(content: Text(e.toString())),
       );
     } finally {
-      if (mounted) setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
   Future<void> _onForgotPassword() async {
-    final email = _emailController.text.trim().toLowerCase();
-    if (email.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Enter your email first')),
-      );
-      return;
-    }
-    try {
-      await authService.sendPasswordReset(email);
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Password reset email sent to: $email')),
-      );
-    } on AuthException catch (e) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to send reset email: ${e.message}')),
-      );
-    } catch (_) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to send reset email.')),
-      );
-    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Forgot password: backend route not implemented yet'),
+      ),
+    );
   }
 
   @override
@@ -148,15 +148,17 @@ class _LoginPageState extends State<LoginPage> {
                         children: [
                           ShaderMask(
                             blendMode: BlendMode.srcIn,
-                            shaderCallback: (b) =>
-                                _btnGradient.createShader(Rect.fromLTWH(0, 0, b.width, b.height)),
+                            shaderCallback: (b) => _btnGradient.createShader(
+                              Rect.fromLTWH(0, 0, b.width, b.height),
+                            ),
                             child: const Icon(Icons.lock_outline, size: 54),
                           ),
                           const SizedBox(height: 12),
                           ShaderMask(
                             blendMode: BlendMode.srcIn,
-                            shaderCallback: (r) =>
-                                _btnGradient.createShader(Rect.fromLTWH(0, 0, r.width, r.height)),
+                            shaderCallback: (r) => _btnGradient.createShader(
+                              Rect.fromLTWH(0, 0, r.width, r.height),
+                            ),
                             child: Text(
                               'Welcome Back',
                               style: theme.textTheme.headlineSmall?.copyWith(
@@ -168,12 +170,11 @@ class _LoginPageState extends State<LoginPage> {
                           Text(
                             'Sign in to continue',
                             style: theme.textTheme.bodyMedium?.copyWith(
-                              color: theme.textTheme.bodyMedium?.color?.withOpacity(0.7),
+                              color: theme.textTheme.bodyMedium?.color
+                                  ?.withOpacity(0.7),
                             ),
                           ),
                           const SizedBox(height: 28),
-
-                          // Email
                           TextFormField(
                             focusNode: _emailNode,
                             controller: _emailController,
@@ -188,18 +189,20 @@ class _LoginPageState extends State<LoginPage> {
                             validator: (v) {
                               final value = v?.trim() ?? '';
                               if (value.isEmpty) return 'Please enter email';
-                              final emailReg =
-                                  RegExp(r'^[\w\.\-]+@([\w\-]+\.)+[a-zA-Z]{2,}$');
+
+                              final emailReg = RegExp(
+                                r'^[\w.\-]+@([\w\-]+\.)+[a-zA-Z]{2,}$',
+                              );
+
                               if (!emailReg.hasMatch(value)) {
                                 return 'Invalid email format';
                               }
+
                               return null;
                             },
                             onFieldSubmitted: (_) => _pwdNode.requestFocus(),
                           ),
                           const SizedBox(height: 16),
-
-                          // Password
                           TextFormField(
                             focusNode: _pwdNode,
                             controller: _passwordController,
@@ -212,11 +215,17 @@ class _LoginPageState extends State<LoginPage> {
                               icon: Icons.lock,
                               isDark: isDark,
                               suffix: IconButton(
-                                onPressed: () =>
-                                    setState(() => _obscurePwd = !_obscurePwd),
+                                onPressed: () {
+                                  setState(() => _obscurePwd = !_obscurePwd);
+                                },
                                 icon: Icon(
-                                    _obscurePwd ? Icons.visibility : Icons.visibility_off),
-                                tooltip: _obscurePwd ? 'Show password' : 'Hide password',
+                                  _obscurePwd
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                ),
+                                tooltip: _obscurePwd
+                                    ? 'Show password'
+                                    : 'Hide password',
                               ),
                             ),
                             validator: (v) {
@@ -228,16 +237,14 @@ class _LoginPageState extends State<LoginPage> {
                               return null;
                             },
                           ),
-
                           const SizedBox(height: 8),
-
-                          // Remember me + Forget password
                           Row(
                             children: [
                               Checkbox(
                                 value: _rememberMe,
-                                onChanged: (v) =>
-                                    setState(() => _rememberMe = v ?? true),
+                                onChanged: (v) {
+                                  setState(() => _rememberMe = v ?? true);
+                                },
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(6),
                                 ),
@@ -250,17 +257,16 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ],
                           ),
-
                           const SizedBox(height: 8),
-
-                          // Gradient login button
                           SizedBox(
                             width: double.infinity,
                             height: 52,
                             child: _GradientButton(
                               onPressed: _isLoading ? null : login,
                               isLoading: _isLoading,
-                              gradient: _isLoading ? _btnGradientDisabled : _btnGradient,
+                              gradient: _isLoading
+                                  ? _btnGradientDisabled
+                                  : _btnGradient,
                               child: const Text(
                                 'Login',
                                 style: TextStyle(
@@ -271,28 +277,24 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ),
                           ),
-
                           const SizedBox(height: 18),
-
-                          // Or divider
                           Row(
                             children: [
                               const Expanded(child: Divider()),
                               Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8),
                                 child: Text(
                                   'or',
-                                  style: theme.textTheme.bodySmall
-                                      ?.copyWith(color: Colors.black54),
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: Colors.black54,
+                                  ),
                                 ),
                               ),
                               const Expanded(child: Divider()),
                             ],
                           ),
-
                           const SizedBox(height: 12),
-
-                          // 社交登录（占位）
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -309,12 +311,11 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ],
                           ),
-
                           const SizedBox(height: 18),
-
-                          // Go register
                           GestureDetector(
-                            onTap: () => Navigator.of(context).pushNamed('/signup'),
+                            onTap: () {
+                              context.push('/signup');
+                            },
                             child: Text.rich(
                               TextSpan(
                                 text: "Don't have an account? ",
@@ -345,7 +346,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  // Go to unify the input box decorations
   InputDecoration _inputDecoration({
     required String label,
     required IconData icon,
@@ -363,8 +363,11 @@ class _LoginPageState extends State<LoginPage> {
       labelText: label,
       prefixIcon: ShaderMask(
         blendMode: BlendMode.srcIn,
-        shaderCallback: (b) =>
-            _btnGradient.createShader(Rect.fromLTWH(0, 0, b.width, b.height)),
+        shaderCallback: (b) {
+          return _btnGradient.createShader(
+            Rect.fromLTWH(0, 0, b.width, b.height),
+          );
+        },
         child: Icon(icon),
       ),
       suffixIcon: suffix,
@@ -374,7 +377,10 @@ class _LoginPageState extends State<LoginPage> {
       enabledBorder: baseBorder,
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
-        borderSide: const BorderSide(width: 1.6, color: Color(0xFF736EFE)),
+        borderSide: const BorderSide(
+          width: 1.6,
+          color: Color(0xFF736EFE),
+        ),
       ),
     );
   }
@@ -396,6 +402,7 @@ class _GradientButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDisabled = onPressed == null;
+
     return Material(
       color: Colors.transparent,
       borderRadius: BorderRadius.circular(14),
@@ -429,7 +436,7 @@ class _GradientButton extends StatelessWidget {
                     )
                   : Padding(
                       key: const ValueKey('text'),
-                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
                       child: child,
                     ),
             ),
@@ -476,7 +483,9 @@ class _SocialIconButton extends StatelessWidget {
                 colors: [Color(0xFF736EFE), Color(0xFF62E0E6)],
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
-              ).createShader(Rect.fromLTWH(0, 0, b.width, b.height)),
+              ).createShader(
+                Rect.fromLTWH(0, 0, b.width, b.height),
+              ),
               child: Icon(icon, size: 28),
             ),
           ),

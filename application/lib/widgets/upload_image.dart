@@ -1,37 +1,56 @@
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
-import 'dart:io';
 
 class UploadImage extends StatefulWidget{
-  const UploadImage({super.key});
+  const UploadImage({
+    super.key,
+    required this.onImagesChanged,
+    });
+
+  // Reports that the images value has changed (added / remove choses image)
+  final ValueChanged<List<PlatformFile>> onImagesChanged;
 
   @override
   State<UploadImage> createState() => _UploadImageState();
 }
 
 class _UploadImageState extends State<UploadImage> { 
-  final List<File> _images = [];
+  final List<PlatformFile> _images = [];
 
   // Picks images from desktop file system
   Future<void> _pick() async {
     final result = await FilePicker.platform.pickFiles(
       type: FileType.image,
       allowMultiple: true,
+      withData: true,
     );
 
     if (result == null) return;
 
     setState(() {
-      final availableSlots = 3 - _images.length;
-      if (availableSlots > 0) {
-        final newFiles = result.paths
-            .where((path) => path != null)
-            .take(availableSlots)
-            .map((path) => File(path!))
-            .toList();
-        _images.addAll(newFiles);
-      }
+      // Max slots is 7, can grow no larger
+      const maxSlots = 7;
+      
+      // Combine lists
+      final combinedList = List<PlatformFile>.from(_images);
+      combinedList.addAll(result.files);
+
+      // Remove all the (older) images that dont fit within the max slots
+      final startNo = (combinedList.length - maxSlots).clamp(0, combinedList.length);
+      final latestImages = combinedList.sublist(startNo);
+
+      // Clear and add to _images
+      _images.clear();
+      _images.addAll(latestImages); 
     });
+
+    debugPrint('Selected image count: ${_images.length}');
+    for (final image in _images) {
+      debugPrint('Selected image: ${image.path ?? image.name}');
+    }
+
+    // Sends out the images on a call
+    widget.onImagesChanged(List.unmodifiable(_images));
   }
 
 

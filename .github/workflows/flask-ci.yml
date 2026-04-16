@@ -4,11 +4,11 @@ on:
   push:
     branches: [ "dev" ]
     paths:
-      - 'backend/**' # Isolates the changes to the backend
+      - 'backend/**'
   pull_request:
     branches: [ "main", "dev" ]
     paths:
-      - 'backend/**' # Isolates the changes to the backend
+      - 'backend/**'
   workflow_dispatch:    
 
 jobs:
@@ -16,13 +16,13 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    # ~~~~~ Sets up the virual environment: ~~~~~
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up Python 3.11
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.11'
         cache: 'pip'
+
     - name: Install dependencies
       working-directory: ./backend
       run: |
@@ -30,19 +30,16 @@ jobs:
         pip install -r requirements.txt
         pip install ruff pytest-cov
 
-    # Simply check the formatting is correct
     - name: Check formatting standards with Ruff
       working-directory: ./backend
       continue-on-error: true
-      run: ruff format --check . # Use ' ruff format . ' to fix styling errors :)
+      run: ruff format --check .
 
-    # Simple linting check using Ruff
     - name: Linting using Ruff
       working-directory: ./backend
       continue-on-error: true
-      run: ruff check --output-format=github --target-version=py311 . 
+      run: ruff check --output-format=github --target-version=py311 .
 
-    # Runs all the tests and the returns a table with the percentages of each.py file is accounted for    
     - name: Run tests and generate a coverage report
       working-directory: ./backend
       env:

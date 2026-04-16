@@ -1,0 +1,276 @@
+# Secondhand Marketplace Handover
+
+## Contents
+- [Secondhand Marketplace Handover](#secondhand-marketplace-handover)
+  - [Contents](#contents)
+  - [Introduction](#introduction)
+  - [Project Setup](#project-setup)
+    - [Prerequisite Downloads](#prerequisite-downloads)
+    - [Setup Development Environment](#setup-development-environment)
+    - [Backend environment](#backend-environment)
+    - [Frontend environment](#frontend-environment)
+    - [Docker Full Stack Setup](#docker-full-stack-setup)
+    - [(Optional) MKdocs documentation server](#optional-mkdocs-documentation-server)
+  - [System Architecture](#system-architecture)
+  - [API Overview](#api-overview)
+  - [Project Structure](#project-structure)
+
+## Introduction
+This document is designed to give detailed information on certain aspects of the project: If a new developer were to begin working on it. 
+
+The majority of need-to-know, high-level information will be outlined within this document, with more fine grain details being outlined within code comments left throughout the projects codebase.
+
+## Tech Stack
+Frontend: Flutter
+Backend/API: Flask (Python)
+Database: Supabase (PostgreSQL)
+Cloud Hosting & Deployment: AWS
+Infrastructure & CI/CD: Docker, GitHub Actions
+
+## Project Setup
+
+### Prerequisite Downloads
+- [Python 3.xx](https://www.python.org/downloads/) (currently 3.16)
+- [Flutter](https://docs.flutter.dev/install)
+- [Docker](https://docs.docker.com/engine/install/)
+
+Of course you also need to clone the repository:
+
+- Using **HTTPS URL**:
+  - `git clone https://github.com/spe-uob/2025-SecondhandMarketplace.git`
+
+- Using **SSH**:
+  - `git clone git@github.com:spe-uob/2025-SecondhandMarketplace.git`
+
+### Setup Development Environment
+
+In order for the project to run, these constants must be declared within a `.env` file in the root directory
+
+```env
+SUPABASE_URL= "..." # Supabase project URL, used to connect to the Supabase instance.
+SUPABASE_KEY= "..." # Supabase API service role key with elevated privileges
+```
+
+>[!WARNING]
+>
+> `SUPABASE_KEY` must never be exposed in client-side code or commited to the repository.
+> Ensure `.env` file is ignored by github
+
+>[!NOTE]
+>
+> Set `SUPABASE_URL` to be the url of your supabase project [^1]
+>
+> Set `SUPABASE_KEY` to be the Supabase `service_role` key [^2] 
+>
+> Frontend does not use any `.env` variables
+
+> [!TIP]
+> variable assignment template held in the [`.env.template`](https://github.com/spe-uob/2025-SecondhandMarketplace/blob/dev/.env.template) within the root of the project
+>
+> Comments within the template tell you what to assign each variable to!
+
+### Backend environment
+> [!WARNING]
+>
+> It is highly recommended that if you are running backend and frontend manually - that you run the backend first
+>
+> Running the Frontend first is fine for testing UI, however may break functionality
+
+**Initialise virtual environment**
+
+On a Unix based OS (Linux, MacOS, ...):
+```bash
+python3 -m venv venv                         # Create a virtual environment
+source venv/bin/activate                     # Start up the virtual environment
+```
+
+On Windows:
+```
+python -m venv venv                                                  # Create a virtual environment
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process     # Allows locally created scripts to run
+venv/Scripts/Activate.ps1                                            # Start up the virtual environment
+```
+
+**Install dependancies**
+
+```bash
+pip install -r backend/requirements.txt      # Install dependencies
+```
+
+**Running using Python**
+
+```
+python backend/run.py                        # Run the backend server
+```
+
+> [!NOTE]
+>
+> The virtual environment and dependencies only need to be set up once
+>
+> They can be used henceforth, unless dependencies are updated
+>
+> If that is the case simply run `pip install -r backend/requirements.txt` again
+
+### Frontend environment
+
+**Enter the frontend root**
+```bash
+cd application                               # Navigate to the frontend directory
+```
+
+**Install dependencies**
+
+```
+flutter pub get                              # Install required packages
+```
+
+> [!NOTE]
+> 
+> Only necessary to run once, or after any project updates / ```flutter clean``` commands
+>
+> *make sure to run ```flutter doctor``` to make sure you arent missing any toolchains*
+
+**Running using Flutter**
+
+make sure you are in the application folder when running this command:
+
+```bash
+flutter run                                  # Run flutter frontend server
+```
+
+you will be prompted to press a key to run on a certain emulator/environment - alternatively use:
+
+```bash
+flutter run -d [environment name - e.g: chrome]
+```
+
+### Docker Full Stack Setup
+
+> [!NOTE]
+>
+> This approach should only be ran when in a non-production environment
+>
+> The primary usage is when you want an image that you can repeatedly run for testing purposes
+
+**Running the application**
+
+```
+docker compose up --build     # Builds the projects in a docker container, then launches it
+```
+>[!TIP]
+>
+>Container can then be ran within docker desktop (or alternative) for quick access
+
+**Accessing URLS**
+
+- Frontend: http://localhost:8080
+- Backend API: http://localhost:5000
+
+### (Optional) MKdocs documentation server
+
+If you want to keep documentation up to date, it is recommended to change the projects' GitHub Pages
+server to keep everything adequately documented
+
+**Key configurations**
+
+under `mkdocs.yml`:
+
+- `site_name`: Holds the name of the project
+- `repo_url`: Links to Projects GitHub repository
+- `markdown_extensions`: Holds any markdown extensions you want added
+- `nav`: Holds the documentation table of contents structure
+
+**Running docs server**
+>[!NOTE]
+>
+>This shows how to run on a non-production environment (within the backends virtual environment)
+>
+>The site is automatically updated when pushing to `dev`/`main` using Actions
+
+```bash
+mkdocs serve
+```
+
+**Accessing docs URL**
+
+found at http://localhost:8000
+
+**Adding new docs**
+
+- Create new `.md` file under `/docs`
+- Add entry to `nav:` in `mkdocs.yml`
+
+## System Architecture
+
+Here is our final architecture diagram for the system
+
+![Software architecture](../assets/handover/Software-architecture.png)
+
+The frontend is developed in Flutter (Dart) and communicates with Flask backend via HTTP requests. The backend provides RESTful API endpoints to handle application logic and data operations. 
+Data storage and authentication (partially implemented) are managed by Supabase which provides a PostgreSQL database.
+Everything is containerised using Docker to ensure consistency across environments. 
+GitHub Actions manage continuous integrations (CI) and continuous deployment (CD). 
+In development, a reverse proxy (Nginx) is used to route requests between the frontend and backend services.
+In production, the frontend is deployed as a static site on an AWS S3 bucket and delivered by CloudFront to improve performance. The backend is deployed on AWS by ECS or Elastic Beanstalk (depending on the environment).
+In short, AWS is responsible for hosting and deployment of the application, whereas Supabase provides database and authentication services.
+
+## API Overview
+
+The backend exposes RESTful API used by the Flutter frontend to manage user data, item listings, and gamification features. The API is implemented in Flask and communicates with Supabase to store and query data.
+
+### Base URL
+The frontend uses a configurable base URL defined in `app_config.dart`
+
+The value is resolved by this logic and order:
+1. If provided via `--dart-define=API_BASE_URL`, that value is used.
+2. In local development (web or mobile), the default is:
+   - `http://localhost:5000/api`
+3. In deployed web environments, a relative path is used (relies on a proxy):
+   - `/api`
+
+### Authentication
+Authentication is only partially implemented
+- Backend routes currently use hardcoded user IDs or mock data
+- Supabase has been choosen to provide authentication, but is not yet enforced across endpoints
+
+### Main Endpoints
+- `/auth/` routes for authentication (login, sign-up)
+- `/status` for checking backend connectivity
+- `/items` for retrieving items for listings
+- `/profile/<user_id>` and `/me` for user profile retrieval and updates
+- `/reviews` for user review retrieval
+- `/levels` and `/me/xp` for gamification (level and XP progression)
+
+### Current Implementation Notes
+- Responses return JSON with a `status_code` field and either `data`, `table_data`, or `message`
+- Some routes currently return mock data rather than actual data from the database (e.g. `/reviews`)
+
+## Project Structure
+```txt
+2025-SecondhandMarketPlace
+├── application                     # Flutter frontend
+│   ├── lib
+│   │   ├── models                  # Reusable data structures
+│   │   ├── pages                   # Application pages
+│   │   ├── services                # Frontend services
+│   │   └── widgets                 # Reusable UI elements
+│   ├── test                        # Frontend tests
+|   ├── nginx.conf                  # Serves the frontend
+│   ├── Dockerfile                  # Docker build info
+│   ├── ...
+├── backend                         # Python Flask backend
+│   ├── app
+│   │   ├── __init__.py             # Blueprint + frontend connection
+│   │   └── routes                  # API endpoints
+│   ├── run.py                      # Run backend server
+│   ├── test                        # Backend tests
+│   ├── requirements.txt            # Backend dependencies
+│   ├── Dockerfile                  # Docker build info
+├── docs                            # Project docs
+├── .env.template                   # Template for .env (API keys)
+├── docker-compose.yml              # Multi-container setup (frontend/backend)
+├── mkdocs.yml                      # Online docs structure
+```
+
+[^1]: An example SUPABASE_URL:  "https://abc123.supabase.co"
+[^2]: An example `service_role` key will usually be formatted: "eyJhbGci..." (200-300 characters long)

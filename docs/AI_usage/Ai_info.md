@@ -310,3 +310,44 @@ SizedBox(
 ),  
 ```
 code like ```child: showBackButton``` can be automatically written in VSCode by Github Copilot.
+
+...
+
+#### Prompt - Lingze (case 9)
+*In Flutter, help me write the login flow for a sign-in screen, including form validation, calling the backend login API, handling a "Remember Me" checkbox, showing success/error messages, and navigating after a successful login.*
+
+#### Response [code snippet] (case 9)
+
+For example:
+
+```dart
+Future<void> login() async {
+  FocusScope.of(context).unfocus();
+  if (!_formKey.currentState!.validate()) return;
+
+  final email = _emailController.text.trim().toLowerCase();
+  final password = _passwordController.text;
+
+  setState(() => _isLoading = true);
+
+  try {
+    await _api.login(email: email, password: password);
+
+    if (_rememberMe && _api.accessToken != null) {
+      await _storage.saveSession(
+        AuthSession(
+          accessToken: _api.accessToken!,
+          refreshToken: _api.refreshToken!,
+          expiresAt: _api.expiresAt,
+        ),
+      );
+    }
+
+    ...
+    Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+  } on ApiException catch (e) {
+    ...
+  } finally {
+    if (mounted) setState(() => _isLoading = false);
+  }
+}
