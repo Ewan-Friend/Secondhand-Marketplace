@@ -33,7 +33,12 @@ nav:
   - Project References:
       - Database Structure: database-structure/database-structure.md
       - Naming Conventions: naming_conventions/naming_conventions.md
-  - AI Usage: AI_usage/Ai_info.md
+  - Production:
+      - AWS Infrastructure: aws/aws-infrastructure.md
+      - IAM and OIDC: aws/iam-oidc
+      - CI/CD Workflows: workflows/ci-cd.md
+  - Governance:
+    - AI Usage: AI_usage/Ai_info.md
   - Project Handover: handover/handover.md
  
 
