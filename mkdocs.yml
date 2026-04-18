@@ -1,5 +1,5 @@
 site_name: Secondhand Marketplace
-site_url: https://example.com
+site_url: https://urban-adventure-qm9y5k8.pages.github.io/
 
 repo_name: spe-uob/2025-SecondhandMarketplace
 repo_url: https://github.com/spe-uob/2025-SecondhandMarketplace
@@ -9,6 +9,12 @@ theme:
   favicon: logos/logo.png
   logo: logos/logo.svg
   locale: en
+  features:
+  - navigation.instant
+  - navigation.tracking
+  - navigation.sections
+  - navigation.expand
+  - content.code.copy
   palette:
     # Taken from https://squidfunk.github.io/mkdocs-material/setup/changing-the-colors/https://squidfunk.github.io/mkdocs-material/setup/changing-the-colors/
     # Light mode
@@ -24,6 +30,8 @@ theme:
         icon: material/brightness-4
         name: Switch to light mode
 
+plugins:
+ - search
 
 nav:
   - Home: index.md
@@ -35,7 +43,7 @@ nav:
       - Naming Conventions: naming_conventions/naming_conventions.md
   - Production:
       - AWS Infrastructure: aws/aws-infrastructure.md
-      - IAM and OIDC: aws/iam-oidc
+      - IAM and OIDC: aws/iam-oidc.md
       - CI/CD Workflows: workflows/ci-cd.md
   - Governance:
     - AI Usage: AI_usage/Ai_info.md
@@ -45,3 +53,10 @@ nav:
 markdown_extensions:
   - toc:
       permalink: true
+  - admonition
+  - tables
+  - footnotes
+  - attr_list
+  - md_in_html
+  - pymdownx.details
+  - pymdownx.superfences
