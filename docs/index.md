@@ -5,5 +5,12 @@
 - [mkdocs](https://www.mkdocs.org).
 - [material for mkdocs](https://squidfunk.github.io/mkdocs-material/)
 
+##  Full documentation as PDF
+
+- [Open as PDF](pdf/secondhand-marketplace.pdf)
+
+* May be formatting errors / repeated sections - it's not perfect *
+
 ## Instructions
+
 Use the sidebar for navigation
