@@ -305,6 +305,94 @@ Contains CI and CD workflows, that triggers certain GitHub actions events
 
 ### ./application
 
+```txt
+.
+├──lib/
+|  ├── auth/                           # Auth flow components
+|  │   └──  ..
+|  ├── config/                         # Centralised app congiguration
+|  │   └── ...
+|  ├── models/                         # Structured data models
+|  │   └── ...
+|  ├── pages/                          # Contains flutter web pages
+|  │   └──  ...      
+|  ├── services/                       # Contains generic application service functions
+|  │   └──  ...
+|  └── widgets/                        # Contains reusable flutter widgets
+|      └──...
+├── test/                              # Frontend test suite
+|  ├── ...
+└── ...                               
+  ```
+
+- [./application/lib/auth/.](#applicationlibauth)
+- [./application/lib/config/.](#applicationlibconfig)
+- [./application/lib/models/.](#applicationlibmodels)
+- [./application/lib/pages/.](#applicationlibpages)
+- [./application/lib/services/.](#applicationlibservices)
+- [./application/lib/widgets/.](#applicationlibwidgets)
+- [./application/lib/.](#applicationlib)
+- [./application/test/.](#applicationtest)
+- [./application/.](#application-1)
+
+#### ./application/lib/auth/.
+
+Handles the authentication flow and access. The intention is to decide whether certain users could access protected pages for be directed to the login/signup screen.
+
+#### ./application/lib/config/.
+
+Stores global app configuration across the frontend, currently holds environment based settings such as the API base URL resolution
+
+#### ./application/lib/models/.
+
+Serialization and deserialization between JSON packed variables and a structured data model defined within each corresponding file, matching the information required by widgets.
+
+- `item_model` - Contains item attributes
+- `user_model` - Contains user profile attributes
+
+#### ./application/lib/pages/.
+
+Contains frontend page-level screens
+
+Listed are notable pages:
+
+- `home_page.dart`: Page that contains a grid of user uploaded items
+- `item_detail_page.dart`: Page that shows information for a single item
+- `post_items_page.dart`: Page that allows users to upload their own item
+- `profile_page.dart`: Page that shows information for a single user
+
+#### ./application/lib/services/.
+
+Holds service-layer logic that allows communication with the backend and holds usable operations. This abstracts networking away from the page widgets so UI stays cleaner
+
+#### ./application/lib/widgets/.
+
+Contaains reuable UI components that can be shared by multiple pages. Enforces DRY principles and keeps styling consistent.
+
+Listed are notable widgets:
+
+- `header.dart`: Header with navigation elements displayed on the top of most pages
+- `item_widget.dart`: Format that item information is displayed on the home and profile pages 
+- `upload_image.dart`: Used to upload images and handle them within a page
+- `user_widget`: Format that user information is displayed in the item widget
+
+#### ./application/lib/.
+
+Primary Flutter source directory containing the apps core code
+
+- `main.dart`: Frontend entry point, booting up the Flutter app and initialising app configuration. 
+
+#### ./application/test/.
+
+Frontend test suite for widgets, models and services. They simply make sure that user facing operations behave as expected. Unit tests, integration tests, and widget tests.
+
+#### ./application/.
+
+- `nginx.conf`: Defines Nginx proxy rules to serve the web build and route requests
+- `Dockerfile`: Defines how the frontend container is built
+- `pubspec.yaml`: Declares dependencies, assets and metadata
+- `analysis_options.yaml`: configures analysis and linting rules
+
 ### ./backend
 
 ```txt
@@ -321,8 +409,8 @@ Contains CI and CD workflows, that triggers certain GitHub actions events
 │       ├── gamification.py            # Level progression endpoints
 │       └── health.py                  # Health/status endpoint(s)
 ├── test/                              # Backend test suite
-│   ├── ...
-├── ...
+│   └── ...
+└── ...
 ```
 
 - [./backend/app/routes](#backendapproutes)
