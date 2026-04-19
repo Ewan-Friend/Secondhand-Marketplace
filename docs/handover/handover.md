@@ -278,11 +278,11 @@ Authentication is only partially implemented
 
 ```txt
 .
-├── ./ISSUE_TEMPLATE                 # GitHub Issues templates
+├── ISSUE_TEMPLATE/                 # GitHub Issues templates
 │   ├── ...
-├── ./workflows                      # Workflow files
+├── workflows/                      # Workflow files
 │   ├── ...
-└── ./pull_request_template.md       # GitHub PR template
+└── pull_request_template.md        # GitHub PR template
 ```
 
 - [./github/ISSUE_TEMPLATE](#githubissue_template)
@@ -296,16 +296,71 @@ Currently contains templates for bug reports and general tasks, allows users to 
 
 Contains CI and CD workflows, that triggers certain GitHub actions events
 
-- `./workflows/backend-cd.yml`: triggers on pushes to `dev`, deploys the backend to AWS Elastic Beanstalk. Packages the Flask app, Uploading it to S3, updating the environment then verifying the health afterwards
-- `./workflows/deploy-web.yml`: triggers on pushes to `dev`, builds the Flutter web app, syncs the release to S3, invalidates CloudFront and then check the deployed site successfully responds
-- `./workflows/flask-ci.yml`: triggers on changes made to `./backend` on pushes / pull requests / manual runs. runs the backend CI - including formatting, linting, and generating pytest coverage
-- `./workflows/flutter-ci.yml`: triggers on changes made to `./application` on pushes / pull requests / manual runs. runs the frontend CI - fetching dependencies, running `flutter analyze` and executing the test suite.
-- `./workflows/mkdocs-cd.yml`: triggers when `dev` or `main` is updated, publishes the project documentation site to GitHub Pages
-- `./workflows/pr-formatting-ci.yml`: triggers when a pull request is made to `dev`, enforces PR hygiene by checking title format, requiring a close tag, and ensuring a change type is selected
+- `./workflows/backend-cd.yml`: Triggers on pushes to `dev`, deploys the backend to AWS Elastic Beanstalk. Packages the Flask app, Uploading it to S3, updating the environment then verifying the health afterwards
+- `./workflows/deploy-web.yml`: Triggers on pushes to `dev`, builds the Flutter web app, syncs the release to S3, invalidates CloudFront and then check the deployed site successfully responds
+- `./workflows/flask-ci.yml`: Triggers on changes made to `./backend` on pushes / pull requests / manual runs. runs the backend CI - including formatting, linting, and generating pytest coverage
+- `./workflows/flutter-ci.yml`: Triggers on changes made to `./application` on pushes / pull requests / manual runs. runs the frontend CI - fetching dependencies, running `flutter analyze` and executing the test suite.
+- `./workflows/mkdocs-cd.yml`: Triggers when `dev` or `main` is updated, publishes the project documentation site to GitHub Pages
+- `./workflows/pr-formatting-ci.yml`: Triggers when a pull request is made to `dev`, enforces PR hygiene by checking title format, requiring a close tag, and ensuring a change type is selected
 
 ### ./application
 
 ### ./backend
+
+```txt
+.
+├── app/                               # Backend application package
+│   ├── __init__.py                    # Flask app setup
+│   ├── services.py                    # Shared backend service logic
+│   └── routes/                        # API route modules
+│       ├── __init__.py                # Exports route blueprints
+│       ├── auth.py                    # Authentication endpoints
+│       ├── users.py                   # User profile endpoints
+│       ├── items.py                   # Item endpoints
+│       ├── reviews.py                 # Review endpoints
+│       ├── gamification.py            # Level progression endpoints
+│       └── health.py                  # Health/status endpoint(s)
+├── test/                              # Backend test suite
+│   ├── ...
+├── ...
+```
+
+- [./backend/app/routes](#backendapproutes)
+- [./backend/app](#backendapp)
+- [./backend/test](#backendtest)
+- [./backend](#backend-1)
+
+#### ./backend/app/routes/.
+
+This directory contains main python scripts for setting up endpoints that can interact with the frontend - utilising flask routing patterns.
+
+- `__init__.py`: Exports route blueprints to attatch to the app
+- `auth.py`: API endpoints relating to authentication
+- `users.py`: API endpoints for user profile reads and updates
+- `items.py`: API endpoints for item listings and management
+- `reviews.py`: API endpoints for reviews and ratings
+- `gamification.py`: API endpoints for level progression
+- `health.py`: API endpoints for connectivity checks
+
+#### ./backend/app/.
+
+This directory contains files that pertain to the primary functionality of the backend, and how it interacts with the frontend.
+
+- `__init__.py`: Configures the flask application, wires the core backend setup
+- `services.py`: Holds shared service logic used by route handlers
+
+#### ./backend/test/.
+
+Contains tests for various scripts within the `app/` folder, primarily for the routing patterns
+
+- `test_{route_filename}.py`: Route-specific tests for each file in `routes/`
+- `conftest.py`: Shared pytest fixtures, establishes common test configuration
+
+#### ./backend/.
+
+- `Dockerfile`: Defines how the backend container is built
+- `requirements.txt`: Python dependencies for the backend environment
+- `run.py`: Local entry script used to start the backend server
 
 ### ./docs
 
