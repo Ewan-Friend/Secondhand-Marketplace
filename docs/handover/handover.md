@@ -5,15 +5,11 @@
   - [Contents](#contents)
   - [Introduction](#introduction)
   - [Project Setup](#project-setup)
-    - [Prerequisite Downloads](#prerequisite-downloads)
-    - [Setup Development Environment](#setup-development-environment)
-    - [Backend environment](#backend-environment)
-    - [Frontend environment](#frontend-environment)
-    - [Docker Full Stack Setup](#docker-full-stack-setup)
-    - [(Optional) MKdocs documentation server](#optional-mkdocs-documentation-server)
   - [System Architecture](#system-architecture)
   - [API Overview](#api-overview)
   - [Project Structure](#project-structure)
+  - [Testing](#testing)
+  - [Limitations](#limitations)
 
 ## Introduction
 This document is designed to give detailed information on certain aspects of the project: If a new developer were to begin working on it. 
@@ -249,28 +245,13 @@ Authentication is only partially implemented
 ```txt
 2025-SecondhandMarketPlace
 ├── application                     # Flutter frontend
-│   ├── lib
-│   │   ├── models                  # Reusable data structures
-│   │   ├── pages                   # Application pages
-│   │   ├── services                # Frontend services
-│   │   └── widgets                 # Reusable UI elements
-│   ├── test                        # Frontend tests
-|   ├── nginx.conf                  # Serves the frontend
-│   ├── Dockerfile                  # Docker build info
-│   ├── ...
 ├── backend                         # Python Flask backend
-│   ├── app
-│   │   ├── __init__.py             # Blueprint + frontend connection
-│   │   └── routes                  # API endpoints
-│   ├── run.py                      # Run backend server
-│   ├── test                        # Backend tests
-│   ├── requirements.txt            # Backend dependencies
-│   ├── Dockerfile                  # Docker build info
 ├── docs                            # Project docs
 ├── .env.template                   # Template for .env (API keys)
 ├── docker-compose.yml              # Multi-container setup (frontend/backend)
 ├── mkdocs.yml                      # Online docs structure
 ```
+
 
 ## Testing
 
@@ -378,10 +359,7 @@ lcov --summary coverage/lcov.info
 > then rerun the command for HTML
 >
 
-## Deployment
-
-
-## Limitations & Future Improvements
+## Limitations
 
 **Backend**
 - Authentication is incomplete: missing login endpoint, token validation, email verification, and automatic profile creation on registration 
