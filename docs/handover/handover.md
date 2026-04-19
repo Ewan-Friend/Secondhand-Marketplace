@@ -276,6 +276,33 @@ Authentication is only partially implemented
 
 ### ./.github
 
+```txt
+.
+├── ./ISSUE_TEMPLATE                 # GitHub Issues templates
+│   ├── ...
+├── ./workflows                      # Workflow files
+│   ├── ...
+└── ./pull_request_template.md       # GitHub PR template
+```
+
+- [./github/ISSUE_TEMPLATE](#githubissue_template)
+- [./github/workflows](#githubworkflows)
+
+#### ./.github/ISSUE_TEMPLATE
+
+Currently contains templates for bug reports and general tasks, allows users to fill out the template when starting a new issue.
+
+#### ./.github/workflows
+
+Contains CI and CD workflows, that triggers certain GitHub actions events
+
+- `./workflows/backend-cd.yml`: triggers on pushes to `dev`, deploys the backend to AWS Elastic Beanstalk. Packages the Flask app, Uploading it to S3, updating the environment then verifying the health afterwards
+- `./workflows/deploy-web.yml`: triggers on pushes to `dev`, builds the Flutter web app, syncs the release to S3, invalidates CloudFront and then check the deployed site successfully responds
+- `./workflows/flask-ci.yml`: triggers on changes made to `./backend` on pushes / pull requests / manual runs. runs the backend CI - including formatting, linting, and generating pytest coverage
+- `./workflows/flutter-ci.yml`: triggers on changes made to `./application` on pushes / pull requests / manual runs. runs the frontend CI - fetching dependencies, running `flutter analyze` and executing the test suite.
+- `./workflows/mkdocs-cd.yml`: triggers when `dev` or `main` is updated, publishes the project documentation site to GitHub Pages
+- `./workflows/pr-formatting-ci.yml`: triggers when a pull request is made to `dev`, enforces PR hygiene by checking title format, requiring a close tag, and ensuring a change type is selected
+
 ### ./application
 
 ### ./backend
