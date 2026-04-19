@@ -272,5 +272,130 @@ Authentication is only partially implemented
 ├── mkdocs.yml                      # Online docs structure
 ```
 
+## Testing
+
+### Backend Testing
+
+Navigate to the backend directory and run it in the python virtual environment:
+```bash
+cd backend
+```
+
+**Run all tests:**
+```bash
+pytest -v --cov=app --cov-report=term-missing test/
+```
+
+- runs all tests in `test/`
+- shows each test result
+- reports coverage for `app` (which contains all backend logic)
+
+**Run specific test file:**
+```bash
+pytest -v test/test_items.py
+```
+
+**Run a single test:**
+```bash
+pytest -v test/test_health.py::test_get_status
+```
+
+All tests are automatically run on every push thanks to the `flask-ci.yml` CI workflow
+
+**Test Coverage**
+
+For backend test coverage, from the `backend/` directory with the Python virtual environment activated, run:
+
+```bash
+pytest --cov=app --cov-report=term-missing test/
+```
+
+This runs all backend tests and prints the overall coverage summary in the terminal, including any missing lines
+
+To generate an interactive and more detailed HTML report, run:
+```bash
+pytest --cov=app --cov-report=html test/
+```
+
+Then open `htmlcov/index.html` in a browser
+
+> [!WARNING]
+>
+> Make sure that the Python virtual environment is activated before running test commands and that you are in the `backend/` directory
+>
+
+### Frontend Testing
+
+Navigate to the frontend directory:
+```bash
+cd application
+```
+
+**Run all tests:**
+```bash
+flutter test
+```
+
+**Run specific test file:**
+```bash
+flutter test test/post_items_page_test.dart
+```
+
+All tests are automatically run on every push thanks to the `flutter-ci.yml` CI workflow
+
+**Test Coverage**
+
+To get the frontend test coverage, run the following from `application/`:
+
+```bash
+flutter test --coverage
+```
+
+This generates coverage/lcov.info which contains the frontend test coverage data
+
+To view the coverage in an interactive HTML report, run:
+
+```bash
+genhtml coverage/lcov.info -o coverage/html
+```
+Then open `coverage/html/index.html` in a browser
+
+Alternatively view the overall summary in the terminal by running:
+
+```bash
+lcov --summary coverage/lcov.info
+```
+
+> [!NOTE]
+>
+> lcov is easy to install on Mac and Linux
+> - Mac: `brew install lcov` 
+> - Linux: `sudo apt-get install lcov`
+>
+> However when it comes to Windows, we suggest using WSL
+> If `genhtml` fails due to Windows-style file paths in `lcov.info`, convert backslashes to forward slashes first: 
+> `sed -i 's|\\|/|g' coverage/lcov.info`
+> then rerun the command for HTML
+>
+
+## Deployment
+
+
+## Limitations & Future Improvements
+
+**Backend**
+- Authentication is incomplete: missing login endpoint, token validation, email verification, and automatic profile creation on registration 
+- Posting an item is tied to a hard-coded testing user, rather than a logged in user (incomplete authentication)
+- User information about "Posting for X months" not implemented
+
+**Frontend**
+- Test coverage is limited, primarily focused on widgets and models, with less coverage of full user flows and integration
+
+**General**
+- Favourites and Messaging page are not implemented
+- Reviews and ratings are hard-coded in the frontend, but the fitting API endpoints are present in the backend
+
+
+
 [^1]: An example SUPABASE_URL:  "https://abc123.supabase.co"
 [^2]: An example `service_role` key will usually be formatted: "eyJhbGci..." (200-300 characters long)
