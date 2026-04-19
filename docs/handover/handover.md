@@ -260,14 +260,29 @@ Authentication is only partially implemented
 ## Project Structure
 
 ```txt
-2025-SecondhandMarketPlace
+.
+├── .github
 ├── application                     # Flutter frontend
 ├── backend                         # Python Flask backend
 ├── docs                            # Project docs
-├── .env.template                   # Template for .env (API keys)
-├── docker-compose.yml              # Multi-container setup (frontend/backend)
-├── mkdocs.yml                      # Online docs structure
+├── *root files*                    # Configuration files in the root
 ```
+
+- [.github](#github)
+- [./application](#application)
+- [./backend](#backend)
+- [./docs](#docs)
+- [./*root files*](#root-files)
+
+### ./.github
+
+### ./application
+
+### ./backend
+
+### ./docs
+
+### ./*root files*
 
 
 ## Testing
