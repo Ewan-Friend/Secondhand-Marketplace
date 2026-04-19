@@ -452,6 +452,31 @@ Contains tests for various scripts within the `app/` folder, primarily for the r
 
 ### ./docs
 
+```txt
+.
+├── AI_usage/        
+│   └── Ai_info.md              
+├── assets/                            # Contains images locally, used for documentation
+│   └── ... 
+├── aws/                               # Docs for deployment
+│   └── ...
+├── database-structure/
+│   └── database_structure.md          # Docs about Supabase structure
+├── handover/
+│   └── handover.md                    # Docs for handover
+├── naming_conventions/
+│   └── naming_conventions.md          # Docs for GitHub naming conventions
+├── project-setup/
+│   └── project_setup.md               # Docs for developer initial setup
+├── user-instructions/
+│   └── user_instructions.md           # Docs for user guide
+├── workflows/
+│   └── ci-cd.md                       # Docs for GitHub Actions workflows
+├── requirements.txt                   # Establish dependencies for serving web docs
+├── index.md                           # Entry page for served docs
+└── ...
+```
+
 ### ./*root files*
 
 
