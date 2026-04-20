@@ -267,7 +267,19 @@ The project uses Supabase as its backend database service. Supabase provides a P
 
 The database structure is documented in more detail ![here](../database-structure/database-structure.md)
 
+### Tables
 
+**categories**
+- stores item categories used to group similar items together (not implemented in the actual application)
+
+**profiles**
+- stores information about users such as username, location, rating, and level
+
+**items**
+- stores item data such as which seller has posted it, title, description, and price 
+
+**item_images**
+- stores the images of items along with a ordering 
 
 ## Project Structure
 
