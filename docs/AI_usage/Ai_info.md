@@ -264,7 +264,7 @@ Frontend CD usually includes:
 #### Response - Chat GPT 5.0 (case 7)
 Short answer: **SVG is already the easiest**. Long answer: only if you behave.
 
-Here’s the brutally honest ranking for Flutter headers, from “pleasant” to “why did you do this to yourself”.
+Here's the brutally honest ranking for Flutter headers, from "pleasant" to "why did you do this to yourself".
 
 ---
 
@@ -272,7 +272,7 @@ Here’s the brutally honest ranking for Flutter headers, from “pleasant” to
 
 **Use this if** the logo is simple shapes and flat colors.
 
-**Why it’s good**
+**Why it's good**
 
 * Scales perfectly on every screen
 * Tiny file size
@@ -351,6 +351,7 @@ Future<void> login() async {
     if (mounted) setState(() => _isLoading = false);
   }
 }
+```
 
 #### Prompt - Emir (case 10)
 "Create flowchart diagrams for all six GitHub Actions workflows in our project. Each workflow should have its own diagram showing the trigger, steps, and outcome."
