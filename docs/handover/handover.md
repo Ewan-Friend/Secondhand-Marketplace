@@ -296,6 +296,13 @@ The database follows these relationships:
 - An **item** can have many **item_images**
 - An **item_image** belongs to one **item** through `item_id`
 
+### Storage
+Images are stored in Supabase storage as the corresponding file URLs rather than the actual image files
+- avatars (profile pictures) are stored in the avatars bucket
+- item images are stored in the item_images bucket
+
+
+### Authentication
 
 ## Project Structure
 
