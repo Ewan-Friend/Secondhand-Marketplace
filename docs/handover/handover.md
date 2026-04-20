@@ -479,6 +479,13 @@ Contains tests for various scripts within the `app/` folder, primarily for the r
 
 ### ./*root files*
 
+The following files are from the root directory:
+
+- `.env.template`: A template to copy and paste the variables required for `.env`
+- `.gitignore`: Patterns that indicate files to be ignored by git
+- `docker-compose.yml`: Congfiguration service for building the full stack of the project
+- `mkdocs.yml`: configuration for the documentation site
+- `README.md`: contains a general overview of the project
 
 ## Testing
 
