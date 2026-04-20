@@ -270,16 +270,18 @@ The database structure is documented in more detail ![here](../database-structur
 ### Tables
 
 **categories**
-- stores item categories used to group similar items together (not implemented in the actual application)
+- stores item categories used to group similar items together
+- category functionalitiy is not implemented at in the application at current stage
 
 **profiles**
-- stores information about users such as username, location, rating, and level
+- stores user information such as username, location, rating, and level
 
 **items**
-- stores item data such as which seller has posted it, title, description, and price 
+- stores marketplace listings, including seller, title, description, and price 
+- each item is assigned to a seller via `selller_id` (foreign key)
 
 **item_images**
-- stores the images of items along with a ordering 
+- stores images of items along with ordering to control how images are displayed (by time on default)
 
 ## Project Structure
 
