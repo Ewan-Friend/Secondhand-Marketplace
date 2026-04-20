@@ -270,17 +270,21 @@ The database structure is documented in more detail ![here](../database-structur
 ### Tables
 
 **categories**
+![Categories](../assets/database-structure/categories.png)
 - stores item categories used to group similar items together
-- category functionalitiy is not implemented at in the application at current stage
+- category functionality is not implemented at in the application at current stage
 
 **profiles**
+![Profiles](../assets/database-structure/profiles.png)
 - stores user information such as username, location, rating, and level
 
 **items**
+![Items](../assets/database-structure/items.png)
 - stores marketplace listings, including seller, title, description, and price 
 - each item is assigned to a seller via `selller_id` (foreign key)
 
 **item_images**
+![Item images](../assets/database-structure/item_images.png)
 - stores images of items along with ordering to control how images are displayed (by time on default)
 
 ## Project Structure
