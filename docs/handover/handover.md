@@ -269,23 +269,32 @@ The database structure is documented in more detail ![here](../database-structur
 
 ### Tables
 
-**categories**
+#### categories
+
 ![Categories](../assets/database-structure/categories.png)
+
 - stores item categories used to group similar items together
 - category functionality is not implemented at in the application at current stage
 
-**profiles**
+#### profiles
+
 ![Profiles](../assets/database-structure/profiles.png)
+
 - stores user information such as username, location, rating, and level
 - this table is separate from the Supabase Auth users table
+- `level` and `xp` are always updated in real time for gamification purposes, they are stored separately
 
-**items**
+#### items
+
 ![Items](../assets/database-structure/items.png)
+
 - stores marketplace listings, including seller, title, description, and price 
 - each item is assigned to a seller via `seller_id` (foreign key)
 
-**item_images**
+#### item_images
+
 ![Item images](../assets/database-structure/item_images.png)
+
 - stores images of items along with `sort_order` which controls the relation of images
 
 ### Table Relationships
