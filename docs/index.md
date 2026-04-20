@@ -9,7 +9,7 @@
 
 - [Open as PDF](pdf/secondhand-marketplace.pdf)
 
-* May be formatting errors / repeated sections - it's not perfect *
+_May be formatting errors / repeated sections - it's not perfect_
 
 ## Instructions
 

@@ -323,7 +323,7 @@ Contains CI and CD workflows, that triggers certain GitHub actions events
 ├── test/                              # Frontend test suite
 |  ├── ...
 └── ...                               
-  ```
+```
 
 - [./application/lib/auth/.](#applicationlibauth)
 - [./application/lib/config/.](#applicationlibconfig)
