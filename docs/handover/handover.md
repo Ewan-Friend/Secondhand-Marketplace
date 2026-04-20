@@ -277,15 +277,16 @@ The database structure is documented in more detail ![here](../database-structur
 **profiles**
 ![Profiles](../assets/database-structure/profiles.png)
 - stores user information such as username, location, rating, and level
+- this table is separate from the Supabase Auth users table
 
 **items**
 ![Items](../assets/database-structure/items.png)
 - stores marketplace listings, including seller, title, description, and price 
-- each item is assigned to a seller via `selller_id` (foreign key)
+- each item is assigned to a seller via `seller_id` (foreign key)
 
 **item_images**
 ![Item images](../assets/database-structure/item_images.png)
-- stores images of items along with ordering to control how images are displayed (by time on default)
+- stores images of items along with `sort_order` which controls the relation of images
 
 ### Table Relationships
 
@@ -315,9 +316,18 @@ Each authenticated user has:
 
 > [!WARNING]
 >
->The authenticated users are not linked to the users in `profiles` table (their primary keys differ)
+> Authenticated users are not directly linked to the entries in `profiles` table (their primary keys differ)
 >
-> This relationship needs to be considered when extending the backend authentication functionality
+> This relationship must be considered when extending the backend authentication functionality
+>
+
+> [!NOTE]
+>
+> When modifying the database:
+> - ensure any changes are reflected in backend queries and models
+> - update the schema documentation file accordingly
+> - verify that foreign key relationships remain valid
+> - ensure any storage bucket references remain consistent with the frontend and backend
 >
 
 
