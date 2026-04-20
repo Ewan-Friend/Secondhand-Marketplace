@@ -297,12 +297,29 @@ The database follows these relationships:
 - An **item_image** belongs to one **item** through `item_id`
 
 ### Storage
+
 Images are stored in Supabase storage as the corresponding file URLs rather than the actual image files
 - avatars (profile pictures) are stored in the avatars bucket
 - item images are stored in the item_images bucket
 
-
 ### Authentication
+
+Supabase Auth is used for user authentication for managing user sign-up and login
+
+Each authenticated user has:
+- `id (UID)` - unique identifier for the authenticated user
+- `email` - user email address
+- `created_at` - account creation timestamp
+- `last_sign_in_at` - timestamp of the user's last login, if available
+- `provider` - authentication method (currently Email)
+
+> [!WARNING]
+>
+>The authenticated users are not linked to the users in `profiles` table (their primary keys differ)
+>
+> This relationship needs to be considered when extending the backend authentication functionality
+>
+
 
 ## Project Structure
 
