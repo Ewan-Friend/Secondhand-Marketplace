@@ -261,6 +261,14 @@ Authentication is only partially implemented
 - Responses return JSON with a `status_code` field and either `data`, `table_data`, or `message`
 - Some routes currently return mock data rather than actual data from the database (e.g. `/reviews`)
 
+## Database Overview
+
+The project uses Supabase as its backend database service. Supabase provides a PostgreSQL database used to store data, including user profiles, listed items as well as item images.
+
+The database structure is documented in more detail ![here](../database-structure/database-structure.md)
+
+
+
 ## Project Structure
 
 ```txt
