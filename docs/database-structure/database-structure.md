@@ -35,7 +35,7 @@
 
 ## Profiles
 
-![Categories](../assets/database-structure/profiles.png)
+![Profiles](../assets/database-structure/profiles.png)
 
 - ```id <uuid>``` - unique identifier
 - ```created_at <string>``` - exact date and time that profile was created
