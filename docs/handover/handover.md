@@ -20,11 +20,11 @@ The majority of need-to-know, high-level information will be outlined within thi
 
 ## Tech Stack
 
-Frontend: Flutter
-Backend/API: Flask (Python)
-Database: Supabase (PostgreSQL)
-Cloud Hosting & Deployment: AWS
-Infrastructure & CI/CD: Docker, GitHub Actions
+- **Frontend**: Flutter
+- **Backend/API**: Flask (Python)
+- **Database**: Supabase (PostgreSQL)
+- **Cloud Hosting & Deployment**: AWS
+- **Infrastructure & CI/CD**: Docker, GitHub Actions
 
 ## Project Setup
 
