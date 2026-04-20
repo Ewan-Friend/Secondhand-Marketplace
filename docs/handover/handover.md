@@ -287,6 +287,16 @@ The database structure is documented in more detail ![here](../database-structur
 ![Item images](../assets/database-structure/item_images.png)
 - stores images of items along with ordering to control how images are displayed (by time on default)
 
+### Table Relationships
+
+The database follows these relationships:
+- A **profile** can own many **items**
+- An **item** belongs to one **profile** through `seller_id`
+- An **item** belongs to one **category** through `category_id`
+- An **item** can have many **item_images**
+- An **item_image** belongs to one **item** through `item_id`
+
+
 ## Project Structure
 
 ```txt
