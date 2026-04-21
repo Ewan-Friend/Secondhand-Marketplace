@@ -265,7 +265,7 @@ Authentication is only partially implemented
 
 The project uses Supabase as its backend database service. Supabase provides a PostgreSQL database used to store data, including user profiles, listed items as well as item images.
 
-The database structure is documented in more detail ![here](../database-structure/database-structure.md)
+The database structure is documented in more detail [here](../database-structure/database-structure.md)
 
 ### Tables
 
