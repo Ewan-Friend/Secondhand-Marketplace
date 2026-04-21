@@ -32,19 +32,6 @@ theme:
 
 plugins:
  - search
- - with-pdf:
-    author: Ewan Friend, Filip Hrehovcik, Emir Gizer, Lingze Yuan, Yunbo Zhang
-
-    output_path: pdf/secondhand-marketplace.pdf
-    cover_title: SecondHand Marketplace
-    cover_subtitle: Full documentation pages for SecondHand Marketplace project
-    
-    toc_level: 3
-    
-    debug_html: true
-    show_anchors: true
-    verbose: true
-
 
 nav:
   - Home: index.md
