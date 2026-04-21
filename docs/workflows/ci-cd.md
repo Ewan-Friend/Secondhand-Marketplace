@@ -21,6 +21,7 @@ deployment, and quality checks for the Secondhand Marketplace project.
 ## Continuous Integration
 
 ### PR Formatting Check (`pr-formatting-ci.yml`)
+![pr-formatting-ci](diagrams/pr_formatting_ci_titled.svg)
 
 Runs on every pull request opened, edited, or synchronized against `dev`. 
 Enforces three rules before a PR can be merged:
@@ -40,6 +41,7 @@ lines following the "Type of Change" header for a checked box.
 ---
 
 ### Flutter CI (`flutter-ci.yml`)
+![flutter-ci](diagrams/flutter_ci_titled.svg)
 
 Runs on pushes and pull requests to `dev` or `main` when files inside 
 `application/` are changed. Uses Flutter 3.35.7 stable with SDK caching 
@@ -55,6 +57,7 @@ Steps:
 ---
 
 ### Flask CI (`flask-ci.yml`)
+![flask-ci](diagrams/flask_ci_titled.svg)
 
 Runs on pushes and pull requests to `dev` or `main` when files inside 
 `backend/` are changed.
@@ -75,6 +78,7 @@ during the test step.
 ## Continuous Deployment
 
 ### Deploy Web (`deploy-web.yml`)
+![deploy-web](diagrams/deploy_web_titled.svg)
 
 Triggers on every push to `dev`. Builds the Flutter web app and deploys it 
 to AWS S3, then invalidates the CloudFront cache to serve the latest version.
@@ -116,6 +120,7 @@ Steps:
 ---
 
 ### Backend CD (`backend-cd.yml`)
+![backend-cd](diagrams/backend_cd_titled.svg)
 
 Triggers on every push to `dev`. Packages the Flask backend and deploys it 
 to AWS Elastic Beanstalk via the AWS CLI.

@@ -264,7 +264,7 @@ Frontend CD usually includes:
 #### Response - Chat GPT 5.0 (case 7)
 Short answer: **SVG is already the easiest**. Long answer: only if you behave.
 
-Here’s the brutally honest ranking for Flutter headers, from “pleasant” to “why did you do this to yourself”.
+Here's the brutally honest ranking for Flutter headers, from "pleasant" to "why did you do this to yourself".
 
 ---
 
@@ -272,7 +272,7 @@ Here’s the brutally honest ranking for Flutter headers, from “pleasant” to
 
 **Use this if** the logo is simple shapes and flat colors.
 
-**Why it’s good**
+**Why it's good**
 
 * Scales perfectly on every screen
 * Tiny file size
@@ -351,3 +351,21 @@ Future<void> login() async {
     if (mounted) setState(() => _isLoading = false);
   }
 }
+```
+
+#### Prompt - Emir (case 10)
+"Create flowchart diagrams for all six GitHub Actions workflows in our project. Each workflow should have its own diagram showing the trigger, steps, and outcome."
+*provided all six workflow YAML files as context*
+
+#### Response - Claude Sonnet 4.5 (case 10)
+
+Generated SVG flowchart diagrams for all six CI/CD workflows:
+
+- `pr-formatting-ci.yml` — three parallel checks (title format, closing tag, type of change)
+- `flutter-ci.yml` — checkout, Flutter setup, analyze and test in parallel
+- `flask-ci.yml` — checkout, Python setup, Ruff format/lint and pytest in parallel
+- `deploy-web.yml` — Flutter build, OIDC auth, S3 sync, CloudFront invalidation, health check
+- `backend-cd.yml` — zip creation, OIDC auth, S3 upload, EB deploy, health check with rollback on failure
+- `mkdocs-cd.yml` — checkout, MkDocs build, GitHub Pages publish
+
+Diagrams were saved as SVG files under `docs/workflows/diagrams/` and referenced in `ci-cd.md`.

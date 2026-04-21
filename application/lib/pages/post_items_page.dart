@@ -5,6 +5,9 @@ import '../services/api_service.dart';
 import '../widgets/upload_image.dart';
 import '../models/item_model.dart';
 
+const int xpPerPost = 50;
+const String _testUserId = '55d89a2e-d30c-4b20-a51d-6a979ba6b7da';
+
 class PostItemsPage extends StatefulWidget {
   const PostItemsPage({super.key});
 
@@ -19,8 +22,6 @@ class _PostItemsPage extends State<PostItemsPage> {
   final descriptionController = TextEditingController();
   final priceController = TextEditingController();
   final locationController = TextEditingController();
-
-  // Retrieves currently selected images
   List<PlatformFile> selectedImages = [];
 
   Item createItem() {
@@ -35,17 +36,14 @@ class _PostItemsPage extends State<PostItemsPage> {
       location: locationController.text,
       condition: condition ?? 'good',
       imageUrls: [],
-      // Publishes under a created test user
-      //TODO: This placeholder user should be replaced by the current session user
       sellerInfo: {
-        'seller_id': '745a9056-66f1-4eb1-901b-16bfa402116f',
+        'seller_id': _testUserId,
         'seller_name': 'Upload Test User',
         'location': 'Bristol, UK',
       },
     );
   }
 
-  // Simply creates the item, then converts to JSON
   Future<void> onPublish() async {
     final item = createItem();
     final apiService = APIService();
@@ -55,6 +53,14 @@ class _PostItemsPage extends State<PostItemsPage> {
         selectedImages: selectedImages,
       );
 
+      final profile = await apiService.getUserById(_testUserId);
+      final data = profile['table_data'] ?? profile['data'] ?? profile;
+      final currentXp = (data['xp'] as num?)?.toInt() ?? 0;
+      final currentLevel = (data['level'] as num?)?.toInt() ?? 1;
+      final newXp = currentXp + xpPerPost;
+
+      await apiService.addXP(newXp, currentLevel);
+
       titleController.clear();
       descriptionController.clear();
       priceController.clear();
@@ -63,9 +69,7 @@ class _PostItemsPage extends State<PostItemsPage> {
       setState(() => selectedImages = []);
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Item posted successfully!')),
-        );
+        _showXpPopup(xpPerPost);
       }
     } catch (e) {
       if (mounted) {
@@ -74,6 +78,85 @@ class _PostItemsPage extends State<PostItemsPage> {
         ).showSnackBar(SnackBar(content: Text('Error: $e')));
       }
     }
+  }
+
+  void _showXpPopup(int xpEarned) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.all(16),
+        duration: const Duration(seconds: 3),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        content: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          decoration: BoxDecoration(
+            color: const Color(0xFF1A1A1A),
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: const Color(0xFFFF6C6C).withOpacity(0.6)),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFFFF6C6C).withOpacity(0.15),
+                blurRadius: 20,
+                spreadRadius: 2,
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFF6C6C).withOpacity(0.15),
+                  shape: BoxShape.circle,
+                ),
+                child: const Text('⭐', style: TextStyle(fontSize: 16)),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      'Item posted!',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 13,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      'You earned +$xpEarned XP',
+                      style: const TextStyle(
+                        color: Colors.white54,
+                        fontSize: 11,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFF6C6C).withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  '+$xpEarned XP',
+                  style: const TextStyle(
+                    color: Color(0xFFFF6C6C),
+                    fontWeight: FontWeight.w700,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -152,8 +235,6 @@ class _PostItemsPage extends State<PostItemsPage> {
           style: TextStyle(fontSize: 14, color: Colors.black87),
         ),
         const SizedBox(height: 8),
-
-        // Upload Image widget that can take image files from users filesystem
         UploadImage(
           images: selectedImages,
           onImagesChanged: (images) {
@@ -164,16 +245,10 @@ class _PostItemsPage extends State<PostItemsPage> {
         ),
 
         const SizedBox(height: 20),
-
-        /// Title
         _TitleField(titleController),
         const SizedBox(height: 18),
-
-        /// Description
         _DescriptionField(descriptionController),
         const SizedBox(height: 18),
-
-        /// Price + Location
         Row(
           children: [
             SizedBox(width: 180, child: _PriceField(priceController)),
@@ -182,8 +257,6 @@ class _PostItemsPage extends State<PostItemsPage> {
           ],
         ),
         const SizedBox(height: 18),
-
-        /// Condition + Category
         Row(
           children: [
             Expanded(
@@ -205,7 +278,6 @@ class _PostItemsPage extends State<PostItemsPage> {
 
 class _FieldLabel extends StatelessWidget {
   final String text;
-
   const _FieldLabel(this.text);
 
   @override
@@ -219,7 +291,6 @@ class _FieldLabel extends StatelessWidget {
 
 class _TitleField extends StatelessWidget {
   final TextEditingController titleController;
-
   const _TitleField(this.titleController);
 
   @override
@@ -239,7 +310,6 @@ class _TitleField extends StatelessWidget {
 
 class _DescriptionField extends StatelessWidget {
   final TextEditingController controller;
-
   const _DescriptionField(this.controller);
 
   @override
@@ -275,7 +345,6 @@ class _DescriptionField extends StatelessWidget {
 
 class _PriceField extends StatelessWidget {
   final TextEditingController controller;
-
   const _PriceField(this.controller);
 
   @override
@@ -293,11 +362,7 @@ class _PriceField extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Row(
             children: [
-              const Text(
-                '£',
-                style: TextStyle(
-                    fontSize: 13, color: Colors.grey, height: 1.4),
-              ),
+              const Text('£', style: TextStyle(fontSize: 13, color: Colors.grey, height: 1.4)),
               const SizedBox(width: 8),
               Expanded(
                 child: TextField(
@@ -321,7 +386,6 @@ class _PriceField extends StatelessWidget {
 
 class _LocationField extends StatelessWidget {
   final TextEditingController controller;
-
   const _LocationField(this.controller);
 
   @override
@@ -343,7 +407,6 @@ class _LocationField extends StatelessWidget {
 class _ConditionField extends StatelessWidget {
   final String? value;
   final void Function(String?) onChanged;
-
   const _ConditionField({required this.value, required this.onChanged});
 
   @override
@@ -393,7 +456,7 @@ class _SideButtons extends StatelessWidget {
   final String? condition;
   final VoidCallback onPublish;
 
-  _SideButtons(
+  const _SideButtons(
     this.titleController,
     this.descriptionController,
     this.priceController,
@@ -418,10 +481,7 @@ class _SideButtons extends StatelessWidget {
               shadowColor: const Color(0x55FF6C6C),
             ),
             onPressed: onPublish,
-            child: const Text(
-              'Publish',
-              style: TextStyle(color: Colors.white, fontSize: 15),
-            ),
+            child: const Text('Publish', style: TextStyle(color: Colors.white, fontSize: 15)),
           ),
           const SizedBox(height: 12),
           OutlinedButton(
@@ -432,10 +492,7 @@ class _SideButtons extends StatelessWidget {
               backgroundColor: const Color(0xFFF2F2F2),
             ),
             onPressed: () {},
-            child: const Text(
-              'Preview',
-              style: TextStyle(color: Colors.black87, fontSize: 15),
-            ),
+            child: const Text('Preview', style: TextStyle(color: Colors.black87, fontSize: 15)),
           ),
           const SizedBox(height: 12),
           OutlinedButton(
@@ -446,10 +503,7 @@ class _SideButtons extends StatelessWidget {
               backgroundColor: const Color(0xFFF6F6F6),
             ),
             onPressed: () {},
-            child: const Text(
-              'Save Draft',
-              style: TextStyle(color: Colors.black87, fontSize: 15),
-            ),
+            child: const Text('Save Draft', style: TextStyle(color: Colors.black87, fontSize: 15)),
           ),
         ],
       ),
