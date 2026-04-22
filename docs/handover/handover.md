@@ -261,6 +261,85 @@ Authentication is only partially implemented
 - Responses return JSON with a `status_code` field and either `data`, `table_data`, or `message`
 - Some routes currently return mock data rather than actual data from the database (e.g. `/reviews`)
 
+## Database Overview
+
+The project uses Supabase as its backend database service. Supabase provides a PostgreSQL database used to store data, including user profiles, listed items as well as item images.
+
+The database structure is documented in more detail [here](../database-structure/database-structure.md)
+
+### Tables
+
+#### categories
+
+![Categories](../assets/database-structure/categories.png)
+
+- stores item categories used to group similar items together
+- category functionality is not implemented at in the application at current stage
+
+#### profiles
+
+![Profiles](../assets/database-structure/profiles.png)
+
+- stores user information such as username, location, rating, and level
+- this table is separate from the Supabase Auth users table
+- `level` and `xp` are always updated in real time for gamification purposes, they are stored separately
+
+#### items
+
+![Items](../assets/database-structure/items.png)
+
+- stores marketplace listings, including seller, title, description, and price 
+- each item is assigned to a seller via `seller_id` (foreign key)
+
+#### item_images
+
+![Item images](../assets/database-structure/item_images.png)
+
+- stores images of items along with `sort_order` which controls the relation of images
+
+### Table Relationships
+
+The database follows these relationships:
+- A **profile** can own many **items**
+- An **item** belongs to one **profile** through `seller_id`
+- An **item** belongs to one **category** through `category_id`
+- An **item** can have many **item_images**
+- An **item_image** belongs to one **item** through `item_id`
+
+### Storage
+
+Images are stored in Supabase storage as the corresponding file URLs rather than the actual image files
+- avatars (profile pictures) are stored in the avatars bucket
+- item images are stored in the item_images bucket
+
+### Authentication
+
+Supabase Auth is used for user authentication for managing user sign-up and login
+
+Each authenticated user has:
+- `id (UID)` - unique identifier for the authenticated user
+- `email` - user email address
+- `created_at` - account creation timestamp
+- `last_sign_in_at` - timestamp of the user's last login, if available
+- `provider` - authentication method (currently Email)
+
+> [!WARNING]
+>
+> Authenticated users are not directly linked to the entries in `profiles` table (their primary keys differ)
+>
+> This relationship must be considered when extending the backend authentication functionality
+>
+
+> [!NOTE]
+>
+> When modifying the database:
+> - ensure any changes are reflected in backend queries and models
+> - update the schema documentation file accordingly
+> - verify that foreign key relationships remain valid
+> - ensure any storage bucket references remain consistent with the frontend and backend
+>
+
+
 ## Project Structure
 
 ```txt
