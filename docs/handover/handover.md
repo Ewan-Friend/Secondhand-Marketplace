@@ -6,15 +6,11 @@
   - [Contents](#contents)
   - [Introduction](#introduction)
   - [Project Setup](#project-setup)
-    - [Prerequisite Downloads](#prerequisite-downloads)
-    - [Setup Development Environment](#setup-development-environment)
-    - [Backend environment](#backend-environment)
-    - [Frontend environment](#frontend-environment)
-    - [Docker Full Stack Setup](#docker-full-stack-setup)
-    - [(Optional) MKdocs documentation server](#optional-mkdocs-documentation-server)
   - [System Architecture](#system-architecture)
   - [API Overview](#api-overview)
   - [Project Structure](#project-structure)
+  - [Testing](#testing)
+  - [Limitations](#limitations)
 
 ## Introduction
 
@@ -24,11 +20,11 @@ The majority of need-to-know, high-level information will be outlined within thi
 
 ## Tech Stack
 
-Frontend: Flutter
-Backend/API: Flask (Python)
-Database: Supabase (PostgreSQL)
-Cloud Hosting & Deployment: AWS
-Infrastructure & CI/CD: Docker, GitHub Actions
+- **Frontend**: Flutter
+- **Backend/API**: Flask (Python)
+- **Database**: Supabase (PostgreSQL)
+- **Cloud Hosting & Deployment**: AWS
+- **Infrastructure & CI/CD**: Docker, GitHub Actions
 
 ## Project Setup
 
@@ -343,30 +339,232 @@ Each authenticated user has:
 ## Project Structure
 
 ```txt
-2025-SecondhandMarketPlace
+.
+├── .github
 ├── application                     # Flutter frontend
-│   ├── lib
-│   │   ├── models                  # Reusable data structures
-│   │   ├── pages                   # Application pages
-│   │   ├── services                # Frontend services
-│   │   └── widgets                 # Reusable UI elements
-│   ├── test                        # Frontend tests
-|   ├── nginx.conf                  # Serves the frontend
-│   ├── Dockerfile                  # Docker build info
-│   ├── ...
 ├── backend                         # Python Flask backend
-│   ├── app
-│   │   ├── __init__.py             # Blueprint + frontend connection
-│   │   └── routes                  # API endpoints
-│   ├── run.py                      # Run backend server
-│   ├── test                        # Backend tests
-│   ├── requirements.txt            # Backend dependencies
-│   ├── Dockerfile                  # Docker build info
 ├── docs                            # Project docs
-├── .env.template                   # Template for .env (API keys)
-├── docker-compose.yml              # Multi-container setup (frontend/backend)
-├── mkdocs.yml                      # Online docs structure
+├── *root files*                    # Configuration files in the root
 ```
+
+- [.github](#github)
+- [./application](#application)
+- [./backend](#backend)
+- [./docs](#docs)
+- [./*root files*](#root-files)
+
+### ./.github
+
+```txt
+.
+├── ISSUE_TEMPLATE/                 # GitHub Issues templates
+│   ├── ...
+├── workflows/                      # Workflow files
+│   ├── ...
+└── pull_request_template.md        # GitHub PR template
+```
+
+- [./github/ISSUE_TEMPLATE](#githubissue_template)
+- [./github/workflows](#githubworkflows)
+
+#### ./.github/ISSUE_TEMPLATE
+
+Currently contains templates for bug reports and general tasks, allows users to fill out the template when starting a new issue.
+
+#### ./.github/workflows
+
+Contains CI and CD workflows, that triggers certain GitHub actions events
+
+- `./workflows/backend-cd.yml`: Triggers on pushes to `dev`, deploys the backend to AWS Elastic Beanstalk. Packages the Flask app, Uploading it to S3, updating the environment then verifying the health afterwards
+- `./workflows/deploy-web.yml`: Triggers on pushes to `dev`, builds the Flutter web app, syncs the release to S3, invalidates CloudFront and then check the deployed site successfully responds
+- `./workflows/flask-ci.yml`: Triggers on changes made to `./backend` on pushes / pull requests / manual runs. runs the backend CI - including formatting, linting, and generating pytest coverage
+- `./workflows/flutter-ci.yml`: Triggers on changes made to `./application` on pushes / pull requests / manual runs. runs the frontend CI - fetching dependencies, running `flutter analyze` and executing the test suite.
+- `./workflows/mkdocs-cd.yml`: Triggers when `dev` or `main` is updated, publishes the project documentation site to GitHub Pages
+- `./workflows/pr-formatting-ci.yml`: Triggers when a pull request is made to `dev`, enforces PR hygiene by checking title format, requiring a close tag, and ensuring a change type is selected
+
+### ./application
+
+```txt
+.
+├──lib/
+|  ├── auth/                           # Auth flow components
+|  │   └──  ..
+|  ├── config/                         # Centralised app congiguration
+|  │   └── ...
+|  ├── models/                         # Structured data models
+|  │   └── ...
+|  ├── pages/                          # Contains flutter web pages
+|  │   └──  ...      
+|  ├── services/                       # Contains generic application service functions
+|  │   └──  ...
+|  └── widgets/                        # Contains reusable flutter widgets
+|      └──...
+├── test/                              # Frontend test suite
+|  ├── ...
+└── ...                               
+```
+
+- [./application/lib/auth/.](#applicationlibauth)
+- [./application/lib/config/.](#applicationlibconfig)
+- [./application/lib/models/.](#applicationlibmodels)
+- [./application/lib/pages/.](#applicationlibpages)
+- [./application/lib/services/.](#applicationlibservices)
+- [./application/lib/widgets/.](#applicationlibwidgets)
+- [./application/lib/.](#applicationlib)
+- [./application/test/.](#applicationtest)
+- [./application/.](#application-1)
+
+#### ./application/lib/auth/.
+
+Handles the authentication flow and access. The intention is to decide whether certain users could access protected pages for be directed to the login/signup screen.
+
+#### ./application/lib/config/.
+
+Stores global app configuration across the frontend, currently holds environment based settings such as the API base URL resolution
+
+#### ./application/lib/models/.
+
+Serialization and deserialization between JSON packed variables and a structured data model defined within each corresponding file, matching the information required by widgets.
+
+- `item_model` - Contains item attributes
+- `user_model` - Contains user profile attributes
+
+#### ./application/lib/pages/.
+
+Contains frontend page-level screens
+
+Listed are notable pages:
+
+- `home_page.dart`: Page that contains a grid of user uploaded items
+- `item_detail_page.dart`: Page that shows information for a single item
+- `post_items_page.dart`: Page that allows users to upload their own item
+- `profile_page.dart`: Page that shows information for a single user
+
+#### ./application/lib/services/.
+
+Holds service-layer logic that allows communication with the backend and holds usable operations. This abstracts networking away from the page widgets so UI stays cleaner
+
+#### ./application/lib/widgets/.
+
+Contaains reuable UI components that can be shared by multiple pages. Enforces DRY principles and keeps styling consistent.
+
+Listed are notable widgets:
+
+- `header.dart`: Header with navigation elements displayed on the top of most pages
+- `item_widget.dart`: Format that item information is displayed on the home and profile pages 
+- `upload_image.dart`: Used to upload images and handle them within a page
+- `user_widget`: Format that user information is displayed in the item widget
+
+#### ./application/lib/.
+
+Primary Flutter source directory containing the apps core code
+
+- `main.dart`: Frontend entry point, booting up the Flutter app and initialising app configuration. 
+
+#### ./application/test/.
+
+Frontend test suite for widgets, models and services. They simply make sure that user facing operations behave as expected. Unit tests, integration tests, and widget tests.
+
+#### ./application/.
+
+- `nginx.conf`: Defines Nginx proxy rules to serve the web build and route requests
+- `Dockerfile`: Defines how the frontend container is built
+- `pubspec.yaml`: Declares dependencies, assets and metadata
+- `analysis_options.yaml`: configures analysis and linting rules
+
+### ./backend
+
+```txt
+.
+├── app/                               # Backend application package
+│   ├── __init__.py                    # Flask app setup
+│   ├── services.py                    # Shared backend service logic
+│   └── routes/                        # API route modules
+│       ├── __init__.py                # Exports route blueprints
+│       ├── auth.py                    # Authentication endpoints
+│       ├── users.py                   # User profile endpoints
+│       ├── items.py                   # Item endpoints
+│       ├── reviews.py                 # Review endpoints
+│       ├── gamification.py            # Level progression endpoints
+│       └── health.py                  # Health/status endpoint(s)
+├── test/                              # Backend test suite
+│   └── ...
+└── ...
+```
+
+- [./backend/app/routes](#backendapproutes)
+- [./backend/app](#backendapp)
+- [./backend/test](#backendtest)
+- [./backend](#backend-1)
+
+#### ./backend/app/routes/.
+
+This directory contains main python scripts for setting up endpoints that can interact with the frontend - utilising flask routing patterns.
+
+- `__init__.py`: Exports route blueprints to attatch to the app
+- `auth.py`: API endpoints relating to authentication
+- `users.py`: API endpoints for user profile reads and updates
+- `items.py`: API endpoints for item listings and management
+- `reviews.py`: API endpoints for reviews and ratings
+- `gamification.py`: API endpoints for level progression
+- `health.py`: API endpoints for connectivity checks
+
+#### ./backend/app/.
+
+This directory contains files that pertain to the primary functionality of the backend, and how it interacts with the frontend.
+
+- `__init__.py`: Configures the flask application, wires the core backend setup
+- `services.py`: Holds shared service logic used by route handlers
+
+#### ./backend/test/.
+
+Contains tests for various scripts within the `app/` folder, primarily for the routing patterns
+
+- `test_{route_filename}.py`: Route-specific tests for each file in `routes/`
+- `conftest.py`: Shared pytest fixtures, establishes common test configuration
+
+#### ./backend/.
+
+- `Dockerfile`: Defines how the backend container is built
+- `requirements.txt`: Python dependencies for the backend environment
+- `run.py`: Local entry script used to start the backend server
+
+### ./docs
+
+```txt
+.
+├── AI_usage/        
+│   └── Ai_info.md              
+├── assets/                            # Contains images locally, used for documentation
+│   └── ... 
+├── aws/                               # Docs for deployment
+│   └── ...
+├── database-structure/
+│   └── database_structure.md          # Docs about Supabase structure
+├── handover/
+│   └── handover.md                    # Docs for handover
+├── naming_conventions/
+│   └── naming_conventions.md          # Docs for GitHub naming conventions
+├── project-setup/
+│   └── project_setup.md               # Docs for developer initial setup
+├── user-instructions/
+│   └── user_instructions.md           # Docs for user guide
+├── workflows/
+│   └── ci-cd.md                       # Docs for GitHub Actions workflows
+├── requirements.txt                   # Establish dependencies for serving web docs
+├── index.md                           # Entry page for served docs
+└── ...
+```
+
+### ./*root files*
+
+The following files are from the root directory:
+
+- `.env.template`: A template to copy and paste the variables required for `.env`
+- `.gitignore`: Patterns that indicate files to be ignored by git
+- `docker-compose.yml`: Congfiguration service for building the full stack of the project
+- `mkdocs.yml`: configuration for the documentation site
+- `README.md`: contains a general overview of the project
 
 ## Testing
 
@@ -484,9 +682,7 @@ lcov --summary coverage/lcov.info
 > then rerun the command for HTML
 >
 
-## Deployment
-
-## Limitations & Future Improvements
+## Limitations
 
 ### Backend
 

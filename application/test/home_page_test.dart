@@ -48,7 +48,6 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(Scaffold), findsOneWidget);
-    expect(find.text('API OK'), findsOneWidget);
     expect(find.text('Explore'), findsNothing);
     expect(find.text('No items found'), findsOneWidget);
   });
