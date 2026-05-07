@@ -1,0 +1,62 @@
+site_name: Secondhand Marketplace
+site_url: https://urban-adventure-qm9y5k8.pages.github.io/
+
+repo_name: spe-uob/2025-SecondhandMarketplace
+repo_url: https://github.com/spe-uob/2025-SecondhandMarketplace
+
+theme:
+  name: material
+  favicon: logos/logo.png
+  logo: logos/logo.svg
+  locale: en
+  features:
+  - navigation.instant
+  - navigation.tracking
+  - navigation.sections
+  - navigation.expand
+  - content.code.copy
+  palette:
+    # Taken from https://squidfunk.github.io/mkdocs-material/setup/changing-the-colors/https://squidfunk.github.io/mkdocs-material/setup/changing-the-colors/
+    # Light mode
+    - scheme: default
+      primary: deep orange
+      toggle:
+        icon: material/brightness-7 
+        name: Switch to dark mode
+    # Dark mode
+    - scheme: slate
+      primary: deep orange
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+plugins:
+ - search
+
+nav:
+  - Home: index.md
+  - Guides:
+      - User Guide: user-instructions/user-instructions.md
+      - Project Setup: project-setup/project-setup.md
+  - Project References:
+      - Database Structure: database-structure/database-structure.md
+      - Naming Conventions: naming_conventions/naming_conventions.md
+  - Production:
+      - AWS Infrastructure: aws/aws-infrastructure.md
+      - IAM and OIDC: aws/iam-oidc.md
+      - CI/CD Workflows: workflows/ci-cd.md
+  - Governance:
+    - AI Usage: AI_usage/Ai_info.md
+  - Project Handover: handover/handover.md
+ 
+
+markdown_extensions:
+  - toc:
+      permalink: true
+  - admonition
+  - tables
+  - footnotes
+  - attr_list
+  - md_in_html
+  - pymdownx.details
+  - pymdownx.superfences

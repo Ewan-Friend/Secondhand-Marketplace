@@ -1,0 +1,14 @@
+services:
+  flask:
+    build: ./backend
+    ports:
+      - "5000:8000"
+    env_file:
+      - .env
+
+  flutter:
+    build: ./application
+    ports:
+      - "8080:80"
+    depends_on:
+      - flask

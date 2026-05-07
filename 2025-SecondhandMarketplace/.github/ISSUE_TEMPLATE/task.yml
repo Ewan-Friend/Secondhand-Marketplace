@@ -1,0 +1,75 @@
+name: "Task / Enhancement"
+description: "Create a new task, feature, or bug report"
+title: "[Task]: "
+labels: []
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: "## 📋 Description"
+
+  - type: input
+    id: summary
+    attributes:
+      label: "Summary"
+      description: "Short description of the issue"
+      placeholder: "Briefly summarize the issue"
+    validations:
+      required: true
+
+  - type: textarea
+    id: details
+    attributes:
+      label: "Details"
+      description: "Provide additional information if needed"
+      placeholder: "Add more context, logs, or details here"
+
+  - type: markdown
+    attributes:
+      value: "## 🔗 Related Issue"
+
+  - type: input
+    id: closes
+    attributes:
+      label: "Closes"
+      description: "Add issue numbers this issue will close (e.g., #123)"
+      placeholder: "#___"
+
+  - type: input
+    id: relates_to
+    attributes:
+      label: "Relates to"
+      description: "Add related issue numbers (e.g., #456)"
+      placeholder: "#___"
+
+  - type: markdown
+    attributes:
+      value: "## 🔄 Type of Change"
+
+  - type: checkboxes
+    id: change_type
+    attributes:
+      label: "Select the type of change"
+      options:
+        - label: "New feature"
+        - label: "Enhancement"
+        - label: "Documentation update"
+        - label: "Other (please specify below)"
+
+  - type: input
+    id: other_change
+    attributes:
+      label: "Other Type (if applicable)"
+      placeholder: "Specify other change type"
+
+  - type: markdown
+    attributes:
+      value: "## 📷 Helpful guides"
+
+  - type: textarea
+    id: image_annotation
+    attributes:
+      label: "Screenshots or screen recordings"
+      description: "Screenshots, references, or extra context if applicable to use as visual aide"
+      placeholder: "Add any supporting references here"
